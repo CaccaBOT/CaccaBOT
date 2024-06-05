@@ -3,3 +3,4 @@ node_modules/*
 # ignore intellij config
 .idea
 public/*
+db.sqlite3
