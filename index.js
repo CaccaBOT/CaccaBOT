@@ -45,10 +45,6 @@ server.register(require('@fastify/autoload'), {
 	options: { prefix: '/api' },
 })
 
-server.register(require('@fastify/static'), {
-	root: path.join(__dirname, 'public'),
-})
-
 server.register(require('@fastify/cors'), {
 	origin: '*',
 })
