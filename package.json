@@ -23,7 +23,6 @@
 		"npm": "^8.3.2",
 		"puppeteer": "^13.1.2",
 		"qrcode-terminal": "^0.12.0",
-		"showdown": "^2.1.0",
 		"whatsapp-web.js": "^1.23.0"
 	}
 }

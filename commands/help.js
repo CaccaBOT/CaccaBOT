@@ -19,7 +19,9 @@ module.exports = {
 
 		helpString += `\nYou can add a poop by typing 'cacca++' with all its variants\n`
 
-		helpString += `\nCaccaBOT ${config.version}`
+		helpString += `https://caccabot-client.pages.dev`
+
+		helpString += `\nCaccaBOT ${config.version}\n`
 
 		message.reply(helpString)
 	},
