@@ -250,7 +250,8 @@ function poopStreak(id) {
 	let streak = 0
 
 	for (let i = days.length - 1; i > 0; i--) {
-		if (new Date(days[i]) - new Date(days[i - 1]) == DAY_IN_MILLISECONDS) {
+		const diff = new Date(days[i]) - new Date(days[i - 1])
+		if (diff == DAY_IN_MILLISECONDS || diff == 0) {
 			streak++
 		} else {
 			break
