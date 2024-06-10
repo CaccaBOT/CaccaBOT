@@ -1,7 +1,5 @@
-const path = require('path')
 const server = require('fastify')()
 const { client } = require('./whatsapp/index')
-const fs = require('fs')
 const dotenv = require('dotenv')
 const config = require('./config.json')
 dotenv.config()
@@ -53,13 +51,12 @@ server.decorate('NotFound', (req, res) => {
 	if (req.url.toLowerCase().startsWith('/api')) {
 		res.send({error: 'This endpoint does not exist'}).code(404)
 	}
-	const stream = fs.createReadStream(`${__dirname}/public/index.html`)
-	res.type('text/html').send(stream)
+	res.redirect(`${config.frontendUrl}${req.url}`)
 })
 
 server.setNotFoundHandler(server.NotFound)
 
-client.initialize()
+//client.initialize()
 
 server.listen(
 	{ host: '0.0.0.0', port: process.env.SERVER_PORT ?? 3000 },

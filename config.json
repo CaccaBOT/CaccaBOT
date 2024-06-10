@@ -1,4 +1,5 @@
 {
 	"prefix": "cacca",
-	"version": "v2.4.0"
+	"version": "v2.4.1",
+	"frontendUrl": "https://caccabot-client.pages.dev"
 }
