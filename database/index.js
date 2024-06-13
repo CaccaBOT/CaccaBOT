@@ -79,16 +79,16 @@ function poopLeaderboard() {
 		.prepare(
 			`
             SELECT u.*, 
-                   poop_count,
-                   ROW_NUMBER() OVER (ORDER BY poop_count DESC) AS rank
+                   poops,
+                   ROW_NUMBER() OVER (ORDER BY poops DESC) AS rank
             FROM (
                 SELECT p.user_id, 
-                       COUNT(*) AS poop_count
+                       COUNT(*) AS poops
                 FROM poop p 
                 GROUP BY p.user_id
-            ) AS poop_counts
-            JOIN user u ON poop_counts.user_id = u.id
-            ORDER BY poop_count DESC
+            ) AS poops
+            JOIN user u ON poops.user_id = u.id
+            ORDER BY poops DESC
         `
 		)
 		.all()
@@ -338,13 +338,6 @@ function poopStats() {
 	}
 }
 
-function getAllUserProfiles() {
-	return db.prepare(`
-		SELECT u.*, COUNT(p.id) as poops
-		FROM user u JOIN poop p ON (u.id = p.user_id)
-		GROUP BY u.id
-	`).all()
-}
 
 function updateUsername(id, username) {
 	id = hashId(id)
@@ -412,7 +405,6 @@ module.exports = {
 	getUserProfileById,
 	getUserProfileByUsername,
 	getUserProfileByPhone,
-	getAllUserProfiles,
 	createUser,
 	getPoopsFromUser,
 	getPoopsFromUserWithFilter,
