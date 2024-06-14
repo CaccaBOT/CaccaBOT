@@ -12,7 +12,7 @@ module.exports = {
             }
 
         } else {
-            message.reply('You are not allowed to perform raw SQL queries')
+            message.reply('❌ You are not allowed to perform raw SQL queries')
         }
 	},
 }

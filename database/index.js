@@ -1,5 +1,6 @@
 const db = require('better-sqlite3')('./storage/db.sqlite3')
 const crypto = require('crypto')
+const argon2 = require('argon2')
 
 function initDatabase() {
 	db.exec(`
@@ -9,6 +10,8 @@ function initDatabase() {
             id TEXT PRIMARY KEY,
             phone TEXT,
             username TEXT,
+			password TEXT,
+			frozen INTEGER DEFAULT 0,
             pfp TEXT,
             bio TEXT
         );
@@ -20,6 +23,15 @@ function initDatabase() {
             FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE CASCADE ON UPDATE CASCADE
         );
     `)
+}
+
+function login(username, password) {
+	// TODO: implement logic
+}
+
+async function updatePassword(id, password) {
+	const hash = await argon2.hash(password)
+	db.prepare(`UPDATE user SET password = ? WHERE id = ?`).run(hash, id)
 }
 
 function createUser(id, username, bio) {
@@ -390,6 +402,8 @@ function rawQuery(query) {
 
 module.exports = {
 	initDatabase,
+	login,
+	updatePassword,
 	addPoop,
 	poopLeaderboard,
 	poopLeaderboardWithFilter,
