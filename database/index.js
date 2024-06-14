@@ -12,6 +12,7 @@ function initDatabase() {
             username TEXT,
 			password TEXT,
 			frozen INTEGER DEFAULT 0,
+			token TEXT,
             pfp TEXT,
             bio TEXT
         );
@@ -25,8 +26,26 @@ function initDatabase() {
     `)
 }
 
-function login(username, password) {
-	// TODO: implement logic
+async function login(username, password) {
+	const user = db
+		.prepare(`SELECT * FROM user WHERE username = ?`)
+		.get(username)
+
+	if (!user) {
+		return null
+	}
+
+	if (!(await argon2.verify(user.password, password))) {
+		return null
+	}
+
+	return user
+}
+
+function generateToken(id) {
+	const token = crypto.randomBytes(64).toString('hex')
+	db.prepare(`UPDATE user SET token = ? WHERE id = ?`).run(token, id)
+	return token
 }
 
 async function updatePassword(id, password) {
@@ -39,14 +58,14 @@ function createUser(id, username, bio) {
 	id = hashId(id)
 
 	db.prepare(
-		`INSERT INTO user (id, phone, username, bio) VALUES (?, ?, ?, ?)`
+		`INSERT INTO user (id, phone, username, bio) VALUES (?, ?, ?, ?)`,
 	).run(id, phone, username, bio)
 }
 
 function getUserProfileById(id) {
 	return db
 		.prepare(
-			'SELECT u.*, COUNT(p.id) as poops FROM user u JOIN poop p ON u.id = p.user_id WHERE u.id = ?'
+			'SELECT u.*, COUNT(p.id) as poops FROM user u JOIN poop p ON u.id = p.user_id WHERE u.id = ?',
 		)
 		.get(id)
 }
@@ -54,7 +73,7 @@ function getUserProfileById(id) {
 function getUserProfileByUsername(username) {
 	return db
 		.prepare(
-			'SELECT u.*, COUNT(p.id) as poops FROM user u JOIN poop p ON u.id = p.user_id WHERE u.username = ?'
+			'SELECT u.*, COUNT(p.id) as poops FROM user u JOIN poop p ON u.id = p.user_id WHERE u.username = ?',
 		)
 		.get(username)
 }
@@ -63,7 +82,7 @@ function getUserProfileByPhone(phone) {
 	phone = sanitizePhone(phone)
 	return db
 		.prepare(
-			'SELECT u.*, COUNT(p.id) as poops FROM user u JOIN poop p ON u.id = p.user_id WHERE u.phone = ?'
+			'SELECT u.*, COUNT(p.id) as poops FROM user u JOIN poop p ON u.id = p.user_id WHERE u.phone = ?',
 		)
 		.get(phone)
 }
@@ -73,7 +92,7 @@ function addPoop(id) {
 
 	db.prepare(`INSERT INTO poop (user_id, timestamp) VALUES (?, ?)`).run(
 		id,
-		new Date().toISOString()
+		new Date().toISOString(),
 	)
 }
 
@@ -82,7 +101,7 @@ function addPoopWithTimestamp(id, timestamp) {
 
 	db.prepare(`INSERT INTO poop (user_id, timestamp) VALUES (?, ?)`).run(
 		id,
-		timestamp
+		timestamp,
 	)
 }
 
@@ -101,7 +120,7 @@ function poopLeaderboard() {
             ) AS poops
             JOIN user u ON poops.user_id = u.id
             ORDER BY poops DESC
-        `
+        `,
 		)
 		.all()
 }
@@ -111,19 +130,19 @@ function poopLeaderboardWithFilter(year, month) {
 		.prepare(
 			`
         SELECT u.*, 
-               poop_count,
-               ROW_NUMBER() OVER (ORDER BY poop_count DESC) AS rank
+               poops,
+               ROW_NUMBER() OVER (ORDER BY poops DESC) AS rank
         FROM (
             SELECT p.user_id, 
-                   COUNT(*) AS poop_count
+                   COUNT(*) AS poops
             FROM poop p 
             WHERE strftime('%Y', p.timestamp) = ? 
                   AND strftime('%m', p.timestamp) = ?
             GROUP BY p.user_id
         ) AS poop_counts
         JOIN user u ON poop_counts.user_id = u.id
-        ORDER BY poop_count DESC
-    `
+        ORDER BY poops DESC
+    `,
 		)
 		.all(year.toString(), month.toString().padStart(2, '0'))
 }
@@ -131,7 +150,7 @@ function poopLeaderboardWithFilter(year, month) {
 function allPoop() {
 	return db
 		.prepare(
-			'SELECT p.*, u.username as username FROM poop p JOIN user u ON p.user_id = u.id'
+			'SELECT p.*, u.username as username FROM poop p JOIN user u ON p.user_id = u.id',
 		)
 		.all()
 }
@@ -145,11 +164,11 @@ function allPoopWithFilter(year, month) {
 
 	return db
 		.prepare(
-		`SELECT p.*, u.username
+			`SELECT p.*, u.username
          FROM poop p
 		 JOIN user u
 		 ON (p.user_id = u.id)
-         WHERE p.timestamp >= ? AND p.timestamp <= ?`
+         WHERE p.timestamp >= ? AND p.timestamp <= ?`,
 		)
 		.all(startOfMonthIso, endOfMonthIso)
 }
@@ -157,7 +176,7 @@ function allPoopWithFilter(year, month) {
 function getPoopsFromUser(id) {
 	return db
 		.prepare(
-			'SELECT p.* FROM poop p JOIN user u ON p.user_id = u.id WHERE u.id = ?'
+			'SELECT p.* FROM poop p JOIN user u ON p.user_id = u.id WHERE u.id = ?',
 		)
 		.all(id)
 }
@@ -174,7 +193,7 @@ function getPoopsFromUserWithFilter(id, year, month) {
 			`SELECT p.*
          FROM poop p
          JOIN user u ON p.user_id = u.id
-         WHERE u.id = ? AND p.timestamp >= ? AND p.timestamp <= ?`
+         WHERE u.id = ? AND p.timestamp >= ? AND p.timestamp <= ?`,
 		)
 		.all(id, startOfMonthIso, endOfMonthIso)
 }
@@ -182,7 +201,7 @@ function getPoopsFromUserWithFilter(id, year, month) {
 function poopStatsFromUser(id) {
 	const now = new Date()
 	const todayStart = new Date(
-		Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate())
+		Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()),
 	)
 	const todayEnd = new Date(
 		Date.UTC(
@@ -192,8 +211,8 @@ function poopStatsFromUser(id) {
 			23,
 			59,
 			59,
-			999
-		)
+			999,
+		),
 	)
 
 	// Calculate start of the week and start of the month in UTC
@@ -212,19 +231,19 @@ function poopStatsFromUser(id) {
 	// Query the database
 	const todayPoops = db
 		.prepare(
-			`SELECT COUNT(*) as today FROM poop WHERE timestamp BETWEEN ? AND ? AND poop.user_id = ?`
+			`SELECT COUNT(*) as today FROM poop WHERE timestamp BETWEEN ? AND ? AND poop.user_id = ?`,
 		)
 		.get(today, todayEndSqlite, id)
 
 	const weeklyPoops = db
 		.prepare(
-			`SELECT COUNT(*) as week FROM poop WHERE timestamp >= ? AND poop.user_id = ?`
+			`SELECT COUNT(*) as week FROM poop WHERE timestamp >= ? AND poop.user_id = ?`,
 		)
 		.get(weekStart, id)
 
 	const monthlyPoops = db
 		.prepare(
-			`SELECT COUNT(*) as month FROM poop WHERE timestamp >= ? AND poop.user_id = ?`
+			`SELECT COUNT(*) as month FROM poop WHERE timestamp >= ? AND poop.user_id = ?`,
 		)
 		.get(monthStart, id)
 
@@ -243,20 +262,22 @@ function poopStatsFromUser(id) {
 function poopStreak(id) {
 	const DAY_IN_MILLISECONDS = 24 * 60 * 60 * 1000
 	let days = db
-		.prepare(`
+		.prepare(
+			`
 			SELECT DATE(p.timestamp) as days
 			FROM poop p JOIN user u ON p.user_id = u.id
 			WHERE u.id = ?
 			GROUP BY days
 			ORDER BY days;
-		`)
+		`,
+		)
 		.all(id)
 		.map((x) => x.days)
 
 	days.push(
 		`${new Date().getFullYear()}-${(new Date().getMonth() + 1)
 			.toString()
-			.padStart(2, '0')}-${new Date().getDate().toString().padStart(2, '0')}`
+			.padStart(2, '0')}-${new Date().getDate().toString().padStart(2, '0')}`,
 	)
 
 	let streak = 0
@@ -286,7 +307,7 @@ function poopStatsFromUserWithFilter(id, year, month) {
 	}
 	const monthlyLeaderboardPosition = poopLeaderboardWithFilter(
 		year,
-		month
+		month,
 	).find((x) => x.id === id).rank
 	const streak = poopStreak(id)
 	const poops = getPoopsFromUserWithFilter(id, year, month)
@@ -298,7 +319,7 @@ function poopStatsFromUserWithFilter(id, year, month) {
 function poopStats() {
 	const now = new Date()
 	const todayStart = new Date(
-		Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate())
+		Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()),
 	)
 	const todayEnd = new Date(
 		Date.UTC(
@@ -308,8 +329,8 @@ function poopStats() {
 			23,
 			59,
 			59,
-			999
-		)
+			999,
+		),
 	)
 
 	// Calculate start of the week and start of the month in UTC
@@ -328,7 +349,7 @@ function poopStats() {
 	// Query the database
 	const todayPoops = db
 		.prepare(
-			`SELECT COUNT(*) as today FROM poop WHERE timestamp BETWEEN ? AND ?`
+			`SELECT COUNT(*) as today FROM poop WHERE timestamp BETWEEN ? AND ?`,
 		)
 		.get(today, todayEndSqlite)
 
@@ -350,7 +371,6 @@ function poopStats() {
 	}
 }
 
-
 function updateUsername(id, username) {
 	id = hashId(id)
 	db.prepare(
@@ -358,7 +378,7 @@ function updateUsername(id, username) {
         UPDATE user
         SET username = ?
         WHERE id = ?
-    `
+    `,
 	).run(username, id)
 }
 
@@ -369,7 +389,7 @@ function updateProfilePicture(id, picture) {
         UPDATE user
         SET pfp = ?
         WHERE id = ?
-    `
+    `,
 	).run(picture, id)
 }
 
@@ -380,7 +400,7 @@ function updateBio(id, bio) {
 		UPDATE user
 		SET bio = ?
 		WHERE id = ?
-	`
+	`,
 	).run(bio, id)
 }
 
@@ -423,5 +443,5 @@ module.exports = {
 	getPoopsFromUser,
 	getPoopsFromUserWithFilter,
 	addPoopWithTimestamp,
-	rawQuery
+	rawQuery,
 }

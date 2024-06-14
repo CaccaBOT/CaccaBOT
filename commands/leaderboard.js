@@ -8,11 +8,11 @@ module.exports = {
 		const now = new Date()
 		let leaderboard = poopLeaderboardWithFilter(
 			now.getFullYear(),
-			now.getMonth() + 1
+			now.getMonth() + 1,
 		)
 		let leaderboardMsg = `Leaderboard for ${new Date().toLocaleDateString(
 			'default',
-			{ year: 'numeric', month: 'long' }
+			{ year: 'numeric', month: 'long' },
 		)}\n`
 		leaderboardMsg += `*Rank* | *User* | *Count*\n`
 		let chat = await message.getChat()
@@ -28,7 +28,7 @@ module.exports = {
 
 			for (let i = 0; i < leaderboard.length; i++) {
 				leaderboardMsg += `${i + 1}° | @${sanitizeId(leaderboard[i].phone)} | ${
-					leaderboard[i].poop_count
+					leaderboard[i].poops
 				}\n`
 			}
 

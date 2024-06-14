@@ -49,14 +49,14 @@ server.register(require('@fastify/cors'), {
 
 server.decorate('NotFound', (req, res) => {
 	if (req.url.toLowerCase().startsWith('/api')) {
-		res.send({error: 'This endpoint does not exist'}).code(404)
+		res.send({ error: 'This endpoint does not exist' }).code(404)
 	}
 	res.redirect(`${config.frontendUrl}${req.url}`)
 })
 
 server.setNotFoundHandler(server.NotFound)
 
-client.initialize()
+//client.initialize()
 
 server.listen(
 	{ host: '0.0.0.0', port: process.env.SERVER_PORT ?? 3000 },
@@ -66,5 +66,5 @@ server.listen(
 			process.exit(1)
 		}
 		console.log('[READY] CaccaBOT on ' + address)
-	}
+	},
 )

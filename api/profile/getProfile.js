@@ -6,9 +6,9 @@ module.exports = async function (fastify, options) {
 		let user = getUserProfileById(id)
 		if (user) {
 			delete user.phone
-			res.code(200).send(user)
+			res.send(user).code(200)
 		} else {
-			res.code(404).send()
+			res.send().code(404)
 		}
 	})
 }
