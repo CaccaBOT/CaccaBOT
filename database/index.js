@@ -27,9 +27,7 @@ function initDatabase() {
 }
 
 async function login(username, password) {
-	const user = db
-		.prepare(`SELECT * FROM user WHERE username = ?`)
-		.get(username)
+	const user = db.prepare(`SELECT * FROM user WHERE username = ?`).get(username)
 
 	if (!user) {
 		return null
@@ -42,6 +40,10 @@ async function login(username, password) {
 	return user
 }
 
+function getUserByToken(token) {
+	return db.prepare(`SELECT * FROM user WHERE token = ?`).get(token)
+}
+
 function generateToken(id) {
 	const token = crypto.randomBytes(64).toString('hex')
 	db.prepare(`UPDATE user SET token = ? WHERE id = ?`).run(token, id)
@@ -51,6 +53,7 @@ function generateToken(id) {
 async function updatePassword(id, password) {
 	const hash = await argon2.hash(password)
 	db.prepare(`UPDATE user SET password = ? WHERE id = ?`).run(hash, id)
+	generateToken(id)
 }
 
 function createUser(id, username, bio) {
@@ -436,6 +439,7 @@ module.exports = {
 	updateUsername,
 	updateProfilePicture,
 	updateBio,
+	getUserByToken,
 	getUserProfileById,
 	getUserProfileByUsername,
 	getUserProfileByPhone,

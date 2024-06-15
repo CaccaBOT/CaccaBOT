@@ -5,6 +5,7 @@ module.exports = async function (fastify, options) {
 		const username = req.query['username']
 		let user = getUserProfileByUsername(username)
 		if (user) {
+			delete user.password
 			delete user.phone
 			res.send(user).code(200)
 		} else {
