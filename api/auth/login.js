@@ -5,13 +5,13 @@ module.exports = async function (fastify, options) {
 		const { username, password } = req.body
 		const user = await login(username, password)
 		if (!user) {
-			res.send({ error: 'Invalid credentials' }).code(401)
+			res.code(401).send({ error: 'Invalid credentials' })
 			return
 		}
 
 		delete user.password
 		delete user.phone
 
-		res.send(user).code(200)
+		res.code(200).send(user)
 	})
 }

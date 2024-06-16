@@ -5,9 +5,10 @@ module.exports = async function (fastify, options) {
 		const { year, month } = req.params
 		let leaderboard = poopLeaderboardWithFilter(year, month)
 		leaderboard.forEach((x) => {
+			delete token
 			delete password
 			delete phone
 		})
-		res.send(leaderboard).code(200)
+		res.code(200).send(leaderboard)
 	})
 }

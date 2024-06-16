@@ -6,7 +6,7 @@ module.exports = async function (fastify, options) {
 		const user = await authenticate(req, res)
 		const { password } = req.body
 		if (!password || password == '') {
-			res.send({ error: 'Invalid password' }).code(403)
+			res.code(403).send({ error: 'Invalid password' })
 		}
 		updatePassword(user.id, password)
 	})

@@ -49,7 +49,7 @@ server.register(require('@fastify/cors'), {
 
 server.decorate('NotFound', (req, res) => {
 	if (req.url.toLowerCase().startsWith('/api')) {
-		res.send({ error: 'This endpoint does not exist' }).code(404)
+		res.code(404).send({ error: 'This endpoint does not exist' })
 	}
 	res.redirect(`${config.frontendUrl}${req.url}`)
 })
