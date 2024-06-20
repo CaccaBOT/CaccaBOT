@@ -4,6 +4,7 @@ const {
 	initDatabase,
 	addPoop,
 	getUserProfileByPhone,
+	poopStreak,
 	createUser,
 } = require('../database/index')
 const { detectPoop } = require('../poop/parser')
@@ -48,9 +49,16 @@ client.on('message_create', async (message) => {
 			const username = contact.pushname
 			const bio = await contact.getAbout()
 			createUser(id, username, bio)
+			foundUser = getUserProfileByPhone(id)
 		}
-		addPoop(id)
-		message.reply(replies[Math.floor(Math.random() * (replies.length - 0 + 1))])
+		addPoop(foundUser.id)
+		const streak = poopStreak(foundUser.id)
+		message.reply(
+			replies[Math.floor(Math.random() * replies.length)].replace(
+				'{streak}',
+				streak,
+			),
+		)
 	}
 })
 

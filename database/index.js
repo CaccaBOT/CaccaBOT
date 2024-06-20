@@ -56,6 +56,10 @@ async function updatePassword(id, password) {
 	generateToken(id)
 }
 
+async function updateUsername(id, username) {
+	db.prepare(`UPDATE user SET username = ? WHERE id = ?`).run(username, id)
+}
+
 function createUser(id, username, bio) {
 	let phone = sanitizePhone(id)
 	id = hashId(id)
@@ -85,14 +89,12 @@ function getUserProfileByPhone(phone) {
 	phone = sanitizePhone(phone)
 	return db
 		.prepare(
-			'SELECT u.*, COUNT(p.id) as poops FROM user u JOIN poop p ON u.id = p.user_id WHERE u.phone = ?',
+			'SELECT u.*, COUNT(p.id) as poops FROM user u LEFT JOIN poop p ON u.id = p.user_id WHERE u.phone = ?',
 		)
 		.get(phone)
 }
 
 function addPoop(id) {
-	id = hashId(id)
-
 	db.prepare(`INSERT INTO poop (user_id, timestamp) VALUES (?, ?)`).run(
 		id,
 		new Date().toISOString(),
@@ -100,8 +102,6 @@ function addPoop(id) {
 }
 
 function addPoopWithTimestamp(id, timestamp) {
-	id = hashId(id)
-
 	db.prepare(`INSERT INTO poop (user_id, timestamp) VALUES (?, ?)`).run(
 		id,
 		timestamp,
@@ -375,7 +375,6 @@ function poopStats() {
 }
 
 function updateUsername(id, username) {
-	id = hashId(id)
 	db.prepare(
 		`
         UPDATE user
@@ -386,7 +385,6 @@ function updateUsername(id, username) {
 }
 
 function updateProfilePicture(id, picture) {
-	id = hashId(id)
 	db.prepare(
 		`
         UPDATE user
@@ -397,7 +395,6 @@ function updateProfilePicture(id, picture) {
 }
 
 function updateBio(id, bio) {
-	id = hashId(id)
 	db.prepare(
 		`
 		UPDATE user

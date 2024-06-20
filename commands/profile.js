@@ -20,16 +20,16 @@ module.exports = {
 		switch (info.args[0]) {
 			case 'pic':
 				let pic = info.args[1]
-				updateProfilePicture(message.author, pic)
+				updateProfilePicture(user.id, pic)
 				break
 			case 'username':
 				let username = info.args[1]
-				updateUsername(message.author, username)
+				updateUsername(user.id, username)
 				break
 			case 'bio':
 				let bio = info.args.join(' ')
 				bio = bio.substring(3, bio.length)
-				updateBio(message.author, bio)
+				updateBio(user.id, bio)
 				break
 			default:
 				message.reply('Invalid argument\nAvailable: pic, username, bio')
