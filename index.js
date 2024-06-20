@@ -2,6 +2,7 @@ const server = require('fastify')()
 const { client } = require('./whatsapp/index')
 const dotenv = require('dotenv')
 const config = require('./config.json')
+const fs = require('fs')
 dotenv.config()
 
 server.register(require('@fastify/swagger'), {
@@ -45,6 +46,18 @@ server.register(require('@fastify/autoload'), {
 
 server.register(require('@fastify/cors'), {
 	origin: '*',
+})
+
+server.addHook('onRequest', (req, res, done) => {
+	if (req.url.toLowerCase().startsWith('/api')) {
+		const log = `${new Date().toISOString()} | ${req.ip} | ${req.method} | ${req.url}`
+		if (!fs.existsSync(`${__dirname}/logs`)) {
+			fs.mkdirSync(`${__dirname}/logs`)
+		}
+		fs.appendFileSync(`${__dirname}/logs/${new Date().toISOString().slice(0, 10)}.log`, `${log}\n`)
+		console.info(log)
+	}
+	done()
 })
 
 server.decorate('NotFound', (req, res) => {
