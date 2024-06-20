@@ -69,7 +69,7 @@ server.decorate('NotFound', (req, res) => {
 
 server.setNotFoundHandler(server.NotFound)
 
-//client.initialize()
+client.initialize()
 
 server.listen(
 	{ host: '0.0.0.0', port: process.env.SERVER_PORT ?? 3000 },
