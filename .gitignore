@@ -5,3 +5,4 @@ node_modules/*
 public/*
 db.sqlite3
 logs/*
+.env
