@@ -3,6 +3,7 @@ const {
 	updateProfilePicture,
 	updateBio,
 	getUserProfileByPhone,
+	getUserProfileByUsername,
 } = require('../database/index')
 
 module.exports = {
@@ -24,6 +25,11 @@ module.exports = {
 				break
 			case 'username':
 				let username = info.args[1]
+				const isUsernameAvailable =
+					getUserProfileByUsername(user.username).id == null
+				if (isUsernameAvailable) {
+					user.username = username
+				}
 				updateUsername(user.id, username)
 				break
 			case 'bio':

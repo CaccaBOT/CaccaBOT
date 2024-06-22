@@ -94,6 +94,10 @@ function getUserProfileByPhone(phone) {
 		.get(phone)
 }
 
+function getLastPoop() {
+	return db.prepare(`SELECT * FROM poop ORDER BY id DESC LIMIT 1`).get()
+}
+
 function addPoop(id) {
 	db.prepare(`INSERT INTO poop (user_id, timestamp) VALUES (?, ?)`).run(
 		id,
@@ -436,6 +440,7 @@ module.exports = {
 	updateUsername,
 	updateProfilePicture,
 	updateBio,
+	getLastPoop,
 	getUserByToken,
 	getUserProfileById,
 	getUserProfileByUsername,

@@ -6,6 +6,7 @@ const {
 	getUserProfileByPhone,
 	poopStreak,
 	createUser,
+	getLastPoop,
 } = require('../database/index')
 const { detectPoop } = require('../poop/parser')
 const config = require('../config.json')
@@ -59,8 +60,18 @@ client.on('message_create', async (message) => {
 				streak,
 			),
 		)
+		const poop = getLastPoop()
+		checkAchievements(poop, foundUser, message)
 	}
 })
+
+function checkAchievements(poop, user, message) {
+	const achievementsDir = path.resolve(`${__dirname}/../achievements`)
+	fs.readdirSync(achievementsDir).forEach((file) => {
+		const achievement = require(`${achievementsDir}/${file}`)
+		achievement.check(poop, user, message)
+	})
+}
 
 async function parseMessage(message) {
 	if (Object.values(message.body).length == 0 || message.body == null) {
@@ -85,13 +96,13 @@ async function parseMessage(message) {
 		info.isCommand = true
 
 		// analyze message by splitting it into an array with " " as separator
-		let arrayMsgContent = message.body.split(' ')
+		let msgContent = message.body.split(' ')
 		// set name of the command
-		info.command.name = arrayMsgContent[1]
+		info.command.name = msgContent[1]
 
 		// set the arguments of the command
-		for (let i = 2; i < arrayMsgContent.length; i++) {
-			info.command.args.push(arrayMsgContent[i])
+		for (let i = 2; i < msgContent.length; i++) {
+			info.command.args.push(msgContent[i])
 		}
 	}
 
@@ -124,7 +135,7 @@ async function parseMessage(message) {
 }
 
 process.on('SIGINT', async () => {
-	console.log('\n[SIGINT] Quitting...')
+	console.log('\n[SIGINT] Terminating process')
 	await client.destroy()
 	process.exit(0)
 })

@@ -21,7 +21,7 @@ module.exports = {
 
 		helpString += `https://caccabot-client.pages.dev`
 
-		helpString += `\nCaccaBOT ${config.version}\n`
+		helpString += `\nCaccaBOT ${config.version}-${process.env.ENVIRONMENT ?? 'test'}\n`
 
 		message.reply(helpString)
 	},

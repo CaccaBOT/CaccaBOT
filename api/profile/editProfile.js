@@ -1,4 +1,7 @@
-const { getUserProfileById } = require('../../database')
+const {
+	getUserProfileById,
+	getUserProfileByUsername,
+} = require('../../database')
 const { authenticate } = require('../../middleware/auth')
 
 module.exports = async function (fastify, options) {
@@ -9,6 +12,20 @@ module.exports = async function (fastify, options) {
 			res.code(403).send({ error: 'Invalid username' })
 		}
 
-		user.username = username
+		if (user.username && user.username.length >= 3) {
+			const isUsernameAvailable =
+				getUserProfileByUsername(user.username).id == null
+			if (isUsernameAvailable) {
+				user.username = username
+			}
+		}
+
+		if (user.bio) {
+			user.bio = bio
+		}
+
+		if (user.pfp) {
+			user.pfp = pfp
+		}
 	})
 }
