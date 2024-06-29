@@ -19,7 +19,7 @@ module.exports = {
 
 		helpString += `\nYou can add a poop by typing 'cacca++' with all its variants\n`
 
-		helpString += `https://caccabot-client.pages.dev`
+		helpString += `${config.frontendUrl}`
 
 		helpString += `\nCaccaBOT ${config.version}-${process.env.ENVIRONMENT ?? 'test'}\n`
 

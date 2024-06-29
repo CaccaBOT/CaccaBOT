@@ -32,7 +32,7 @@ module.exports = {
 				}\n`
 			}
 
-			leaderboardMsg += `\nThe leaderboard can be viewed here\nhttps://caccabot-client.pages.dev/leaderboard`
+			leaderboardMsg += `\nThe leaderboard can be viewed here\n${config.frontendUrl}/leaderboard`
 		} else {
 			message.reply('This command is only available in groups')
 			return
