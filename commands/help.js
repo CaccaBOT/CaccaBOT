@@ -21,7 +21,9 @@ module.exports = {
 
 		helpString += `${config.frontendUrl}`
 
-		helpString += `\nCaccaBOT ${config.version}-${process.env.ENVIRONMENT ?? 'test'}\n`
+		helpString += `\nCaccaBOT ${config.version}-${
+			process.env.ENVIRONMENT ?? 'test'
+		}\n`
 
 		message.reply(helpString)
 	},

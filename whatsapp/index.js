@@ -53,8 +53,8 @@ client.on('message_create', async (message) => {
 		message.reply(
 			replies[Math.floor(Math.random() * replies.length)].replace(
 				'{streak}',
-				streak,
-			),
+				streak
+			)
 		)
 		const poop = getLastPoop()
 		checkAchievements(poop, foundUser, message)

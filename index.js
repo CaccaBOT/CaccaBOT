@@ -50,13 +50,15 @@ server.register(require('@fastify/cors'), {
 
 server.addHook('onRequest', (req, res, done) => {
 	if (req.url.toLowerCase().startsWith('/api')) {
-		const log = `${new Date().toISOString()} | ${res.headers['X-Real-IP'] ?? req.ip} | ${req.method} | ${req.url}`
+		const log = `${new Date().toISOString()} | ${
+			res.headers['X-Real-IP'] ?? req.ip
+		} | ${req.method} | ${req.url}`
 		if (!fs.existsSync(`${__dirname}/logs`)) {
 			fs.mkdirSync(`${__dirname}/logs`)
 		}
 		fs.appendFileSync(
 			`${__dirname}/logs/${new Date().toISOString().slice(0, 10)}.log`,
-			`${log}\n`,
+			`${log}\n`
 		)
 		console.info(log)
 	}
@@ -82,5 +84,5 @@ server.listen(
 			process.exit(1)
 		}
 		console.log('[READY] CaccaBOT on ' + address)
-	},
+	}
 )

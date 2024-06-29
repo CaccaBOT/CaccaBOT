@@ -13,7 +13,7 @@ module.exports = {
 		const user = getUserProfileByPhone(message.author)
 		if (!user.id) {
 			message.reply(
-				`You don't have a poop profile.\nIt'll be automatically created when you poop the first time`,
+				`You don't have a poop profile.\nIt'll be automatically created when you poop the first time`
 			)
 			return
 		}
