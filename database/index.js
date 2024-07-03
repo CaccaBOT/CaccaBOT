@@ -113,10 +113,10 @@ function addPoopWithTimestamp(id, timestamp) {
 }
 
 function poopLeaderboard() {
-	return db
-		.prepare(
-			`
-            SELECT u.id, u.username, u.pfp, u.bio, u.frozen, 
+    const result = db
+        .prepare(
+            `
+            SELECT u.id, u.phone, u.username, u.pfp, u.bio, u.frozen, 
                    poops,
                    ROW_NUMBER() OVER (ORDER BY poops DESC) AS rank
             FROM (
@@ -128,15 +128,22 @@ function poopLeaderboard() {
             JOIN user u ON poops.user_id = u.id
             ORDER BY poops DESC
         `
-		)
-		.all()
+        )
+        .all();
+
+    return result.map(row => ({
+        ...row,
+        frozen: Boolean(row.frozen)
+    }))
 }
 
+
 function poopLeaderboardWithFilter(year, month) {
-	return db
-		.prepare(
-			`
-		SELECT u.id, u.username, u.pfp, u.bio, u.frozen, 
+    const result = db
+        .prepare(
+            `
+        SELECT u.id, u.phone, u.username, u.pfp, u.bio, 
+               CASE u.frozen WHEN 1 THEN true ELSE false END AS frozen, 
                poops,
                ROW_NUMBER() OVER (ORDER BY poops DESC) AS rank
         FROM (
@@ -150,9 +157,15 @@ function poopLeaderboardWithFilter(year, month) {
         JOIN user u ON poop_counts.user_id = u.id
         ORDER BY poops DESC
     `
-		)
-		.all(year.toString(), month.toString().padStart(2, '0'))
+        )
+        .all(year.toString(), month.toString().padStart(2, '0'))
+
+		return result.map(row => ({
+			...row,
+			frozen: Boolean(row.frozen)
+		}))
 }
+
 
 function allPoop() {
 	return db
