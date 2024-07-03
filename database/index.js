@@ -116,7 +116,7 @@ function poopLeaderboard() {
 	return db
 		.prepare(
 			`
-            SELECT u.*, 
+            SELECT u.id, u.username, u.pfp, u.bio, u.frozen, 
                    poops,
                    ROW_NUMBER() OVER (ORDER BY poops DESC) AS rank
             FROM (
@@ -136,7 +136,7 @@ function poopLeaderboardWithFilter(year, month) {
 	return db
 		.prepare(
 			`
-        SELECT u.*, 
+		SELECT u.id, u.username, u.pfp, u.bio, u.frozen, 
                poops,
                ROW_NUMBER() OVER (ORDER BY poops DESC) AS rank
         FROM (
