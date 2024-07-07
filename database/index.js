@@ -14,7 +14,8 @@ function initDatabase() {
 			frozen INTEGER DEFAULT 0,
 			token TEXT,
             pfp TEXT,
-            bio TEXT
+            bio TEXT,
+			money INTEGER DEFAULT 0
         );
 
         CREATE TABLE IF NOT EXISTS poop (
@@ -22,6 +23,27 @@ function initDatabase() {
             user_id TEXT,
             timestamp TIMESTAMP,
             FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE CASCADE ON UPDATE CASCADE
+        );
+
+		CREATE TABLE IF NOT EXISTS rarity (
+			id INTEGER PRIMARY KEY AUTOINCREMENT,
+			name TEXT
+		);
+
+		CREATE TABLE IF NOT EXISTS collectibles (
+			id INTEGER PRIMARY KEY AUTOINCREMENT,
+			name TEXT,
+			description TEXT,
+			rarity_id INTEGER,
+			FOREIGN KEY (rarity_id) REFERENCES rarity(id)
+		);
+
+		CREATE TABLE IF NOT EXISTS user_collectibles (
+			id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id TEXT,
+            collectible_id INTEGER,
+            FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE CASCADE ON UPDATE CASCADE,
+            FOREIGN KEY (collectible_id) REFERENCES collectibles(id) ON DELETE CASCADE ON UPDATE CASCADE
         );
     `)
 }
