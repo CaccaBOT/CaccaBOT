@@ -125,6 +125,8 @@ function addPoop(id) {
 		id,
 		new Date().toISOString()
 	)
+
+	db.prepare(`UPDATE user SET money = (SELECT money FROM user WHERE id = ?) + 1 WHERE id = ?`).run(id, id)
 }
 
 function addPoopWithTimestamp(id, timestamp) {
