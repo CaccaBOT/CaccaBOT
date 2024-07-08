@@ -1,5 +1,6 @@
 {
 	"prefix": "cacca",
-	"version": "v3.2.0",
-	"frontendUrl": "https://caccabot.pages.dev"
+	"version": "v3.3.0",
+	"frontendUrl": "https://caccabot.pages.dev",
+	"whatsappModuleEnabled": false
 }

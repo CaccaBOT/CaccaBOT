@@ -51,7 +51,7 @@ server.register(require('@fastify/cors'), {
 server.addHook('onRequest', (req, res, done) => {
 	if (req.url.toLowerCase().startsWith('/api')) {
 		const log = `${new Date().toISOString()} | ${
-			res.headers['X-Real-IP'] ?? req.ip
+			req.headers['X-Real-IP'] ?? req.ip
 		} | ${req.method} | ${req.url}`
 		if (!fs.existsSync(`${__dirname}/logs`)) {
 			fs.mkdirSync(`${__dirname}/logs`)
@@ -74,7 +74,9 @@ server.decorate('NotFound', (req, res) => {
 
 server.setNotFoundHandler(server.NotFound)
 
-client.initialize()
+if (config.whatsappModuleEnabled) {
+	client.initialize()
+}
 
 server.listen(
 	{ host: '0.0.0.0', port: process.env.SERVER_PORT ?? 3000 },
