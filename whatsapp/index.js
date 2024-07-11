@@ -109,6 +109,19 @@ async function parseMessage(message) {
 
 	let chat = await message.getChat()
 
+	if (!config.groupId && info.isCommand) {
+		message.reply(
+			'Group ID: ' + chat.id._serialized + '\n' +
+			'Please paste this string in your config.json ' +
+			'on the field groupId before using CaccaBOT'
+		)
+		return
+	}
+
+	if (chat.id._serialized != config.groupId) {
+		return
+	}
+
 	if (chat.isGroup) {
 		info.isInGroup = true
 		info.group = chat.name
