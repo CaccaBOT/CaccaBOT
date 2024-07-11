@@ -142,7 +142,7 @@ function poopLeaderboard() {
     const result = db
         .prepare(
             `
-            SELECT u.id, u.phone, u.username, u.pfp, u.bio, u.frozen, u.money
+            SELECT u.id, u.phone, u.username, u.pfp, u.bio, u.frozen, u.money,
                    poops,
                    ROW_NUMBER() OVER (ORDER BY poops DESC) AS rank
             FROM (
