@@ -125,6 +125,10 @@ function addPoop(id) {
 		id,
 		new Date().toISOString()
 	)
+
+	if (new Date().getTime() > new Date('2024-07-10').getTime()) {
+		db.prepare(`UPDATE user SET money = (SELECT money FROM user WHERE id = ?) + 1 WHERE id = ?`).run(id, id)
+	}
 }
 
 function addPoopWithTimestamp(id, timestamp) {
