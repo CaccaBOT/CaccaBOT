@@ -33,7 +33,7 @@ module.exports = async function (fastify, options) {
 
         fs.writeFileSync(filePath, buffer)
 
-        const imageUrl = `http://localhost:3000/public/pfp/${filename}`
+        const imageUrl = `https://caccabot.duckdns.org/public/pfp/${filename}`
         updateProfilePicture(user.id, imageUrl)
 
         return res.send({ url: imageUrl })
