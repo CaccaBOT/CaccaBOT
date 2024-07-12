@@ -1,8 +1,9 @@
-const server = require('fastify')()
+const server = require('fastify')({bodyLimit: 8388608})
 const { client } = require('./whatsapp/index')
 const dotenv = require('dotenv')
 const config = require('./config.json')
 const fs = require('fs')
+const path = require('path')
 dotenv.config()
 
 server.register(require('@fastify/swagger'), {
@@ -44,29 +45,35 @@ server.register(require('@fastify/autoload'), {
 	options: { prefix: '/api' },
 })
 
+server.register(require('@fastify/static'), {
+	root: path.join(__dirname, "/public"),
+	prefix: '/public/'
+})
+
 server.register(require('@fastify/cors'), {
 	origin: '*',
 })
 
 server.addHook('onRequest', (req, res, done) => {
-	if (req.url.toLowerCase().startsWith('/api')) {
-		const log = `${new Date().toISOString()} | ${req.method} | ${req.url}`
-		if (!fs.existsSync(`${__dirname}/logs`)) {
-			fs.mkdirSync(`${__dirname}/logs`)
-		}
-		fs.appendFileSync(
-			`${__dirname}/logs/${new Date().toISOString().slice(0, 10)}.log`,
-			`${log}\n`
-		)
-		console.info(log)
+	const log = `${new Date().toISOString()} | ${req.method} | ${req.url}`
+	if (!fs.existsSync(`${__dirname}/logs`)) {
+		fs.mkdirSync(`${__dirname}/logs`)
 	}
+	fs.appendFileSync(
+		`${__dirname}/logs/${new Date().toISOString().slice(0, 10)}.log`,
+		`${log}\n`
+	)
+	console.info(log)
 	done()
 })
 
 server.decorate('NotFound', (req, res) => {
 	if (req.url.toLowerCase().startsWith('/api')) {
 		res.code(404).send({ error: 'This endpoint does not exist' })
+	} else if (req.url.toLowerCase().startsWith('/public')) {
+		res.code(404).send('File does not exist')
 	}
+
 	res.redirect(`${config.frontendUrl}${req.url}`)
 })
 
