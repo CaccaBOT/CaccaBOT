@@ -3,5 +3,5 @@
 	"version": "v3.6.0",
 	"frontendUrl": "https://caccabot.pages.dev",
 	"groupId": "120363283575526755@g.us",
-	"whatsappModuleEnabled": true
+	"whatsappModuleEnabled": false
 }

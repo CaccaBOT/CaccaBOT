@@ -27,7 +27,8 @@ function initDatabase() {
 
 		CREATE TABLE IF NOT EXISTS rarity (
 			id INTEGER PRIMARY KEY AUTOINCREMENT,
-			name TEXT
+			name TEXT,
+			chance INTEGER
 		);
 
 		CREATE TABLE IF NOT EXISTS collectibles (
@@ -45,6 +46,11 @@ function initDatabase() {
             FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE CASCADE ON UPDATE CASCADE,
             FOREIGN KEY (collectible_id) REFERENCES collectibles(id) ON DELETE CASCADE ON UPDATE CASCADE
         );
+
+		INSERT INTO rarity(name, chance) VALUES ('Merdume', 59);
+		INSERT INTO rarity(name, chance) VALUES ('Escrementale', 30); 
+		INSERT INTO rarity(name, chance) VALUES ('Sensazianale', 10); 
+ 		INSERT INTO rarity(name, chance) VALUES ('Caccasmagorico', 1); 
     `)
 }
 
@@ -89,6 +95,14 @@ function createUser(id, username, bio) {
 	db.prepare(
 		`INSERT INTO user (id, phone, username, bio) VALUES (?, ?, ?, ?)`
 	).run(id, phone, username, bio)
+}
+
+function setMoney(id, amount) {
+	db.prepare(`UPDATE user SET money = ? WHERE id = ?`).run(id, amount)
+}
+
+function getRarities() {
+	return db.prepare(`SELECT * FROM rarity`).all();
 }
 
 function getUserProfileById(id) {
@@ -487,5 +501,7 @@ module.exports = {
 	getPoopsFromUser,
 	getPoopsFromUserWithFilter,
 	addPoopWithTimestamp,
+	setMoney,
+	getRarities,
 	rawQuery,
 }
