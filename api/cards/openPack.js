@@ -1,6 +1,8 @@
 const {
     setMoney,
-    getRarities
+    getRarities,
+    getCollectibles,
+    addCollectibleToUser
 } = require('../../database')
 const { authenticate } = require('../../middleware/auth')
 
@@ -15,9 +17,10 @@ module.exports = async function (fastify, options) {
         setMoney(user.id, user.money - 5)
         const rarities = getRarities()
         const rarity = pickRarity(rarities)
-        // extract one card of such rarity from the DB
-        // assign the card to the user
-        res.code(200).send()
+        const collectiblesOfRarity = getCollectibles(rarity.id)
+        const collectible = collectiblesOfRarity[Math.floor(Math.random() * collectiblesOfRarity.length)]
+        addCollectibleToUser(user.id, collectible.id)
+        res.code(200).send(collectible)
     })
 }
 
@@ -26,9 +29,9 @@ function pickRarity(rarities) {
     let runningSum = 0;
 
     for (const rarity of rarities) {
-        runningSum += rarity.chance;
+        runningSum += rarity.chance
         if (randomChance < runningSum) {
-            return rarity;
+            return rarity
         }
     }
 }

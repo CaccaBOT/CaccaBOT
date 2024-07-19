@@ -31,26 +31,84 @@ function initDatabase() {
 			chance INTEGER
 		);
 
-		CREATE TABLE IF NOT EXISTS collectibles (
+		CREATE TABLE IF NOT EXISTS collectible (
 			id INTEGER PRIMARY KEY AUTOINCREMENT,
 			name TEXT,
 			description TEXT,
 			rarity_id INTEGER,
+			asset_url TEXT,
 			FOREIGN KEY (rarity_id) REFERENCES rarity(id)
 		);
 
-		CREATE TABLE IF NOT EXISTS user_collectibles (
+		CREATE TABLE IF NOT EXISTS user_collectible (
 			id INTEGER PRIMARY KEY AUTOINCREMENT,
             user_id TEXT,
             collectible_id INTEGER,
             FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE CASCADE ON UPDATE CASCADE,
-            FOREIGN KEY (collectible_id) REFERENCES collectibles(id) ON DELETE CASCADE ON UPDATE CASCADE
+            FOREIGN KEY (collectible_id) REFERENCES collectible(id) ON DELETE CASCADE ON UPDATE CASCADE
         );
 
 		INSERT INTO rarity(name, chance) VALUES ('Merdume', 59);
 		INSERT INTO rarity(name, chance) VALUES ('Escrementale', 30); 
 		INSERT INTO rarity(name, chance) VALUES ('Sensazianale', 10); 
  		INSERT INTO rarity(name, chance) VALUES ('Caccasmagorico', 1); 
+
+		INSERT INTO collectible (name, description, rarity_id, asset_url)
+		VALUES ('VulcANO', 'Cacca con parte superiore a forma di vulcano che erutta magma', 
+				(SELECT id FROM rarity WHERE name = 'Merdume'), NULL);
+
+		INSERT INTO collectible (name, description, rarity_id, asset_url)
+		VALUES ('Jeff Merdos', 'Cacca dorata con i baffi da nobile, un bastone e un monocolo', 
+				(SELECT id FROM rarity WHERE name = 'Caccasmagorico'), NULL);
+
+		INSERT INTO collectible (name, description, rarity_id, asset_url)
+		VALUES ('Scopino', NULL, 
+				(SELECT id FROM rarity WHERE name = 'Merdume'), NULL);
+
+		INSERT INTO collectible (name, description, rarity_id, asset_url)
+		VALUES ('Cesso', NULL, 
+				(SELECT id FROM rarity WHERE name = 'Merdume'), NULL);
+
+		INSERT INTO collectible (name, description, rarity_id, asset_url)
+		VALUES ('Carta Igienica', NULL, 
+				(SELECT id FROM rarity WHERE name = 'Merdume'), NULL);
+
+		INSERT INTO collectible (name, description, rarity_id, asset_url)
+		VALUES ('Cacapops', 'Cacca a forma di palline come quella dei conigli o dei cereali cocopops', 
+				(SELECT id FROM rarity WHERE name = 'Escrementale'), NULL);
+
+		INSERT INTO collectible (name, description, rarity_id, asset_url)
+		VALUES ('Una giornata di merda', 'Merdachan al cesso', 
+				(SELECT id FROM rarity WHERE name = 'Caccasmagorico'), NULL);
+
+		INSERT INTO collectible (name, description, rarity_id, asset_url)
+		VALUES ('Supercacca', 'Cacca con mantello da supereroe e una grande "C" sul petto', 
+				(SELECT id FROM rarity WHERE name = 'Sensazianale'), NULL);
+
+		INSERT INTO collectible (name, description, rarity_id, asset_url)
+		VALUES ('Merdinfiore', 'Cacca da cui sboccia un fiore', 
+				(SELECT id FROM rarity WHERE name = 'Merdume'), NULL);
+
+		INSERT INTO collectible (name, description, rarity_id, asset_url)
+		VALUES ('Merdangelo', 'Cacca con ali e aureola', 
+				(SELECT id FROM rarity WHERE name = 'Sensazianale'), NULL);
+
+		INSERT INTO collectible (name, description, rarity_id, asset_url)
+		VALUES ('Robomerda', 'Cacca con sembianze robotiche', 
+				(SELECT id FROM rarity WHERE name = 'Sensazianale'), NULL);
+
+		INSERT INTO collectible (name, description, rarity_id, asset_url)
+		VALUES ('Cesso di Jeff Merdos', 'Cesso dorato (di Jeff Merdos)', 
+				(SELECT id FROM rarity WHERE name = 'Caccasmagorico'), NULL);
+
+		INSERT INTO collectible (name, description, rarity_id, asset_url)
+		VALUES ('Cacca Samurai', 'Cacca con sembianze di un samurai (armatura, elmetto, spada)', 
+				(SELECT id FROM rarity WHERE name = 'Merdume'), NULL);
+
+		INSERT INTO collectible (name, description, rarity_id, asset_url)
+		VALUES ('Caccantante', NULL, 
+				(SELECT id FROM rarity WHERE name = 'Merdume'), NULL);
+
     `)
 }
 
@@ -101,8 +159,16 @@ function setMoney(id, amount) {
 	db.prepare(`UPDATE user SET money = ? WHERE id = ?`).run(id, amount)
 }
 
+function addCollectibleToUser(user, collectible) {
+	db.prepare(`INSERT INTO user_collectible(user_id, collectible_id) VALUES(?, ?)`).run(user, collectible)
+}
+
 function getRarities() {
 	return db.prepare(`SELECT * FROM rarity`).all();
+}
+
+function getCollectibles(rarity) {
+	return db.prepare(`SELECT * FROM collectible WHERE rarity_id = ?`).all(rarity)
 }
 
 function getUserProfileById(id) {
@@ -503,5 +569,7 @@ module.exports = {
 	addPoopWithTimestamp,
 	setMoney,
 	getRarities,
+	getCollectibles,
+	addCollectibleToUser,
 	rawQuery,
 }
