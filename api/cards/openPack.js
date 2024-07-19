@@ -5,6 +5,8 @@ const {
     addCollectibleToUser
 } = require('../../database')
 const { authenticate } = require('../../middleware/auth')
+const { client } = require('../../whatsapp/index')
+const config = require('../../config.json')
 
 module.exports = async function (fastify, options) {
     fastify.get('/open', async (req, res) => {
@@ -20,6 +22,7 @@ module.exports = async function (fastify, options) {
         const collectiblesOfRarity = getCollectibles(rarity.id)
         const collectible = collectiblesOfRarity[Math.floor(Math.random() * collectiblesOfRarity.length)]
         addCollectibleToUser(user.id, collectible.id)
+        client.sendMessage(config.groupId, `*[PACK] ${user.username}* found *${collectible.name}* (${rarities[collectible.rarity_id].name})`)
         res.code(200).send(collectible)
     })
 }
