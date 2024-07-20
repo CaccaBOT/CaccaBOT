@@ -22,7 +22,9 @@ module.exports = async function (fastify, options) {
         const collectiblesOfRarity = getCollectibles(rarity.id)
         const collectible = collectiblesOfRarity[Math.floor(Math.random() * collectiblesOfRarity.length)]
         addCollectibleToUser(user.id, collectible.id)
-        client.sendMessage(config.groupId, `*[PACK] ${user.username}* found *${collectible.name}* (${rarities[collectible.rarity_id].name})`)
+        if (config.whatsappModuleEnabled) {
+            client.sendMessage(config.groupId, `*[PACK] ${user.username}* found *${collectible.name}* (${rarities[collectible.rarity_id].name})`)
+        }
         res.code(200).send(collectible)
     })
 }

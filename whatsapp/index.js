@@ -30,7 +30,6 @@ client.on('ready', () => {
 			commands.push(cmd)
 			console.info(`${file} was loaded`)
 		})
-	initDatabase()
 	console.log('Successfully logged in!')
 })
 

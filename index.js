@@ -1,5 +1,6 @@
 const server = require('fastify')({bodyLimit: 8388608})
 const { client } = require('./whatsapp/index')
+const { initDatabase } = require('./database/index')
 const dotenv = require('dotenv')
 const config = require('./config.json')
 const fs = require('fs')
@@ -90,6 +91,7 @@ server.listen(
 			console.error(err)
 			process.exit(1)
 		}
+		initDatabase()
 		console.log('[READY] CaccaBOT on ' + address)
 	}
 )
