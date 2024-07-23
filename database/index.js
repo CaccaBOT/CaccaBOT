@@ -126,7 +126,12 @@ async function login(username, password) {
 }
 
 function getUserByToken(token) {
-	return db.prepare(`SELECT * FROM user WHERE token = ?`).get(token)
+	const user = db.prepare(`SELECT * FROM user WHERE token = ?`).get(token)
+	if (user) {
+		user.frozen = Boolean(user.frozen)
+	}
+
+	return user
 }
 
 function generateToken(id) {
@@ -161,7 +166,7 @@ function getUserCollectibles(user) {
 }
 
 function setMoney(user, amount) {
-	db.prepare(`UPDATE user SET money = ? WHERE id = ?`).run(user, amount)
+	db.prepare(`UPDATE user SET money = ? WHERE id = ?`).run(amount, user)
 }
 
 function addCollectibleToUser(user, collectible) {

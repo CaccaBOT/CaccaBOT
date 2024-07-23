@@ -10,6 +10,9 @@ const config = require('../../config.json')
 
 module.exports = async function (fastify, options) {
     fastify.get('/open', async (req, res) => {
+
+        res.code(401).send({error: 'This route will be available soon'})
+
         const user = await authenticate(req, res)
 
         if (user.money < 5) {
@@ -21,6 +24,8 @@ module.exports = async function (fastify, options) {
         const rarity = pickRarity(rarities)
         const collectiblesOfRarity = getCollectibles(rarity.id)
         const collectible = collectiblesOfRarity[Math.floor(Math.random() * collectiblesOfRarity.length)]
+        delete collectible.rarity_id
+        collectible.rarity = rarity.name
         addCollectibleToUser(user.id, collectible.id)
         if (config.whatsappModuleEnabled) {
             client.sendMessage(config.groupId, `*[PACK] ${user.username}* found *${collectible.name}* (${rarities[collectible.rarity_id].name})`)
