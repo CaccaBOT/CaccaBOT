@@ -12,11 +12,13 @@ module.exports = async function (fastify, options) {
     fastify.get('/open', async (req, res) => {
 
         res.code(401).send({error: 'This route will be available soon'})
+        return
 
         const user = await authenticate(req, res)
 
         if (user.money < 5) {
             res.code(403).send({error: 'You can\'t afford this item'})
+            return
         }
 
         setMoney(user.id, user.money - 5)
