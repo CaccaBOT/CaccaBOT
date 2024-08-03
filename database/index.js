@@ -160,10 +160,18 @@ function createUser(id, username, bio) {
 }
 
 function getUserCollectibles(user) {
-	return db.prepare(`SELECT c.* FROM collectible c
-		JOIN user_collectible uc ON (uc.collectible_id = c.id)
-		JOIN user u ON (uc.user_id = u.id) WHERE u.id = ?`).all(user)
+    return db.prepare(`
+        SELECT c.name, c.description, c.asset_url, r.name as rarity, COUNT(uc.collectible_id) AS quantity
+        FROM collectible c
+        JOIN user_collectible uc ON uc.collectible_id = c.id
+        JOIN user u ON uc.user_id = u.id
+        JOIN rarity r ON c.rarity_id = r.id
+        WHERE u.id = ?
+        GROUP BY c.id, r.name
+        ORDER BY r.id DESC
+    `).all(user)
 }
+
 
 function setMoney(user, amount) {
 	db.prepare(`UPDATE user SET money = ? WHERE id = ?`).run(amount, user)
@@ -215,10 +223,6 @@ function addPoop(id) {
 		id,
 		new Date().toISOString()
 	)
-
-	if (new Date().getTime() > new Date('2024-07-10').getTime()) {
-		db.prepare(`UPDATE user SET money = (SELECT money FROM user WHERE id = ?) + 1 WHERE id = ?`).run(id, id)
-	}
 }
 
 function addPoopWithTimestamp(id, timestamp) {
@@ -443,7 +447,7 @@ function poopStatsFromUserWithFilter(id, year, month) {
 	const monthlyLeaderboardPosition = poopLeaderboardWithFilter(
 		year,
 		month
-	).find((x) => x.id === id).rank
+	).find((x) => x.id === id)?.rank ?? 0
 	const streak = poopStreak(id)
 	const poops = getPoopsFromUserWithFilter(id, year, month)
 	const poopAverage = parseFloat((poops.length / daysConsidered).toFixed(2))
