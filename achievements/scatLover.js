@@ -1,6 +1,7 @@
 module.exports = {
-	id: 'FIRST_POOP',
+	id: 'SCAT_LOVER',
 	check: function (poop, user, message) {
 		//TODO: write implementation
+		// 69 days of streak
 	},
 }
