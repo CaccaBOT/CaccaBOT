@@ -13,7 +13,7 @@ module.exports = {
 		const user = getUserProfileByPhone(message.author)
 		if (!user.id) {
 			message.reply(
-				`You don't have a poop profile.\nIt'll be automatically created when you poop the first time`
+				`❌ You don't have a poop profile.\nIt'll be automatically created when you poop the first time`,
 			)
 			return
 		}
@@ -27,9 +27,11 @@ module.exports = {
 				let username = info.args[1]
 				const isUsernameAvailable =
 					getUserProfileByUsername(user.username).id == null
-				if (isUsernameAvailable) {
-					user.username = username
+				if (!isUsernameAvailable) {
+					message.reply('❌ Username not available')
+					break
 				}
+				user.username = username
 				updateUsername(user.id, username)
 				break
 			case 'bio':
@@ -38,7 +40,7 @@ module.exports = {
 				updateBio(user.id, bio)
 				break
 			default:
-				message.reply('Invalid argument\nAvailable: pic, username, bio')
+				message.reply('❌ Invalid argument\nAvailable: pic, username, bio')
 				return
 		}
 		message.reply('✅ Saved')

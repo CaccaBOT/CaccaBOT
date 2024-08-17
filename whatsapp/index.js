@@ -52,8 +52,8 @@ client.on('message_create', async (message) => {
 		message.reply(
 			replies[Math.floor(Math.random() * replies.length)].replace(
 				'{streak}',
-				streak
-			)
+				streak,
+			),
 		)
 		const poop = getLastPoop()
 		checkAchievements(poop, foundUser, message)
@@ -110,9 +110,11 @@ async function parseMessage(message) {
 
 	if (!config.groupId && info.isCommand) {
 		message.reply(
-			'Group ID: ' + chat.id._serialized + '\n' +
-			'Please paste this string in your config.json ' +
-			'on the field groupId before using CaccaBOT'
+			'Group ID: ' +
+				chat.id._serialized +
+				'\n' +
+				'Please paste this string in your config.json ' +
+				'on the field groupId before using CaccaBOT',
 		)
 		return
 	}

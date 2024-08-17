@@ -111,6 +111,284 @@ function initDatabase() {
     `)
 }
 
+function getTotalPoopsPerDay() {
+	return db
+		.prepare(
+			`
+			WITH RECURSIVE date_series(date) AS (
+				SELECT MIN(DATE(timestamp)) 
+				FROM poop
+				UNION ALL
+				SELECT DATE(date, '+1 day')
+				FROM date_series
+				WHERE date < (SELECT MAX(DATE(timestamp)) FROM poop)
+			)
+			SELECT 
+				date_series.date as date, 
+				COALESCE(COUNT(p.id), 0) as poops
+			FROM 
+				date_series
+			LEFT JOIN 
+				poop p 
+			ON 
+				date_series.date = DATE(p.timestamp)
+			GROUP BY 
+				date_series.date
+			ORDER BY 
+				date_series.date
+			`,
+		)
+		.all()
+		.reduce((acc, { date, poops }) => {
+			acc[date] = poops
+			return acc
+		}, {})
+}
+
+function getUserCount() {
+	return db.prepare(`SELECT COUNT(*) as totalUsers FROM user`).get().totalUsers
+}
+
+function getMonthlyUserCount(date) {
+	return db
+		.prepare(
+			`
+	SELECT COUNT(DISTINCT u.id) as monthlyUsers
+	FROM user u
+	JOIN poop p ON u.id = p.user_id
+	WHERE strftime('%Y-%m', p.timestamp) = strftime('%Y-%m', ?)
+	`,
+		)
+		.get(date).monthlyUsers
+}
+
+function getCirculatingMoney() {
+	return db.prepare(`SELECT SUM(money) as circulatingMoney FROM user`).get()
+		.circulatingMoney
+}
+
+function getCirculatingMoneyWithAssets() {
+	return db
+		.prepare(
+			`SELECT (COALESCE(SUM(u.money), 0) + COALESCE(COUNT(uc.id), 0) * 5) as circulatingMoneyWithAssets
+            FROM user u 
+            LEFT JOIN user_collectible uc ON u.id = uc.user_id`,
+		)
+		.get().circulatingMoneyWithAssets
+}
+
+function getDailyPoopCount(date) {
+	const currentCount = db
+		.prepare(
+			`
+        SELECT COUNT(*) AS dailyPoops
+        FROM poop
+        WHERE DATE(timestamp) = DATE(?)
+    `,
+		)
+		.get(date).dailyPoops
+
+	const previousCount = db
+		.prepare(
+			`
+        SELECT COUNT(*) AS previousDailyPoops
+        FROM poop
+        WHERE DATE(timestamp) = DATE(?, '-1 day')
+    `,
+		)
+		.get(date).previousDailyPoops
+
+	const trend =
+		previousCount > 0
+			? ((currentCount - previousCount) / previousCount) * 100
+			: currentCount > 0
+				? 100
+				: 0
+
+	return { poops: currentCount, trend: Math.round(trend) }
+}
+
+function getWeeklyPoopCount(date) {
+	// Calculate the start of the current week (Monday)
+	const startOfCurrentWeek = db
+		.prepare("SELECT DATE(?, 'weekday 0', '-6 days') AS startOfWeek")
+		.get(date).startOfWeek
+
+	// Calculate the start of the previous week (Monday of the previous week)
+	const startOfPreviousWeek = db
+		.prepare("SELECT DATE(?, 'weekday 0', '-13 days') AS startOfPreviousWeek")
+		.get(date).startOfPreviousWeek
+
+	// Calculate the end of the current week (Sunday)
+	const endOfCurrentWeek = db
+		.prepare("SELECT DATE(?, 'weekday 0') AS endOfWeek")
+		.get(date).endOfWeek
+
+	// Calculate the end of the previous week (Sunday of the previous week)
+	const endOfPreviousWeek = db
+		.prepare("SELECT DATE(?, 'weekday 0', '-7 days') AS endOfPreviousWeek")
+		.get(date).endOfPreviousWeek
+
+	// Get the poop count for the current week
+	const currentCount = db
+		.prepare(
+			`
+            SELECT COUNT(*) AS weeklyPoops
+            FROM poop
+            WHERE DATE(timestamp) BETWEEN ? AND ?
+        `,
+		)
+		.get(startOfCurrentWeek, endOfCurrentWeek).weeklyPoops
+
+	// Get the poop count for the previous week
+	const previousCount = db
+		.prepare(
+			`
+            SELECT COUNT(*) AS previousWeeklyPoops
+            FROM poop
+            WHERE DATE(timestamp) BETWEEN ? AND ?
+        `,
+		)
+		.get(startOfPreviousWeek, endOfPreviousWeek).previousWeeklyPoops
+
+	// Calculate the trend percentage
+	const trend =
+		previousCount > 0
+			? ((currentCount - previousCount) / previousCount) * 100
+			: currentCount > 0
+				? 100
+				: 0
+
+	// Return the poop count and trend percentage
+	return { poops: currentCount, trend: Math.round(trend) }
+}
+
+function getMonthlyPoopCount(date) {
+	const currentCount = db
+		.prepare(
+			`
+        SELECT COUNT(*) AS monthlyPoops
+        FROM poop
+        WHERE strftime('%Y-%m', timestamp) = strftime('%Y-%m', ?)
+    `,
+		)
+		.get(date).monthlyPoops
+
+	const previousCount = db
+		.prepare(
+			`
+        SELECT COUNT(*) AS previousMonthlyPoops
+        FROM poop
+        WHERE strftime('%Y-%m', timestamp) = strftime('%Y-%m', DATE(?, '-1 month'))
+    `,
+		)
+		.get(date).previousMonthlyPoops
+
+	const trend =
+		previousCount > 0
+			? ((currentCount - previousCount) / previousCount) * 100
+			: currentCount > 0
+				? 100
+				: 0
+
+	return { poops: currentCount, trend: Math.round(trend) }
+}
+
+function getTotalPoopCount() {
+	return db
+		.prepare(
+			`
+	SELECT COUNT(*) AS poops
+	FROM poop
+	`,
+		)
+		.get()
+}
+
+function getDailyTopPooper(date) {
+	return db
+		.prepare(
+			`
+        SELECT u.id, u.username, u.pfp, COUNT(p.id) as poops
+        FROM user u
+        JOIN poop p ON u.id = p.user_id
+        WHERE DATE(p.timestamp) = DATE(?)
+        GROUP BY u.id
+        ORDER BY poops DESC
+        LIMIT 1
+    `,
+		)
+		.get(date)
+}
+
+function getWeeklyTopPooper(date) {
+	return db
+		.prepare(
+			`
+        SELECT u.id, u.username, u.pfp, COUNT(p.id) as poops
+        FROM user u
+        JOIN poop p ON u.id = p.user_id
+        WHERE DATE(p.timestamp) BETWEEN 
+            DATE(?, 'weekday 0', '-6 days') AND 
+            DATE(?, 'weekday 0')
+        GROUP BY u.id
+        ORDER BY poops DESC
+        LIMIT 1
+    `,
+		)
+		.get(date, date)
+}
+
+function getMonthlyTopPooper(date) {
+	return db
+		.prepare(
+			`
+        SELECT u.id, u.username, u.pfp, COUNT(p.id) as poops
+        FROM user u
+        JOIN poop p ON u.id = p.user_id
+        WHERE strftime('%Y-%m', p.timestamp) = strftime('%Y-%m', ?)
+        GROUP BY u.id
+        ORDER BY poops DESC
+        LIMIT 1
+    `,
+		)
+		.get(date)
+}
+
+function getTopPooper() {
+	return db
+		.prepare(
+			`
+        SELECT u.id, u.username, u.pfp, COUNT(p.id) as poops
+        FROM user u
+        JOIN poop p ON u.id = p.user_id
+        GROUP BY u.id
+        ORDER BY poops DESC
+        LIMIT 1
+    `,
+		)
+		.get()
+}
+
+function getMonthlyPoopDistribution(date) {
+	return db
+		.prepare(
+			`
+	SELECT 
+		u.id,
+		u.username,
+		u.pfp,
+		ROUND((COUNT(p.id) * 100.0 / (SELECT COUNT(*) FROM poop WHERE strftime('%Y-%m', timestamp) = strftime('%Y-%m', ?))), 2) as percentage
+	FROM user u
+	JOIN poop p ON u.id = p.user_id
+	WHERE strftime('%Y-%m', p.timestamp) = strftime('%Y-%m', ?)
+	GROUP BY u.id, u.username
+	ORDER BY percentage DESC
+`,
+		)
+		.all(date, date)
+}
+
 async function login(username, password) {
 	const user = db.prepare(`SELECT * FROM user WHERE username = ?`).get(username)
 
@@ -155,12 +433,14 @@ function createUser(id, username, bio) {
 	id = hashId(id)
 
 	db.prepare(
-		`INSERT INTO user (id, phone, username, bio) VALUES (?, ?, ?, ?)`
+		`INSERT INTO user (id, phone, username, bio) VALUES (?, ?, ?, ?)`,
 	).run(id, phone, username, bio)
 }
 
 function getUserCollectibles(user) {
-    return db.prepare(`
+	return db
+		.prepare(
+			`
         SELECT c.name, c.description, c.asset_url, r.name as rarity, COUNT(uc.collectible_id) AS quantity
         FROM collectible c
         JOIN user_collectible uc ON uc.collectible_id = c.id
@@ -169,20 +449,23 @@ function getUserCollectibles(user) {
         WHERE u.id = ?
         GROUP BY c.id, r.name
         ORDER BY r.id DESC
-    `).all(user)
+    `,
+		)
+		.all(user)
 }
-
 
 function setMoney(user, amount) {
 	db.prepare(`UPDATE user SET money = ? WHERE id = ?`).run(amount, user)
 }
 
 function addCollectibleToUser(user, collectible) {
-	db.prepare(`INSERT INTO user_collectible(user_id, collectible_id) VALUES(?, ?)`).run(user, collectible)
+	db.prepare(
+		`INSERT INTO user_collectible(user_id, collectible_id) VALUES(?, ?)`,
+	).run(user, collectible)
 }
 
 function getRarities() {
-	return db.prepare(`SELECT * FROM rarity`).all();
+	return db.prepare(`SELECT * FROM rarity`).all()
 }
 
 function getCollectibles(rarity) {
@@ -192,7 +475,7 @@ function getCollectibles(rarity) {
 function getUserProfileById(id) {
 	return db
 		.prepare(
-			'SELECT u.*, COUNT(p.id) as poops FROM user u JOIN poop p ON u.id = p.user_id WHERE u.id = ?'
+			'SELECT u.*, COUNT(p.id) as poops FROM user u JOIN poop p ON u.id = p.user_id WHERE u.id = ?',
 		)
 		.get(id)
 }
@@ -200,7 +483,7 @@ function getUserProfileById(id) {
 function getUserProfileByUsername(username) {
 	return db
 		.prepare(
-			'SELECT u.*, COUNT(p.id) as poops FROM user u JOIN poop p ON u.id = p.user_id WHERE u.username = ?'
+			'SELECT u.*, COUNT(p.id) as poops FROM user u JOIN poop p ON u.id = p.user_id WHERE u.username = ?',
 		)
 		.get(username)
 }
@@ -209,7 +492,7 @@ function getUserProfileByPhone(phone) {
 	phone = sanitizePhone(phone)
 	return db
 		.prepare(
-			'SELECT u.*, COUNT(p.id) as poops FROM user u LEFT JOIN poop p ON u.id = p.user_id WHERE u.phone = ?'
+			'SELECT u.*, COUNT(p.id) as poops FROM user u LEFT JOIN poop p ON u.id = p.user_id WHERE u.phone = ?',
 		)
 		.get(phone)
 }
@@ -221,21 +504,21 @@ function getLastPoop() {
 function addPoop(id) {
 	db.prepare(`INSERT INTO poop (user_id, timestamp) VALUES (?, ?)`).run(
 		id,
-		new Date().toISOString()
+		new Date().toISOString(),
 	)
 }
 
 function addPoopWithTimestamp(id, timestamp) {
 	db.prepare(`INSERT INTO poop (user_id, timestamp) VALUES (?, ?)`).run(
 		id,
-		timestamp
+		timestamp,
 	)
 }
 
 function poopLeaderboard() {
-    const result = db
-        .prepare(
-            `
+	const result = db
+		.prepare(
+			`
             SELECT u.id, u.phone, u.username, u.pfp, u.bio, u.frozen, u.money,
                    poops,
                    ROW_NUMBER() OVER (ORDER BY poops DESC) AS rank
@@ -247,21 +530,20 @@ function poopLeaderboard() {
             ) AS poops
             JOIN user u ON poops.user_id = u.id
             ORDER BY poops DESC
-        `
-        )
-        .all();
+        `,
+		)
+		.all()
 
-    return result.map(row => ({
-        ...row,
-        frozen: Boolean(row.frozen)
-    }))
+	return result.map((row) => ({
+		...row,
+		frozen: Boolean(row.frozen),
+	}))
 }
 
-
 function poopLeaderboardWithFilter(year, month) {
-    const result = db
-        .prepare(
-            `
+	const result = db
+		.prepare(
+			`
         SELECT u.id, u.phone, u.username, u.pfp, u.bio, u.frozen, u.money, 
                poops,
                ROW_NUMBER() OVER (ORDER BY poops DESC) AS rank
@@ -275,21 +557,20 @@ function poopLeaderboardWithFilter(year, month) {
         ) AS poop_counts
         JOIN user u ON poop_counts.user_id = u.id
         ORDER BY poops DESC
-    `
-        )
-        .all(year.toString(), month.toString().padStart(2, '0'))
+    `,
+		)
+		.all(year.toString(), month.toString().padStart(2, '0'))
 
-		return result.map(row => ({
-			...row,
-			frozen: Boolean(row.frozen)
-		}))
+	return result.map((row) => ({
+		...row,
+		frozen: Boolean(row.frozen),
+	}))
 }
-
 
 function allPoop() {
 	return db
 		.prepare(
-			'SELECT p.*, u.username as username FROM poop p JOIN user u ON p.user_id = u.id'
+			'SELECT p.*, u.username as username FROM poop p JOIN user u ON p.user_id = u.id',
 		)
 		.all()
 }
@@ -307,7 +588,7 @@ function allPoopWithFilter(year, month) {
          FROM poop p
 		 JOIN user u
 		 ON (p.user_id = u.id)
-         WHERE p.timestamp >= ? AND p.timestamp <= ?`
+         WHERE p.timestamp >= ? AND p.timestamp <= ?`,
 		)
 		.all(startOfMonthIso, endOfMonthIso)
 }
@@ -315,7 +596,7 @@ function allPoopWithFilter(year, month) {
 function getPoopsFromUser(id) {
 	return db
 		.prepare(
-			'SELECT p.* FROM poop p JOIN user u ON p.user_id = u.id WHERE u.id = ?'
+			'SELECT p.* FROM poop p JOIN user u ON p.user_id = u.id WHERE u.id = ?',
 		)
 		.all(id)
 }
@@ -332,7 +613,7 @@ function getPoopsFromUserWithFilter(id, year, month) {
 			`SELECT p.*
          FROM poop p
          JOIN user u ON p.user_id = u.id
-         WHERE u.id = ? AND p.timestamp >= ? AND p.timestamp <= ?`
+         WHERE u.id = ? AND p.timestamp >= ? AND p.timestamp <= ?`,
 		)
 		.all(id, startOfMonthIso, endOfMonthIso)
 }
@@ -340,7 +621,7 @@ function getPoopsFromUserWithFilter(id, year, month) {
 function poopStatsFromUser(id) {
 	const now = new Date()
 	const todayStart = new Date(
-		Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate())
+		Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()),
 	)
 	const todayEnd = new Date(
 		Date.UTC(
@@ -350,8 +631,8 @@ function poopStatsFromUser(id) {
 			23,
 			59,
 			59,
-			999
-		)
+			999,
+		),
 	)
 
 	// Calculate start of the week and start of the month in UTC
@@ -370,19 +651,19 @@ function poopStatsFromUser(id) {
 	// Query the database
 	const todayPoops = db
 		.prepare(
-			`SELECT COUNT(*) as today FROM poop WHERE timestamp BETWEEN ? AND ? AND poop.user_id = ?`
+			`SELECT COUNT(*) as today FROM poop WHERE timestamp BETWEEN ? AND ? AND poop.user_id = ?`,
 		)
 		.get(today, todayEndSqlite, id)
 
 	const weeklyPoops = db
 		.prepare(
-			`SELECT COUNT(*) as week FROM poop WHERE timestamp >= ? AND poop.user_id = ?`
+			`SELECT COUNT(*) as week FROM poop WHERE timestamp >= ? AND poop.user_id = ?`,
 		)
 		.get(weekStart, id)
 
 	const monthlyPoops = db
 		.prepare(
-			`SELECT COUNT(*) as month FROM poop WHERE timestamp >= ? AND poop.user_id = ?`
+			`SELECT COUNT(*) as month FROM poop WHERE timestamp >= ? AND poop.user_id = ?`,
 		)
 		.get(monthStart, id)
 
@@ -408,7 +689,7 @@ function poopStreak(id) {
 			WHERE u.id = ?
 			GROUP BY days
 			ORDER BY days;
-		`
+		`,
 		)
 		.all(id)
 		.map((x) => x.days)
@@ -416,7 +697,7 @@ function poopStreak(id) {
 	days.push(
 		`${new Date().getFullYear()}-${(new Date().getMonth() + 1)
 			.toString()
-			.padStart(2, '0')}-${new Date().getDate().toString().padStart(2, '0')}`
+			.padStart(2, '0')}-${new Date().getDate().toString().padStart(2, '0')}`,
 	)
 
 	let streak = 0
@@ -444,10 +725,8 @@ function poopStatsFromUserWithFilter(id, year, month) {
 	} else {
 		daysConsidered = new Date(year, month, 0).getDate()
 	}
-	const monthlyLeaderboardPosition = poopLeaderboardWithFilter(
-		year,
-		month
-	).find((x) => x.id === id)?.rank ?? 0
+	const monthlyLeaderboardPosition =
+		poopLeaderboardWithFilter(year, month).find((x) => x.id === id)?.rank ?? 0
 	const streak = poopStreak(id)
 	const poops = getPoopsFromUserWithFilter(id, year, month)
 	const poopAverage = parseFloat((poops.length / daysConsidered).toFixed(2))
@@ -458,7 +737,7 @@ function poopStatsFromUserWithFilter(id, year, month) {
 function poopStats() {
 	const now = new Date()
 	const todayStart = new Date(
-		Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate())
+		Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()),
 	)
 	const todayEnd = new Date(
 		Date.UTC(
@@ -468,8 +747,8 @@ function poopStats() {
 			23,
 			59,
 			59,
-			999
-		)
+			999,
+		),
 	)
 
 	// Calculate start of the week and start of the month in UTC
@@ -488,7 +767,7 @@ function poopStats() {
 	// Query the database
 	const todayPoops = db
 		.prepare(
-			`SELECT COUNT(*) as today FROM poop WHERE timestamp BETWEEN ? AND ?`
+			`SELECT COUNT(*) as today FROM poop WHERE timestamp BETWEEN ? AND ?`,
 		)
 		.get(today, todayEndSqlite)
 
@@ -516,7 +795,7 @@ function updateUsername(id, username) {
         UPDATE user
         SET username = ?
         WHERE id = ?
-    `
+    `,
 	).run(username, id)
 }
 
@@ -526,7 +805,7 @@ function updateProfilePicture(id, picture) {
         UPDATE user
         SET pfp = ?
         WHERE id = ?
-    `
+    `,
 	).run(picture, id)
 }
 
@@ -536,7 +815,7 @@ function updateBio(id, bio) {
 		UPDATE user
 		SET bio = ?
 		WHERE id = ?
-	`
+	`,
 	).run(bio, id)
 }
 
@@ -586,5 +865,19 @@ module.exports = {
 	getCollectibles,
 	addCollectibleToUser,
 	getUserCollectibles,
+	getUserCount,
+	getMonthlyUserCount,
+	getCirculatingMoney,
+	getCirculatingMoneyWithAssets,
+	getDailyPoopCount,
+	getWeeklyPoopCount,
+	getMonthlyPoopCount,
+	getTotalPoopCount,
+	getDailyTopPooper,
+	getWeeklyTopPooper,
+	getMonthlyTopPooper,
+	getTopPooper,
+	getMonthlyPoopDistribution,
+	getTotalPoopsPerDay,
 	rawQuery,
 }

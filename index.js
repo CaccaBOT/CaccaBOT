@@ -1,4 +1,4 @@
-const server = require('fastify')({bodyLimit: 8388608})
+const server = require('fastify')({ bodyLimit: 8388608 })
 const { client } = require('./whatsapp/index')
 const { initDatabase } = require('./database/index')
 const dotenv = require('dotenv')
@@ -47,8 +47,8 @@ server.register(require('@fastify/autoload'), {
 })
 
 server.register(require('@fastify/static'), {
-	root: path.join(__dirname, "/public"),
-	prefix: '/public/'
+	root: path.join(__dirname, '/public'),
+	prefix: '/public/',
 })
 
 server.register(require('@fastify/cors'), {
@@ -62,7 +62,7 @@ server.addHook('onRequest', (req, res, done) => {
 	}
 	fs.appendFileSync(
 		`${__dirname}/logs/${new Date().toISOString().slice(0, 10)}.log`,
-		`${log}\n`
+		`${log}\n`,
 	)
 	console.info(log)
 	done()
@@ -93,5 +93,5 @@ server.listen(
 		}
 		initDatabase()
 		console.log('[READY] CaccaBOT on ' + address)
-	}
+	},
 )
