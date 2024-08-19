@@ -10,8 +10,8 @@ const config = require('../../config.json')
 
 module.exports = async function (fastify, options) {
 	fastify.get('/open', async (req, res) => {
-		res.code(401).send({error: 'This route will be available soon'})
-		return
+		// res.code(401).send({error: 'This route will be available soon'})
+		// return
 
 		const user = await authenticate(req, res)
 

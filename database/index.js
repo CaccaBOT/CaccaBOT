@@ -111,6 +111,10 @@ function initDatabase() {
     `)
 }
 
+function updateUsername(userId, username) {
+	db.prepare(`UPDATE user SET username = ? WHERE id = ?`).run(username, userId)
+}
+
 function getTotalPoopsPerDay() {
 	return db
 		.prepare(
@@ -879,5 +883,6 @@ module.exports = {
 	getTopPooper,
 	getMonthlyPoopDistribution,
 	getTotalPoopsPerDay,
+	updateUsername,
 	rawQuery,
 }
