@@ -458,14 +458,14 @@ function getUserCollectibles(user) {
 		.all(user)
 }
 
-function setMoney(user, amount) {
-	db.prepare(`UPDATE user SET money = ? WHERE id = ?`).run(amount, user)
+function setMoney(userId, amount) {
+	db.prepare(`UPDATE user SET money = ? WHERE id = ?`).run(amount, userId)
 }
 
-function addCollectibleToUser(user, collectible) {
+function addCollectibleToUser(userId, collectible) {
 	db.prepare(
 		`INSERT INTO user_collectible(user_id, collectible_id) VALUES(?, ?)`,
-	).run(user, collectible)
+	).run(userId, collectible)
 }
 
 function getRarities() {
@@ -505,18 +505,22 @@ function getLastPoop() {
 	return db.prepare(`SELECT * FROM poop ORDER BY id DESC LIMIT 1`).get()
 }
 
-function addPoop(id) {
+function addPoop(userId) {
 	db.prepare(`INSERT INTO poop (user_id, timestamp) VALUES (?, ?)`).run(
-		id,
+		userId,
 		new Date().toISOString(),
 	)
+
+	db.prepare(`UPDATE user SET money = (SELECT money FROM user WHERE id = ?) + 1 WHERE id = ?`).run(userId, userId)
 }
 
-function addPoopWithTimestamp(id, timestamp) {
+function addPoopWithTimestamp(userId, timestamp) {
 	db.prepare(`INSERT INTO poop (user_id, timestamp) VALUES (?, ?)`).run(
-		id,
+		userId,
 		timestamp,
 	)
+	
+	db.prepare(`UPDATE user SET money = (SELECT money FROM user WHERE id = ?) + 1 WHERE id = ?`).run(userId, userId)
 }
 
 function poopLeaderboard() {
