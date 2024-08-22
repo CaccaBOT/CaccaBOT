@@ -7,6 +7,7 @@ const {
 const { authenticate } = require('../../middleware/auth')
 const { client } = require('../../whatsapp/index')
 const config = require('../../config.json')
+const { MessageMedia } = require('whatsapp-web.js')
 
 module.exports = async function (fastify, options) {
 	fastify.get('/open', async (req, res) => {
@@ -32,10 +33,10 @@ module.exports = async function (fastify, options) {
 		collectible.rarity = rarity.name
 		addCollectibleToUser(user.id, collectible.id)
 		if (config.whatsappModuleEnabled) {
-			client.sendMessage(
-				config.groupId,
-				`*[PACK] ${user.username}* found *${collectible.name}* (${rarities[collectible.rarity_id].name})`,
-			)
+			const media = await MessageMedia.fromUrl(collectible.asset_url)
+			client.sendMessage(config.groupId, media, {
+				caption: `*[PACK] ${user.username}* found *${collectible.name}* (${collectible.rarity})`,
+			})
 		}
 		res.code(200).send(collectible)
 	})

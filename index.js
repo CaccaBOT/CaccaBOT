@@ -7,6 +7,22 @@ const fs = require('fs')
 const path = require('path')
 dotenv.config()
 
+console.log(`
+▄████▄   ▄▄▄       ▄████▄   ▄████▄   ▄▄▄       ▄▄▄▄    ▒█████  ▄▄▄█████▓
+▒██▀ ▀█  ▒████▄    ▒██▀ ▀█  ▒██▀ ▀█  ▒████▄    ▓█████▄ ▒██▒  ██▒▓  ██▒ ▓▒
+▒▓█    ▄ ▒██  ▀█▄  ▒▓█    ▄ ▒▓█    ▄ ▒██  ▀█▄  ▒██▒ ▄██▒██░  ██▒▒ ▓██░ ▒░
+▒▓▓▄ ▄██▒░██▄▄▄▄██ ▒▓▓▄ ▄██▒▒▓▓▄ ▄██▒░██▄▄▄▄██ ▒██░█▀  ▒██   ██░░ ▓██▓ ░ 
+▒ ▓███▀ ░ ▓█   ▓██▒▒ ▓███▀ ░▒ ▓███▀ ░ ▓█   ▓██▒░▓█  ▀█▓░ ████▓▒░  ▒██▒ ░ 
+░ ░▒ ▒  ░ ▒▒   ▓▒█░░ ░▒ ▒  ░░ ░▒ ▒  ░ ▒▒   ▓▒█░░▒▓███▀▒░ ▒░▒░▒░   ▒ ░░   
+  ░  ▒     ▒   ▒▒ ░  ░  ▒     ░  ▒     ▒   ▒▒ ░▒░▒   ░   ░ ▒ ▒░     ░    
+░          ░   ▒   ░        ░          ░   ▒    ░    ░ ░ ░ ░ ▒    ░      
+░ ░            ░  ░░ ░      ░ ░            ░  ░ ░          ░ ░           
+░                  ░        ░                        ░                    
+`)
+
+console.log('Loaded the following configuration')
+console.log(config)
+
 server.register(require('@fastify/swagger'), {
 	swagger: {
 		info: {
@@ -46,6 +62,12 @@ server.register(require('@fastify/autoload'), {
 	options: { prefix: '/api' },
 })
 
+server.addHook('onRoute', (routeOptions) => {
+	if (routeOptions.url.startsWith('/api') && routeOptions.method != 'HEAD') {
+		console.log(`[ENDPOINT] ${routeOptions.method} ${routeOptions.url}`)
+	}
+})
+
 server.register(require('@fastify/static'), {
 	root: path.join(__dirname, '/public'),
 	prefix: '/public/',
@@ -62,7 +84,7 @@ server.addHook('onRequest', (req, res, done) => {
 	}
 	fs.appendFileSync(
 		`${__dirname}/logs/${new Date().toISOString().slice(0, 10)}.log`,
-		`${log}\n`,
+		`${log}\n`
 	)
 	console.info(log)
 	done()
@@ -92,6 +114,6 @@ server.listen(
 			process.exit(1)
 		}
 		initDatabase()
-		console.log('[READY] CaccaBOT on ' + address)
-	},
+		console.log('[WEBSERVER] Ready on ' + address)
+	}
 )

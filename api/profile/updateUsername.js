@@ -17,8 +17,7 @@ module.exports = async function (fastify, options) {
 			return
 		}
 
-		const isUsernameAvailable =
-			getUserProfileByUsername(username).id == null
+		const isUsernameAvailable = getUserProfileByUsername(username).id == null
 		if (isUsernameAvailable) {
 			updateUsername(user.id, username)
 			res.code(200).send()

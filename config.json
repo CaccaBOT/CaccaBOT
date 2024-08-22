@@ -1,7 +1,8 @@
 {
 	"prefix": "cacca",
-	"version": "v4.3.1",
+	"version": "v4.4.0",
 	"frontendUrl": "https://caccabot.pages.dev",
 	"groupId": "120363283575526755@g.us",
-	"whatsappModuleEnabled": true
+	"whatsappModuleEnabled": true,
+	"monthlyPurge": true
 }

@@ -1,18 +1,20 @@
 const { Client, LocalAuth } = require('whatsapp-web.js')
 const QRCode = require('qrcode-terminal')
 const {
-	initDatabase,
 	addPoop,
 	getUserProfileByPhone,
 	poopStreak,
 	createUser,
 	getLastPoop,
+	deleteUser,
+	getInactiveUsers,
 } = require('../database/index')
 const { detectPoop } = require('../poop/parser')
 const config = require('../config.json')
 const fs = require('fs')
 const path = require('path')
 const replies = require('../storage/replies.json')
+const schedule = require('node-schedule')
 let commands = []
 
 const client = new Client({
@@ -28,9 +30,41 @@ client.on('ready', () => {
 		.forEach((file) => {
 			let cmd = require(`${path.resolve('./commands')}/${file}`)
 			commands.push(cmd)
-			console.info(`${file} was loaded`)
+			console.info(`[COMMAND] ${cmd.name}`)
 		})
-	console.log('Successfully logged in!')
+	console.log('[WHATSAPP] Ready on ' + client.info.wid.user)
+
+	if (config.monthlyPurge) {
+		console.warn(
+			'[WARNING] Monthly Purge is enabled, users who have been ' +
+				'inactive for more than a month will be deleted at month reset!'
+		)
+		schedule.scheduleJob('0 0 1 * *', async () => {
+			console.info(
+				'[PURGE] Running Monthly Purge for ' + new Date().toISOString()
+			)
+			let purgeMsg = '*Running Monthly Purge*\n'
+			const chat = await client.getChatById(config.groupId)
+			if (chat.isGroup) {
+				const inactiveUsers = getInactiveUsers(
+					new Date(
+						new Date().getFullYear(),
+						new Date().getMonth() - 1,
+						new Date().getDay()
+					)
+				)
+				purgeMsg += inactiveUsers.map((u) => u.username).join('\n')
+				for (const user of inactiveUsers) {
+					deleteUser(user.id)
+					if (inactiveUsers.map((u) => u.phone).includes(user.id.user)) {
+						await chat.removeParticipants([user.id._serialized])
+					}
+				}
+			}
+
+			chat.sendMessage(purgeMsg)
+		})
+	}
 })
 
 client.on('message_create', async (message) => {
@@ -52,8 +86,8 @@ client.on('message_create', async (message) => {
 		message.reply(
 			replies[Math.floor(Math.random() * replies.length)].replace(
 				'{streak}',
-				streak,
-			),
+				streak
+			)
 		)
 		const poop = getLastPoop()
 		checkAchievements(poop, foundUser, message)
@@ -114,7 +148,7 @@ async function parseMessage(message) {
 				chat.id._serialized +
 				'\n' +
 				'Please paste this string in your config.json ' +
-				'on the field groupId before using CaccaBOT',
+				'on the field groupId before using CaccaBOT'
 		)
 		return
 	}

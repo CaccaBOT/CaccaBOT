@@ -3,15 +3,12 @@ const cases = [
 	'cacca+=1',
 	'++cacca',
 	'cacca=cacca+1',
-	'cacca=cacca+1',
 	'cacca=cacca+=1',
-	'cacca=cacca++',
 	'cacca=1+cacca',
 	'cacca-=(-1)',
-	'cacca/=0.5',
 	'cacca|=1',
 	'int*ptr=&cacca;(*ptr)++',
-	'cacca=~((~cacca)+1)',
+	'cacca=~((~cacca)-1)',
 ]
 
 function detectPoop(message) {
