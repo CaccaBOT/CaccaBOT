@@ -1,7 +1,11 @@
+const moment = require('moment')
 module.exports = {
 	id: 'SHITTY_FAGGOT',
 	check: function (poop, user, message) {
-		//TODO: write implementation
-		//poop during pride month
+		const month = moment(poop.timestamp).month
+		if (month == 6) {
+			addAchievementToUser(user.id, this.id)
+			message.reply('Ottenuto achievement: Frocio di merda!')
+		}
 	},
 }

@@ -1,7 +1,12 @@
+const moment = require('moment')
 module.exports = {
 	id: 'SKIBIDI_TOILET',
 	check: function (poop, user, message) {
-		//TODO: write implementation
-		//poop at around 03:00 (to evoke skibidi toilet)
+		const hour = moment(poop.timestamp).hour()
+		const minute = moment(poop.timestamp).minute()
+		if ((hour == 3 && minute <= 5) || (hour == 2 && minute >= 55)) {
+			addAchievementToUser(user.id, this.id)
+			message.reply('Ottenuto achievement: Skibidi toilet!')
+		}
 	},
 }

@@ -10,7 +10,7 @@ module.exports = {
 		const user = getUserProfileByPhone(message.author)
 		if (!user.id) {
 			message.reply(
-				`❌ You don't have a poop profile.\nIt'll be automatically created when you poop the first time`
+				`❌ You don't have a poop profile.\nIt'll be automatically created when you poop the first time`,
 			)
 			return
 		}
@@ -19,7 +19,7 @@ module.exports = {
 		updatePassword(user.id, password)
 		client.sendMessage(
 			message.author,
-			`Your CaccaBOT password is: ${password}\nRemember to change it as soon as possible\n${config.frontendUrl}`
+			`Your CaccaBOT password is: ${password}\nRemember to change it as soon as possible\n${config.frontendUrl}`,
 		)
 	},
 }

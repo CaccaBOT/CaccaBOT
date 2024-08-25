@@ -1,7 +1,11 @@
+const { poopStreak, addAchievementToUser } = require('../database/index')
 module.exports = {
 	id: 'SCAT_LOVER',
 	check: function (poop, user, message) {
-		//TODO: write implementation
-		// 69 days of streak
+		const streak = poopStreak(user.id)
+		if (streak >= 69) {
+			addAchievementToUser(user.id, this.id)
+			message.reply('Ottenuta achievement: Scat lover!')
+		}
 	},
 }

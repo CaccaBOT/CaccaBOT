@@ -84,7 +84,7 @@ server.addHook('onRequest', (req, res, done) => {
 	}
 	fs.appendFileSync(
 		`${__dirname}/logs/${new Date().toISOString().slice(0, 10)}.log`,
-		`${log}\n`
+		`${log}\n`,
 	)
 	console.info(log)
 	done()
@@ -115,5 +115,5 @@ server.listen(
 		}
 		initDatabase()
 		console.log('[WEBSERVER] Ready on ' + address)
-	}
+	},
 )

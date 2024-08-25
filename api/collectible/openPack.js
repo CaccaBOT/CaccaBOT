@@ -11,7 +11,7 @@ const { MessageMedia } = require('whatsapp-web.js')
 
 module.exports = async function (fastify, options) {
 	fastify.get('/open', async (req, res) => {
-		res.code(401).send({error: 'This route will be available soon'})
+		res.code(401).send({ error: 'This route will be available soon' })
 		return
 
 		const user = await authenticate(req, res)

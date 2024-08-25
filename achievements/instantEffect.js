@@ -1,7 +1,12 @@
+const moment = require('moment')
+const { addAchievementToUser } = require('../database')
 module.exports = {
 	id: 'INSTANT_EFFECT',
 	check: function (poop, user, message) {
-		//TODO: write implementation
-		//poop after lunch (12:00 - 14:00)
+		const timestamp = moment(poop.timestamp).hour()
+		if (timestamp >= 12 && timestamp < 14) {
+			addAchievementToUser(user.id, this.id)
+			message.reply('Ottenuto achievement: Presa diretta')
+		}
 	},
 }
