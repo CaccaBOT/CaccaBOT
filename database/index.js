@@ -206,13 +206,19 @@ function getCirculatingMoney() {
 }
 
 function getCirculatingMoneyWithAssets() {
-	return db
-		.prepare(
-			`SELECT (COALESCE(SUM(u.money), 0) + COALESCE(COUNT(uc.id), 0) * 5) as circulatingMoneyWithAssets
-            FROM user u 
-            LEFT JOIN user_collectible uc ON u.id = uc.user_id`
-		)
-		.get().circulatingMoneyWithAssets
+    return db
+        .prepare(
+            `SELECT 
+                COALESCE(SUM(u.money), 0) + 
+                COALESCE(SUM(user_collectible_count * 5), 0) AS circulatingMoneyWithAssets
+            FROM user u
+            LEFT JOIN (
+                SELECT user_id, COUNT(id) AS user_collectible_count
+                FROM user_collectible
+                GROUP BY user_id
+            ) uc ON u.id = uc.user_id`
+        )
+        .get().circulatingMoneyWithAssets;
 }
 
 function getDailyPoopCount(date) {
