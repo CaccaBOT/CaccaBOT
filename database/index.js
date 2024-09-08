@@ -602,7 +602,7 @@ function createUser(id, username, bio) {
 	).run(id, phone, username, bio)
 }
 
-function getUserCollectibles(user) {
+function getUserCollectibles(userId) {
 	return db
 		.prepare(
 			`
@@ -616,7 +616,7 @@ function getUserCollectibles(user) {
         ORDER BY r.id DESC
     `,
 		)
-		.all(user)
+		.all(userId)
 }
 
 function setMoney(userId, amount) {
@@ -635,6 +635,10 @@ function getRarities() {
 
 function getCollectibles(rarity) {
 	return db.prepare(`SELECT * FROM collectible WHERE rarity_id = ?`).all(rarity)
+}
+
+function getAllCollectibles() {
+	return db.prepare(`SELECT * FROM collectible`).all()
 }
 
 function getUserProfileById(id) {
@@ -1057,6 +1061,7 @@ module.exports = {
 	setMoney,
 	getRarities,
 	getCollectibles,
+	getAllCollectibles,
 	addCollectibleToUser,
 	getUserCollectibles,
 	getUserCount,

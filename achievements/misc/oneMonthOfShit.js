@@ -1,4 +1,4 @@
-const { poopStreak, addAchievementToUser } = require('../database/index')
+const { poopStreak, addAchievementToUser } = require('../../database/')
 module.exports = {
 	id: 'ONE_MONTH_OF_SHIT',
 	check: function (poop, user, message) {

@@ -1,5 +1,5 @@
 const moment = require('moment')
-const { addAchievementToUser } = require('../database')
+const { addAchievementToUser } = require('../../database')
 module.exports = {
 	id: 'GOD_IS_SHIT',
 	check: function (poop, user, message) {
@@ -10,7 +10,7 @@ module.exports = {
 		const easter = getEaster(moment(poop.timestamp).year())
 		if (timestamp[0] == easter[0] && timestamp[1] == easter[1]) {
 			addAchievementToUser(user.id, this.id)
-			message.reply('Ottenuto achievement: Dio merda')
+			message.reply('Ottenuto achievement: Dio merda!')
 		}
 	},
 }

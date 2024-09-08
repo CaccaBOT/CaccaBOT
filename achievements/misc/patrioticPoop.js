@@ -1,5 +1,5 @@
 const moment = require('moment')
-const { addAchievementToUser } = require('../database/index')
+const { addAchievementToUser } = require('../../database/')
 module.exports = {
 	id: 'PATRIOTIC_POOP',
 	check: function (poop, user, message) {

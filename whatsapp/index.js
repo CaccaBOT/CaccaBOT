@@ -16,7 +16,7 @@ const fs = require('fs')
 const path = require('path')
 const replies = require('../storage/replies.json')
 const schedule = require('node-schedule')
-const { check } = require('../achievements/instantEffect')
+const { check } = require('../achievements/misc/instantEffect')
 let commands = []
 
 const client = new Client({
@@ -97,13 +97,11 @@ client.on('message_create', async (message) => {
 })
 
 function checkAchievements(poop, user, message) {
-	const achievementsDir = path.resolve(`${__dirname}/../achievements`)
+	const achievementsDir = path.resolve(`${__dirname}/../achievements/misc`)
 	fs.readdirSync(achievementsDir).forEach((file) => {
-		if (file.endsWith('.js')) {
-			const achievement = require(`${achievementsDir}/${file}`)
-			if (!checkAchievementForUser(user.id, achievement.id)) {
-				achievement.check(poop, user, message)
-			}
+		const achievement = require(`${achievementsDir}/${file}`)
+		if (!checkAchievementForUser(user.id, achievement.id)) {
+			achievement.check(poop, user, message)
 		}
 	})
 }

@@ -1,7 +1,11 @@
+const { addAchievementToUser } = require('../../database')
+const { client } = require('../../index')
+
 module.exports = {
 	id: 'I_SAID_THEY_ARE_SHITS',
-	check: function (poop, user, message) {
-		//TODO: write implementation
-		//collect a merdume collectible
+	check: function (collectible, user) {
+		if (collectible.rarity == 'Merdume') {
+			addAchievementToUser(user.id, this.id)
+		}
 	},
 }
