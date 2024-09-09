@@ -7,7 +7,7 @@ module.exports = {
 		const minute = moment(poop.timestamp).minute()
 		if (hour == 1 && minute == 4) {
 			addAchievementToUser(user.id, this.id)
-			message.reply('Ottenuta achievement: Cacca a rotelle!')
+			message.reply('Ottenuto achievement: Cacca a rotelle!')
 		}
 	},
 }

@@ -4,6 +4,7 @@ const {
 	getCollectibles,
 	addCollectibleToUser,
 	checkAchievementForUser,
+	addOpenedPack,
 } = require('../../database')
 const { authenticate } = require('../../middleware/auth')
 const { client } = require('../../whatsapp/index')
@@ -16,10 +17,12 @@ module.exports = async function (fastify, options) {
 	fastify.get('/open', async (req, res) => {
 		const user = await authenticate(req, res)
 
-		// if (user.money < 5) {
-		// 	res.code(403).send({ error: "You can't afford this item" })
-		// 	return
-		// }
+		res.code(401).send({error: 'This route will be available soon'})
+		return
+		if (user.money < 5) {
+			res.code(403).send({ error: "You can't afford this item" })
+			return
+		}
 
 		setMoney(user.id, user.money - 5)
 		const rarities = getRarities()
@@ -32,12 +35,13 @@ module.exports = async function (fastify, options) {
 		delete collectible.rarity_id
 		collectible.rarity = rarity.name
 		addCollectibleToUser(user.id, collectible.id)
-		// if (config.whatsappModuleEnabled) {
-		// 	const media = await MessageMedia.fromUrl(collectible.asset_url)
-		// 	client.sendMessage(config.groupId, media, {
-		// 		caption: `*[PACK] ${user.username}* found *${collectible.name}* (${collectible.rarity})`,
-		// 	})
-		// }
+		addOpenedPack(user.id)
+		if (config.whatsappModuleEnabled) {
+			const media = await MessageMedia.fromUrl(collectible.asset_url)
+			client.sendMessage(config.groupId, media, {
+				caption: `*[PACK] ${user.username}* found *${collectible.name}* (${collectible.rarity})`,
+			})
+		}
 		checkPackAchievements(collectible, user)
 		res.code(200).send(collectible)
 	})

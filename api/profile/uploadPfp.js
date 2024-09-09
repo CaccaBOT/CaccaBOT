@@ -1,4 +1,7 @@
-const { updateProfilePicture } = require('../../database')
+const {
+	updateProfilePicture,
+	checkAchievementForUser,
+} = require('../../database')
 const { authenticate } = require('../../middleware/auth')
 const fs = require('fs')
 const path = require('path')
@@ -33,7 +36,17 @@ module.exports = async function (fastify, options) {
 
 		const imageUrl = `https://caccabot.duckdns.org/public/pfp/${filename}`
 		updateProfilePicture(user.id, imageUrl)
-
+		checkAchievements(user)
 		return res.send({ url: imageUrl })
+	})
+}
+
+function checkAchievements(user) {
+	const achievementsDir = path.resolve(`${__dirname}/../../achievements/action`)
+	fs.readdirSync(achievementsDir).forEach((file) => {
+		const achievement = require(`${achievementsDir}/${file}`)
+		if (!checkAchievementForUser(user.id, achievement.id)) {
+			achievement.check(user)
+		}
 	})
 }

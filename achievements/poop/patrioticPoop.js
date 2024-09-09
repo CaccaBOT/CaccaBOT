@@ -5,9 +5,9 @@ module.exports = {
 	check: function (poop, user, message) {
 		const month = moment(poop.timestamp).month
 		const day = moment(poop.timestamp).day
-		if (month == 6 && day == 2) {
+		if (month == 5 && day == 2) {
 			addAchievementToUser(user.id, this.id)
-			message.reply('Ottenuta achievement: Merda patriottica!')
+			message.reply('Ottenuto achievement: Merda patriottica!')
 		}
 	},
 }

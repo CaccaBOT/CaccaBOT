@@ -4,7 +4,10 @@ const {
 	updateBio,
 	getUserProfileByPhone,
 	getUserProfileByUsername,
+	checkAchievementForUser,
 } = require('../database/index')
+const path = require('path')
+const fs = require('fs')
 
 module.exports = {
 	name: 'profile',
@@ -43,6 +46,17 @@ module.exports = {
 				message.reply('❌ Invalid argument\nAvailable: pic, username, bio')
 				return
 		}
+		checkAchievements(user)
 		message.reply('✅ Saved')
 	},
+}
+
+function checkAchievements(user) {
+	const achievementsDir = path.resolve(`${__dirname}/../achievements/action`)
+	fs.readdirSync(achievementsDir).forEach((file) => {
+		const achievement = require(`${achievementsDir}/${file}`)
+		if (!checkAchievementForUser(user.id, achievement.id)) {
+			achievement.check(user)
+		}
+	})
 }

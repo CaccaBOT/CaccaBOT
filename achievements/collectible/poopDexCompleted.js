@@ -12,7 +12,5 @@ module.exports = {
 		if (user_collectibles.length == collectibles.length) {
 			addAchievementToUser(user.id, this.id)
 		}
-		//TODO: write implementation
-		// collect all collectibles
 	},
 }

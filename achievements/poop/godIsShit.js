@@ -4,7 +4,7 @@ module.exports = {
 	id: 'GOD_IS_SHIT',
 	check: function (poop, user, message) {
 		const timestamp = [
-			moment(poop.timestamp).month(),
+			moment(poop.timestamp).month() + 1,
 			moment(poop.timestamp).day(),
 		]
 		const easter = getEaster(moment(poop.timestamp).year())

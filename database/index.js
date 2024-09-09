@@ -15,7 +15,8 @@ function initDatabase() {
 			token TEXT,
             pfp TEXT,
             bio TEXT,
-			money INTEGER DEFAULT 0
+			money INTEGER DEFAULT 0,
+			openedPacks INTEGER DEFAULT 0
         );
 
         CREATE TABLE IF NOT EXISTS poop (
@@ -629,6 +630,12 @@ function addCollectibleToUser(userId, collectible) {
 	).run(userId, collectible)
 }
 
+function addOpenedPack(userId) {
+	db.prepare(
+		`UPDATE user SET openedPacks = (SELECT openedPacks FROM user WHERE id = ?) + 1 WHERE id = ?`,
+	).run(userId, userId)
+}
+
 function getRarities() {
 	return db.prepare(`SELECT * FROM rarity`).all()
 }
@@ -1063,6 +1070,7 @@ module.exports = {
 	getCollectibles,
 	getAllCollectibles,
 	addCollectibleToUser,
+	addOpenedPack,
 	getUserCollectibles,
 	getUserCount,
 	getMonthlyUserCount,
