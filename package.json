@@ -21,6 +21,8 @@
 		"fastify": "^4.26.2",
 		"i": "^0.3.7",
 		"jsdom": "^24.0.0",
+		"moment": "^2.30.1",
+		"moment-timezone": "^0.5.45",
 		"node-schedule": "^2.1.1",
 		"npm": "^8.3.2",
 		"puppeteer": "^13.1.2",

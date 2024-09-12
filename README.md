@@ -1,9 +1,11 @@
 # CaccaBOT Server
+
 This project was made to keep track of poops from every participant of a WhatsApp group designed for that purpose
 
 ## Installation
 
 ### Requirements
+
 - Node 18 or greater
 - npm
 
@@ -14,6 +16,7 @@ This project was made to keep track of poops from every participant of a WhatsAp
 ```bash
 git clone https://github.com/CaccaBOT/CaccaBOT-Server.git
 ```
+
 #### Edit the `config.json` file to your liking
 
 ```json
@@ -40,6 +43,7 @@ git clone https://github.com/CaccaBOT/CaccaBOT-Server.git
 `monthlyPurge`: if set to true it will kick and delete all users who have not been active for more than a month at every start of the month
 
 #### Edit the `.env` file to your liking
+
 ```bash
 ENVIRONMENT=production
 SERVER_PORT=3000
@@ -50,11 +54,14 @@ SERVER_PORT=3000
 `SERVER_PORT`: the webserver port, ideally leave this on port 3000 or a not well known port and manage routing with a reverse proxy like nginx
 
 #### Run the server
+
 in order to run the server you have to enter the CaccaBOT directory and run the `index.js` file with `node`
+
 ```
 cd CaccaBOT-Server
 node index.js
 ```
+
 However the process will close as soon as you close the SSH session on your remote machine.
 
 To avoid that use a solution like `PM2`
@@ -69,16 +76,18 @@ pm2 start index.js --name CaccaBOT
 this will leave the process in the background even after the SSH session is closed
 
 #### Expected output
+
 If you did everything correctly you should see something like this in your terminal
+
 ```
 ▄████▄   ▄▄▄       ▄████▄   ▄████▄   ▄▄▄       ▄▄▄▄    ▒█████  ▄▄▄█████▓
 ▒██▀ ▀█  ▒████▄    ▒██▀ ▀█  ▒██▀ ▀█  ▒████▄    ▓█████▄ ▒██▒  ██▒▓  ██▒ ▓▒
 ▒▓█    ▄ ▒██  ▀█▄  ▒▓█    ▄ ▒▓█    ▄ ▒██  ▀█▄  ▒██▒ ▄██▒██░  ██▒▒ ▓██░ ▒░
-▒▓▓▄ ▄██▒░██▄▄▄▄██ ▒▓▓▄ ▄██▒▒▓▓▄ ▄██▒░██▄▄▄▄██ ▒██░█▀  ▒██   ██░░ ▓██▓ ░ 
-▒ ▓███▀ ░ ▓█   ▓██▒▒ ▓███▀ ░▒ ▓███▀ ░ ▓█   ▓██▒░▓█  ▀█▓░ ████▓▒░  ▒██▒ ░ 
-░ ░▒ ▒  ░ ▒▒   ▓▒█░░ ░▒ ▒  ░░ ░▒ ▒  ░ ▒▒   ▓▒█░░▒▓███▀▒░ ▒░▒░▒░   ▒ ░░   
-  ░  ▒     ▒   ▒▒ ░  ░  ▒     ░  ▒     ▒   ▒▒ ░▒░▒   ░   ░ ▒ ▒░     ░    
-░          ░   ▒   ░        ░          ░   ▒    ░    ░ ░ ░ ░ ▒    ░      
-░ ░            ░  ░░ ░      ░ ░            ░  ░ ░          ░ ░           
-░                  ░        ░                        ░                    
+▒▓▓▄ ▄██▒░██▄▄▄▄██ ▒▓▓▄ ▄██▒▒▓▓▄ ▄██▒░██▄▄▄▄██ ▒██░█▀  ▒██   ██░░ ▓██▓ ░
+▒ ▓███▀ ░ ▓█   ▓██▒▒ ▓███▀ ░▒ ▓███▀ ░ ▓█   ▓██▒░▓█  ▀█▓░ ████▓▒░  ▒██▒ ░
+░ ░▒ ▒  ░ ▒▒   ▓▒█░░ ░▒ ▒  ░░ ░▒ ▒  ░ ▒▒   ▓▒█░░▒▓███▀▒░ ▒░▒░▒░   ▒ ░░
+  ░  ▒     ▒   ▒▒ ░  ░  ▒     ░  ▒     ▒   ▒▒ ░▒░▒   ░   ░ ▒ ▒░     ░
+░          ░   ▒   ░        ░          ░   ▒    ░    ░ ░ ░ ░ ▒    ░
+░ ░            ░  ░░ ░      ░ ░            ░  ░ ░          ░ ░
+░                  ░        ░                        ░
 ```

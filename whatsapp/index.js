@@ -37,11 +37,11 @@ client.on('ready', () => {
 	if (config.monthlyPurge) {
 		console.warn(
 			'[WARNING] Monthly Purge is enabled, users who have been ' +
-				'inactive for more than a month will be deleted at month reset!'
+				'inactive for more than a month will be deleted at month reset!',
 		)
 		schedule.scheduleJob('0 0 1 * *', async () => {
 			console.info(
-				'[PURGE] Running Monthly Purge for ' + new Date().toISOString()
+				'[PURGE] Running Monthly Purge for ' + new Date().toISOString(),
 			)
 			let purgeMsg = '*Running Monthly Purge*\n'
 			const chat = await client.getChatById(config.groupId)
@@ -50,8 +50,8 @@ client.on('ready', () => {
 					new Date(
 						new Date().getFullYear(),
 						new Date().getMonth() - 1,
-						new Date().getDay()
-					)
+						new Date().getDay(),
+					),
 				)
 				purgeMsg += inactiveUsers.map((u) => u.username).join('\n')
 				for (const user of inactiveUsers) {
@@ -86,21 +86,21 @@ client.on('message_create', async (message) => {
 		message.reply(
 			replies[Math.floor(Math.random() * replies.length)].replace(
 				'{streak}',
-				streak
-			)
+				streak,
+			),
 		)
 		const poop = getLastPoop()
-		checkAchievements(poop, foundUser, message)
+		//checkAchievements(poop, foundUser, message)
 	}
 })
 
-function checkAchievements(poop, user, message) {
-	const achievementsDir = path.resolve(`${__dirname}/../achievements`)
-	fs.readdirSync(achievementsDir).forEach((file) => {
-		const achievement = require(`${achievementsDir}/${file}`)
-		achievement.check(poop, user, message)
-	})
-}
+// function checkAchievements(poop, user, message) {
+// 	const achievementsDir = path.resolve(`${__dirname}/../achievements`)
+// 	fs.readdirSync(achievementsDir).forEach((file) => {
+// 		const achievement = require(`${achievementsDir}/${file}`)
+// 		achievement.check(poop, user, message)
+// 	})
+// }
 
 async function parseMessage(message) {
 	if (Object.values(message.body).length == 0 || message.body == null) {
@@ -148,7 +148,7 @@ async function parseMessage(message) {
 				chat.id._serialized +
 				'\n' +
 				'Please paste this string in your config.json ' +
-				'on the field groupId before using CaccaBOT'
+				'on the field groupId before using CaccaBOT',
 		)
 		return
 	}

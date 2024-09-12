@@ -38,7 +38,7 @@ module.exports = {
 				user.poops +
 				'\n' +
 				'*Merdollars*: ' +
-				user.money
+				user.money,
 		)
 	},
 }
