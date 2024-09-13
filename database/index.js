@@ -67,6 +67,7 @@ function initDatabase() {
 			id INTEGER PRIMARY KEY AUTOINCREMENT,
             user_id TEXT,
             achievement_id TEXT,
+			timestamp TIMESTAMP,
             FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE CASCADE ON UPDATE CASCADE,
             FOREIGN KEY (achievement_id) REFERENCES achievement(id) ON DELETE CASCADE ON UPDATE CASCADE
         );
@@ -1021,8 +1022,8 @@ function rawQuery(query) {
 
 function addAchievementToUser(userId, achievementId) {
 	db.prepare(
-		`INSERT INTO user_achievement (user_id, achievement_id) VALUES (?, ?)`,
-	).run(userId, achievementId)
+		`INSERT INTO user_achievement (user_id, achievement_id, timestamp) VALUES (?, ?, ?)`,
+	).run(userId, achievementId, new Date().toISOString())
 
 	db.prepare(
 		`UPDATE user SET money = (SELECT money FROM user WHERE id = ?) + (SELECT d.reward FROM achievement a JOIN difficulty d ON a.difficulty_id = d.id WHERE a.id = ?) WHERE id = ?`,
@@ -1038,6 +1039,18 @@ function checkAchievementForUser(userId, achievementId) {
 			)
 			.get(userId, achievementId)?.id != null
 	)
+}
+
+function getUserAchievements(userId) {
+	return db
+		.prepare(
+			'SELECT a.* FROM user_achievement a JOIN user u ON a.user_id = u.id WHERE u.id = ?',
+		)
+		.all(userId)
+}
+
+function getAllAchievements() {
+	return db.prepare('SELECT a.* FROM achievement a').all()
 }
 
 module.exports = {
@@ -1092,4 +1105,6 @@ module.exports = {
 	rawQuery,
 	addAchievementToUser,
 	checkAchievementForUser,
+	getUserAchievements,
+	getAllAchievements,
 }
