@@ -14,10 +14,13 @@ const {
 	getMonthlyPoopDistribution,
 	getTotalPoopsPerDay,
 } = require('../../database/index')
+const config = require('../../config.json')
+const timezone = config.timezone || 'UTC'
 
 module.exports = async function (fastify, options) {
 	fastify.get('/stats', async (req, res) => {
-		const date = new Date().toISOString().split('T')[0]
+		const date = moment.tz(new Date(), timezone)
+		
 		const users = {
 			total: getUserCount(),
 			monthly: getMonthlyUserCount(date),
