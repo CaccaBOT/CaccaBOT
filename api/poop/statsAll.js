@@ -20,7 +20,10 @@ const timezone = config.timezone || 'UTC'
 
 module.exports = async function (fastify, options) {
 	fastify.get('/stats', async (req, res) => {
-		const date = moment.tz(new Date(), timezone)
+		const date = moment.tz(moment(), timezone)
+		.startOf('day')
+		.clone()
+		.toISOString()
 		
 		const users = {
 			total: getUserCount(),
