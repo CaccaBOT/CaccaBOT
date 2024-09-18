@@ -1,6 +1,7 @@
 const {
 	poopLeaderboardWithFilter,
 	addAchievementToUser,
+	getAchievement
 } = require('../../database')
 const moment = require('moment')
 
@@ -12,7 +13,8 @@ module.exports = {
 		const leaderboard = poopLeaderboardWithFilter(year, month)
 		if (leaderboard.length == 1) {
 			addAchievementToUser(user.id, this.id)
-			message.reply('Ottenuto achievement: Fast & Fecious!')
+			const achievement = getAchievement(this.id)
+			message.reply(`*[ACHIEVEMENT] ${user.username}* unlocked *${achievement.name}*`)
 		}
 	},
 }

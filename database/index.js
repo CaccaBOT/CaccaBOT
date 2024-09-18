@@ -240,6 +240,10 @@ function initDatabase() {
     `)
 }
 
+function getAchievement(achievementId) {
+	return db.prepare(`SELECT * FROM achievement WHERE id = ?`).get(achievementId)
+}
+
 function getInactiveUsers(date) {
 	const startOfMonth = new Date(
 		date.getFullYear(),
@@ -1107,4 +1111,5 @@ module.exports = {
 	checkAchievementForUser,
 	getUserAchievements,
 	getAllAchievements,
+	getAchievement
 }

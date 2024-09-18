@@ -1,5 +1,5 @@
 const moment = require('moment')
-const { addAchievementToUser } = require('../../database')
+const { addAchievementToUser, getAchievement } = require('../../database')
 
 module.exports = {
 	id: 'LAST_MINUTE',
@@ -11,7 +11,8 @@ module.exports = {
 			.subtract(59, 'seconds')
 		if (date.isBetween(lastMinuteOfMonth, lastSecondOfMonth, null, '[]')) {
 			addAchievementToUser(user.id, this.id)
-			message.reply('Ottenuto achievement: Last minute!')
+			const achievement = getAchievement(this.id)
+			message.reply(`*[ACHIEVEMENT] ${user.username}* unlocked *${achievement.name}*`)
 		}
 	},
 }

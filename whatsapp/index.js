@@ -16,7 +16,6 @@ const fs = require('fs')
 const path = require('path')
 const replies = require('../storage/replies.json')
 const schedule = require('node-schedule')
-const { check } = require('../achievements/poop/instantEffect')
 let commands = []
 
 const client = new Client({

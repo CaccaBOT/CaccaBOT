@@ -1,11 +1,12 @@
-const { poopStreak, addAchievementToUser } = require('../../database/')
+const { poopStreak, addAchievementToUser, getAchievement } = require('../../database/')
 module.exports = {
 	id: 'ONE_MONTH_OF_SHIT',
 	check: function (poop, user, message) {
 		const streak = poopStreak(user.id)
 		if (streak >= 30) {
 			addAchievementToUser(user.id, this.id)
-			message.reply('Ottenuto achievement: Un mese di merda!')
+			const achievement = getAchievement(this.id)
+			message.reply(`*[ACHIEVEMENT] ${user.username}* unlocked *${achievement.name}*`)
 		}
 	},
 }

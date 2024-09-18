@@ -1,11 +1,12 @@
-const { addAchievementToUser } = require('../../database')
+const { addAchievementToUser, getAchievement} = require('../../database')
 
 module.exports = {
 	id: 'DEMONIC_POOP',
 	check: function (poop, user, message) {
 		if (user.money == 666) {
 			addAchievementToUser(user.id, this.id)
-			message.reply('Ottenuto achievement: Cacca indemoniata!')
+			const achievement = getAchievement(this.id)
+			message.reply(`*[ACHIEVEMENT] ${user.username}* unlocked *${achievement.name}*`)
 		}
 	},
 }

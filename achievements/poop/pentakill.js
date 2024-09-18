@@ -1,4 +1,4 @@
-const { poopStatsFromUser, addAchievementToUser } = require('../../database')
+const { poopStatsFromUser, addAchievementToUser, getAchievement } = require('../../database')
 
 module.exports = {
 	id: 'PENTAKILL',
@@ -6,7 +6,8 @@ module.exports = {
 		const stats = poopStatsFromUser(user.id)
 		if (stats.today >= 5) {
 			addAchievementToUser(user.id, this.id)
-			message.reply('Ottenuto achievement: Pentakill!')
+			const achievement = getAchievement(this.id)
+			message.reply(`*[ACHIEVEMENT] ${user.username}* unlocked *${achievement.name}*`)
 		}
 	},
 }

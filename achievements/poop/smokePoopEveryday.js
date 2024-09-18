@@ -1,5 +1,5 @@
 const moment = require('moment')
-const { addAchievementToUser } = require('../../database')
+const { addAchievementToUser, getAchievement } = require('../../database')
 module.exports = {
 	id: 'SMOKE_POOP_EVERYDAY',
 	check: function (poop, user, message) {
@@ -7,7 +7,8 @@ module.exports = {
 		const minute = moment(poop.timestamp).minute()
 		if (hour == 4 && minute == 20) {
 			addAchievementToUser(user.id, this.id)
-			message.reply('Ottenuto achievement: Smoke poop everyday!')
+			const achievement = getAchievement(this.id)
+			message.reply(`*[ACHIEVEMENT] ${user.username}* unlocked *${achievement.name}*`)
 		}
 	},
 }
