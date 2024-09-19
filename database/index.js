@@ -345,9 +345,15 @@ function getCirculatingMoney() {
 function getCirculatingMoneyWithAssets() {
 	return db
 		.prepare(
-			`SELECT (COALESCE(SUM(u.money), 0) + COALESCE(COUNT(uc.id), 0) * 5) as circulatingMoneyWithAssets
-            FROM user u 
-            LEFT JOIN user_collectible uc ON u.id = uc.user_id`
+			`SELECT 
+                COALESCE(SUM(u.money), 0) + 
+                COALESCE(SUM(user_collectible_count * 5), 0) AS circulatingMoneyWithAssets
+            FROM user u
+            LEFT JOIN (
+                SELECT user_id, COUNT(id) AS user_collectible_count
+                FROM user_collectible
+                GROUP BY user_id
+            ) uc ON u.id = uc.user_id`,
 		)
 		.get().circulatingMoneyWithAssets
 }
@@ -367,10 +373,10 @@ function getDailyPoopCount(date) {
 	const currentCount = db
 		.prepare(
 			`
-        SELECT COUNT(*) AS dailyPoops
-        FROM poop
-        WHERE DATE(timestamp) = DATE(?)
-    `
+            SELECT COUNT(*) AS dailyPoops
+            FROM poop
+            WHERE timestamp >= ? AND timestamp < ?
+        `,
 		)
 		.get(startOfDayUTC, endOfDayUTC).dailyPoops
 
@@ -384,10 +390,10 @@ function getDailyPoopCount(date) {
 	const previousCount = db
 		.prepare(
 			`
-        SELECT COUNT(*) AS previousDailyPoops
-        FROM poop
-        WHERE DATE(timestamp) = DATE(?, '-1 day')
-    `
+            SELECT COUNT(*) AS previousDailyPoops
+            FROM poop
+            WHERE timestamp >= ? AND timestamp < ?
+        `,
 		)
 		.get(previousStartOfDayUTC, previousEndOfDayUTC).previousDailyPoops
 
@@ -434,8 +440,8 @@ function getWeeklyPoopCount(date) {
 			`
             SELECT COUNT(*) AS weeklyPoops
             FROM poop
-            WHERE DATE(timestamp) BETWEEN ? AND ?
-        `
+            WHERE timestamp >= ? AND timestamp < ?
+        `,
 		)
 		.get(startOfCurrentWeekUTC, endOfCurrentWeekUTC).weeklyPoops
 
@@ -444,8 +450,8 @@ function getWeeklyPoopCount(date) {
 			`
             SELECT COUNT(*) AS previousWeeklyPoops
             FROM poop
-            WHERE DATE(timestamp) BETWEEN ? AND ?
-        `
+            WHERE timestamp >= ? AND timestamp < ?
+        `,
 		)
 		.get(startOfPreviousWeekUTC, endOfPreviousWeekUTC).previousWeeklyPoops
 
@@ -490,20 +496,20 @@ function getMonthlyPoopCount(date) {
 	const currentCount = db
 		.prepare(
 			`
-        SELECT COUNT(*) AS monthlyPoops
-        FROM poop
-        WHERE strftime('%Y-%m', timestamp) = strftime('%Y-%m', ?)
-    `
+            SELECT COUNT(*) AS monthlyPoops
+            FROM poop
+            WHERE timestamp >= ? AND timestamp < ?
+        `,
 		)
 		.get(startOfCurrentMonthUTC, endOfCurrentMonthUTC).monthlyPoops
 
 	const previousCount = db
 		.prepare(
 			`
-        SELECT COUNT(*) AS previousMonthlyPoops
-        FROM poop
-        WHERE strftime('%Y-%m', timestamp) = strftime('%Y-%m', DATE(?, '-1 month'))
-    `
+            SELECT COUNT(*) AS previousMonthlyPoops
+            FROM poop
+            WHERE timestamp >= ? AND timestamp < ?
+        `,
 		)
 		.get(startOfPreviousMonthUTC, endOfPreviousMonthUTC).previousMonthlyPoops
 
