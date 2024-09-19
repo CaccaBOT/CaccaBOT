@@ -1,9 +1,9 @@
 const { addAchievementToUser } = require('../../database')
 
 module.exports = {
-	id: 'ESCREMENTAL_WATSON',
+	id: 'POOPATIC',
 	check: function (collectible, user) {
-		if (collectible.rarity == 'Escrementale') {
+		if (user.openedPacks >= 50) {
 			addAchievementToUser(user.id, this.id)
 		}
 	},

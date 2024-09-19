@@ -1,7 +1,8 @@
+const { addAchievementToUser } = require('../../database')
+
 module.exports = {
 	id: 'CACCASTOMIZER',
-	check: function (poop, user, message) {
-		//TODO: write implementation
-		//edit your profile in any way
+	check: function (user) {
+		addAchievementToUser(user.id, this.id)
 	},
 }

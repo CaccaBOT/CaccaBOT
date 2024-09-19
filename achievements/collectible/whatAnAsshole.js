@@ -1,7 +1,10 @@
+const { addAchievementToUser } = require('../../database')
+
 module.exports = {
 	id: 'WHAT_AN_ASSHOLE',
-	check: function (poop, user, message) {
-		//TODO: write implementation
-		//collect a caccasmagoric collectible
+	check: function (collectible, user) {
+		if (collectible.rarity == 'Caccasmagorico') {
+			addAchievementToUser(user.id, this.id)
+		}
 	},
 }

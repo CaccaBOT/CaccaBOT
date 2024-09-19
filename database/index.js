@@ -19,7 +19,8 @@ function initDatabase() {
 			token TEXT,
             pfp TEXT,
             bio TEXT,
-			money INTEGER DEFAULT 0
+			money INTEGER DEFAULT 0,
+			openedPacks INTEGER DEFAULT 0
         );
 
         CREATE TABLE IF NOT EXISTS poop (
@@ -52,10 +53,38 @@ function initDatabase() {
             FOREIGN KEY (collectible_id) REFERENCES collectible(id) ON DELETE CASCADE ON UPDATE CASCADE
         );
 
+		CREATE TABLE IF NOT EXISTS difficulty (
+			id INTEGER PRIMARY KEY AUTOINCREMENT,
+			name TEXT UNIQUE,
+			reward INTEGER
+		);
+
+		CREATE TABLE IF NOT EXISTS achievement (
+			id TEXT UNIQUE,
+			name TEXT UNIQUE,
+			description TEXT,
+			difficulty_id INTEGER,
+			FOREIGN KEY (difficulty_id) REFERENCES difficulty(id)
+		);
+
+		CREATE TABLE IF NOT EXISTS user_achievement (
+			id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id TEXT,
+            achievement_id TEXT,
+			timestamp TIMESTAMP,
+            FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE CASCADE ON UPDATE CASCADE,
+            FOREIGN KEY (achievement_id) REFERENCES achievement(id) ON DELETE CASCADE ON UPDATE CASCADE
+        );
+
 		INSERT OR IGNORE INTO rarity(name, chance) VALUES ('Merdume', 59);
 		INSERT OR IGNORE INTO rarity(name, chance) VALUES ('Escrementale', 30); 
 		INSERT OR IGNORE INTO rarity(name, chance) VALUES ('Sensazianale', 10); 
 		INSERT OR IGNORE INTO rarity(name, chance) VALUES ('Caccasmagorico', 1); 
+
+		INSERT OR IGNORE INTO difficulty(name, reward) VALUES ('Easy', 1);
+		INSERT OR IGNORE INTO difficulty(name, reward) VALUES ('Medium', 5); 
+		INSERT OR IGNORE INTO difficulty(name, reward) VALUES ('Hard', 15); 
+		INSERT OR IGNORE INTO difficulty(name, reward) VALUES ('Extreme', 100); 
 
 		INSERT OR IGNORE INTO collectible (name, description, rarity_id, asset_url)
 		VALUES ('VulcANO', 'Cacca con parte superiore a forma di vulcano che erutta magma', 
@@ -112,25 +141,137 @@ function initDatabase() {
 		INSERT OR IGNORE INTO collectible (name, description, rarity_id, asset_url)
 		VALUES ('Caccantante', NULL, 
 				(SELECT id FROM rarity WHERE name = 'Merdume'), NULL);
+
+		INSERT OR IGNORE INTO achievement (id, name, description, difficulty_id)
+		VALUES ('CACCASTOMIZER', 'Caccastomizer', 'Modifica il profilo',
+				(SELECT id FROM difficulty WHERE name = 'Easy'));
+		
+		INSERT OR IGNORE INTO achievement (id, name, description, difficulty_id)
+		VALUES ('I_BECAME_RICH', 'Sono diventato ricco', 'Guadagna il tuo primo merdollaro',
+				(SELECT id FROM difficulty WHERE name = 'Easy'));
+		
+		INSERT OR IGNORE INTO achievement (id, name, description, difficulty_id)
+		VALUES ('THE_FIRST_OF_A_LONG_TIME', 'La prima di una lunga storia', 'Apri il tuo primo cacchetto',
+				(SELECT id FROM difficulty WHERE name = 'Easy'));
+		
+		INSERT OR IGNORE INTO achievement (id, name, description, difficulty_id)
+		VALUES ('POOPATIC', 'Caccapatico', 'Apri il tuo 50esimo cacchetto',
+				(SELECT id FROM difficulty WHERE name = 'Easy'));
+		
+		INSERT OR IGNORE INTO achievement (id, name, description, difficulty_id)
+		VALUES ('DEMONIC_POOP', 'Cacca indemoniata', 'Accumula esattamente 666 merdollari',
+				(SELECT id FROM difficulty WHERE name = 'Easy'));
+		
+		INSERT OR IGNORE INTO achievement (id, name, description, difficulty_id)
+		VALUES ('INSTANT_EFFECT', 'Presa Diretta', 'Caga dopo pranzo (12:00 - 14:00)',
+				(SELECT id FROM difficulty WHERE name = 'Easy'));
+		
+		INSERT OR IGNORE INTO achievement (id, name, description, difficulty_id)
+		VALUES ('TIME_FOR_A_SNACK', 'È Tempo Della Merdenda', 'Caga dopo la merenda (16:00 - 18:00)',
+				(SELECT id FROM difficulty WHERE name = 'Easy'));
+		
+		INSERT OR IGNORE INTO achievement (id, name, description, difficulty_id)
+		VALUES ('POOP_ON_WHEELCHAIR', 'Cacca A Rotelle', 'Caga alle 01:04 (sei disabile)',
+				(SELECT id FROM difficulty WHERE name = 'Easy'));
+		
+		INSERT OR IGNORE INTO achievement (id, name, description, difficulty_id)
+		VALUES ('SKIBIDI_TOILET', 'Skibidi Toilet', 'Caga alle 03:00 di notte (per evocare Skibidi Toilet)',
+				(SELECT id FROM difficulty WHERE name = 'Easy'));
+		
+		INSERT OR IGNORE INTO achievement (id, name, description, difficulty_id)
+		VALUES ('SMOKE_POOP_EVERYDAY', 'Smoke Poop Everyday', 'Caga alle 04:20 (passacene un po)',
+				(SELECT id FROM difficulty WHERE name = 'Easy'));
+		
+		INSERT OR IGNORE INTO achievement (id, name, description, difficulty_id)
+		VALUES ('LAST_MINUTE', 'Last Minute', 'Caga all''ultimo minuto prima del reset',
+				(SELECT id FROM difficulty WHERE name = 'Easy'));
+		
+		INSERT OR IGNORE INTO achievement (id, name, description, difficulty_id)
+		VALUES ('FAST_AND_FECIOUS', 'Fast & Fecious', 'Sii il primo a cagare dopo il reset',
+				(SELECT id FROM difficulty WHERE name = 'Easy'));
+		
+		INSERT OR IGNORE INTO achievement (id, name, description, difficulty_id)
+		VALUES ('GOD_IS_SHIT', 'Dio Merda', 'Caga il giorno di Pasqua',
+				(SELECT id FROM difficulty WHERE name = 'Easy'));
+		
+		INSERT OR IGNORE INTO achievement (id, name, description, difficulty_id)
+		VALUES ('SHITTY_FAGGOT', 'Frocio di merda', 'Caga durante il Pride Month',
+				(SELECT id FROM difficulty WHERE name = 'Easy'));
+		
+		INSERT OR IGNORE INTO achievement (id, name, description, difficulty_id)
+		VALUES ('PATRIOTIC_POOP', 'Merda patriottica', 'Caga durante il giorno della Repubblica',
+				(SELECT id FROM difficulty WHERE name = 'Easy'));
+		
+		INSERT OR IGNORE INTO achievement (id, name, description, difficulty_id)
+		VALUES ('I_SAID_THEY_ARE_SHITS', 'L''ho detto che sono delle merde!', 'Colleziona una caccarta Merdume',
+				(SELECT id FROM difficulty WHERE name = 'Easy'));
+		
+		INSERT OR IGNORE INTO achievement (id, name, description, difficulty_id)
+		VALUES ('ESCREMENTAL_WATSON', 'Escrementale, Watson', 'Colleziona una carta Escrementale',
+				(SELECT id FROM difficulty WHERE name = 'Easy'));
+		
+		INSERT OR IGNORE INTO achievement (id, name, description, difficulty_id)
+		VALUES ('NOT_EVERYTHING_THAT_SHINES_IS_GOLD', 'Tutto ciò che splende non è oro', 'Colleziona una caccarta Sensazianale',
+				(SELECT id FROM difficulty WHERE name = 'Easy'));
+		
+		INSERT OR IGNORE INTO achievement (id, name, description, difficulty_id)
+		VALUES ('WHAT_AN_ASSHOLE', 'Che buco di culo', 'Colleziona una caccarta Caccasmagorica',
+				(SELECT id FROM difficulty WHERE name = 'Easy'));
+		
+		INSERT OR IGNORE INTO achievement (id, name, description, difficulty_id)
+		VALUES ('POOP_SOMMELIER', 'Il sommelier della merda', 'Colleziona la metà delle caccarte',
+				(SELECT id FROM difficulty WHERE name = 'Easy'));
+		
+		INSERT OR IGNORE INTO achievement (id, name, description, difficulty_id)
+		VALUES ('POOPDEX_COMPLETED', 'Caccadex Completato', 'Colleziona tutte le caccarte',
+				(SELECT id FROM difficulty WHERE name = 'Easy'));
+		
+		INSERT OR IGNORE INTO achievement (id, name, description, difficulty_id)
+		VALUES ('PENTAKILL', 'Pentakill', 'Caga 5 volte nello stesso giorno',
+				(SELECT id FROM difficulty WHERE name = 'Easy'));
+		
+		INSERT OR IGNORE INTO achievement (id, name, description, difficulty_id)
+		VALUES ('SCAT_LOVER', 'Scat Lover', 'Accumula 69 cagate di fila',
+				(SELECT id FROM difficulty WHERE name = 'Easy'));
+		
+		INSERT OR IGNORE INTO achievement (id, name, description, difficulty_id)
+		VALUES ('ONE_MONTH_OF_SHIT', 'Un mese di merda', 'Accumula 30 cagate di fila',
+				(SELECT id FROM difficulty WHERE name = 'Easy'));
+		
+		INSERT OR IGNORE INTO achievement (id, name, description, difficulty_id)
+		VALUES ('A_YEAR_OF_SHIT', 'Un anno di merda', 'Accumula 365 cagate di fila',
+				(SELECT id FROM difficulty WHERE name = 'Easy'));
     `)
 }
 
+function getAchievement(achievementId) {
+	return db.prepare(`SELECT * FROM achievement WHERE id = ?`).get(achievementId)
+}
+
 function getInactiveUsers(date) {
-	const startOfMonth = moment(date).tz(timezone).startOf('month').toISOString()
-	const endOfMonth = moment(date).tz(timezone).endOf('month').toISOString()
+	const startOfMonth = new Date(
+		date.getFullYear(),
+		date.getMonth(),
+		1
+	).toISOString()
+	const endOfMonth = new Date(
+		date.getFullYear(),
+		date.getMonth() + 1,
+		0
+	).toISOString()
 
 	const inactiveUsers = db
 		.prepare(
 			`
-            SELECT u.id, u.username, u.phone
-            FROM user u 
-            WHERE NOT EXISTS (
-                SELECT 1 
-                FROM poop p 
-                WHERE p.user_id = u.id 
-                AND p.timestamp BETWEEN ? AND ?
-            )
-        `,
+        SELECT u.id, u.username, u.phone
+        FROM user u 
+        WHERE NOT EXISTS (
+            SELECT 1 
+            FROM poop p 
+            WHERE p.user_id = u.id 
+            AND p.timestamp BETWEEN ? AND ?
+        )
+    `
 		)
 		.all(startOfMonth, endOfMonth)
 
@@ -204,15 +345,9 @@ function getCirculatingMoney() {
 function getCirculatingMoneyWithAssets() {
 	return db
 		.prepare(
-			`SELECT 
-                COALESCE(SUM(u.money), 0) + 
-                COALESCE(SUM(user_collectible_count * 5), 0) AS circulatingMoneyWithAssets
-            FROM user u
-            LEFT JOIN (
-                SELECT user_id, COUNT(id) AS user_collectible_count
-                FROM user_collectible
-                GROUP BY user_id
-            ) uc ON u.id = uc.user_id`,
+			`SELECT (COALESCE(SUM(u.money), 0) + COALESCE(COUNT(uc.id), 0) * 5) as circulatingMoneyWithAssets
+            FROM user u 
+            LEFT JOIN user_collectible uc ON u.id = uc.user_id`
 		)
 		.get().circulatingMoneyWithAssets
 }
@@ -232,10 +367,10 @@ function getDailyPoopCount(date) {
 	const currentCount = db
 		.prepare(
 			`
-            SELECT COUNT(*) AS dailyPoops
-            FROM poop
-            WHERE timestamp >= ? AND timestamp < ?
-        `,
+        SELECT COUNT(*) AS dailyPoops
+        FROM poop
+        WHERE DATE(timestamp) = DATE(?)
+    `
 		)
 		.get(startOfDayUTC, endOfDayUTC).dailyPoops
 
@@ -249,10 +384,10 @@ function getDailyPoopCount(date) {
 	const previousCount = db
 		.prepare(
 			`
-            SELECT COUNT(*) AS previousDailyPoops
-            FROM poop
-            WHERE timestamp >= ? AND timestamp < ?
-        `,
+        SELECT COUNT(*) AS previousDailyPoops
+        FROM poop
+        WHERE DATE(timestamp) = DATE(?, '-1 day')
+    `
 		)
 		.get(previousStartOfDayUTC, previousEndOfDayUTC).previousDailyPoops
 
@@ -299,8 +434,8 @@ function getWeeklyPoopCount(date) {
 			`
             SELECT COUNT(*) AS weeklyPoops
             FROM poop
-            WHERE timestamp >= ? AND timestamp < ?
-        `,
+            WHERE DATE(timestamp) BETWEEN ? AND ?
+        `
 		)
 		.get(startOfCurrentWeekUTC, endOfCurrentWeekUTC).weeklyPoops
 
@@ -309,8 +444,8 @@ function getWeeklyPoopCount(date) {
 			`
             SELECT COUNT(*) AS previousWeeklyPoops
             FROM poop
-            WHERE timestamp >= ? AND timestamp < ?
-        `,
+            WHERE DATE(timestamp) BETWEEN ? AND ?
+        `
 		)
 		.get(startOfPreviousWeekUTC, endOfPreviousWeekUTC).previousWeeklyPoops
 
@@ -355,20 +490,20 @@ function getMonthlyPoopCount(date) {
 	const currentCount = db
 		.prepare(
 			`
-            SELECT COUNT(*) AS monthlyPoops
-            FROM poop
-            WHERE timestamp >= ? AND timestamp < ?
-        `,
+        SELECT COUNT(*) AS monthlyPoops
+        FROM poop
+        WHERE strftime('%Y-%m', timestamp) = strftime('%Y-%m', ?)
+    `
 		)
 		.get(startOfCurrentMonthUTC, endOfCurrentMonthUTC).monthlyPoops
 
 	const previousCount = db
 		.prepare(
 			`
-            SELECT COUNT(*) AS previousMonthlyPoops
-            FROM poop
-            WHERE timestamp >= ? AND timestamp < ?
-        `,
+        SELECT COUNT(*) AS previousMonthlyPoops
+        FROM poop
+        WHERE strftime('%Y-%m', timestamp) = strftime('%Y-%m', DATE(?, '-1 month'))
+    `
 		)
 		.get(startOfPreviousMonthUTC, endOfPreviousMonthUTC).previousMonthlyPoops
 
@@ -398,14 +533,14 @@ function getDailyTopPooper(date) {
 	return db
 		.prepare(
 			`
-            SELECT u.id, u.username, u.pfp, COUNT(p.id) as poops
-            FROM user u
-            JOIN poop p ON u.id = p.user_id
-            WHERE DATE(p.timestamp) = ?
-            GROUP BY u.id
-            ORDER BY poops DESC
-            LIMIT 1
-        `,
+        SELECT u.id, u.username, u.pfp, COUNT(p.id) as poops
+        FROM user u
+        JOIN poop p ON u.id = p.user_id
+        WHERE DATE(p.timestamp) = DATE(?)
+        GROUP BY u.id
+        ORDER BY poops DESC
+        LIMIT 1
+    `
 		)
 		.get(formattedDate)
 }
@@ -419,14 +554,16 @@ function getWeeklyTopPooper(date) {
 	return db
 		.prepare(
 			`
-            SELECT u.id, u.username, u.pfp, COUNT(p.id) as poops
-            FROM user u
-            JOIN poop p ON u.id = p.user_id
-            WHERE DATE(p.timestamp) BETWEEN ? AND ?
-            GROUP BY u.id
-            ORDER BY poops DESC
-            LIMIT 1
-        `,
+        SELECT u.id, u.username, u.pfp, COUNT(p.id) as poops
+        FROM user u
+        JOIN poop p ON u.id = p.user_id
+        WHERE DATE(p.timestamp) BETWEEN 
+            DATE(?, 'weekday 0', '-6 days') AND 
+            DATE(?, 'weekday 0')
+        GROUP BY u.id
+        ORDER BY poops DESC
+        LIMIT 1
+    `
 		)
 		.get(startOfWeek, endOfWeek)
 }
@@ -436,14 +573,14 @@ function getMonthlyTopPooper(date) {
 	return db
 		.prepare(
 			`
-            SELECT u.id, u.username, u.pfp, COUNT(p.id) as poops
-            FROM user u
-            JOIN poop p ON u.id = p.user_id
-            WHERE strftime('%Y-%m', p.timestamp) = ?
-            GROUP BY u.id
-            ORDER BY poops DESC
-            LIMIT 1
-        `,
+        SELECT u.id, u.username, u.pfp, COUNT(p.id) as poops
+        FROM user u
+        JOIN poop p ON u.id = p.user_id
+        WHERE strftime('%Y-%m', p.timestamp) = strftime('%Y-%m', ?)
+        GROUP BY u.id
+        ORDER BY poops DESC
+        LIMIT 1
+    `
 		)
 		.get(formattedDate)
 }
@@ -468,17 +605,17 @@ function getMonthlyPoopDistribution(date) {
 	return db
 		.prepare(
 			`
-            SELECT 
-                u.id,
-                u.username,
-                u.pfp,
-                ROUND((COUNT(p.id) * 100.0 / (SELECT COUNT(*) FROM poop WHERE strftime('%Y-%m', timestamp) = ?)), 2) as percentage
-            FROM user u
-            JOIN poop p ON u.id = p.user_id
-            WHERE strftime('%Y-%m', p.timestamp) = ?
-            GROUP BY u.id, u.username
-            ORDER BY percentage DESC
-        `,
+	SELECT 
+		u.id,
+		u.username,
+		u.pfp,
+		ROUND((COUNT(p.id) * 100.0 / (SELECT COUNT(*) FROM poop WHERE strftime('%Y-%m', timestamp) = strftime('%Y-%m', ?))), 2) as percentage
+	FROM user u
+	JOIN poop p ON u.id = p.user_id
+	WHERE strftime('%Y-%m', p.timestamp) = strftime('%Y-%m', ?)
+	GROUP BY u.id, u.username
+	ORDER BY percentage DESC
+`
 		)
 		.all(formattedDate, formattedDate)
 }
@@ -531,7 +668,7 @@ function createUser(id, username, bio) {
 	).run(id, phone, username, bio)
 }
 
-function getUserCollectibles(user) {
+function getUserCollectibles(userId) {
 	return db
 		.prepare(
 			`
@@ -545,7 +682,7 @@ function getUserCollectibles(user) {
         ORDER BY r.id DESC
     `,
 		)
-		.all(user)
+		.all(userId)
 }
 
 function setMoney(userId, amount) {
@@ -558,12 +695,22 @@ function addCollectibleToUser(userId, collectible) {
 	).run(userId, collectible)
 }
 
+function addOpenedPack(userId) {
+	db.prepare(
+		`UPDATE user SET openedPacks = (SELECT openedPacks FROM user WHERE id = ?) + 1 WHERE id = ?`,
+	).run(userId, userId)
+}
+
 function getRarities() {
 	return db.prepare(`SELECT * FROM rarity`).all()
 }
 
 function getCollectibles(rarity) {
 	return db.prepare(`SELECT * FROM collectible WHERE rarity_id = ?`).all(rarity)
+}
+
+function getAllCollectibles() {
+	return db.prepare(`SELECT * FROM collectible`).all()
 }
 
 function getUserProfileById(id) {
@@ -601,7 +748,7 @@ function addPoop(userId) {
 
 	db.prepare(`INSERT INTO poop (user_id, timestamp) VALUES (?, ?)`).run(
 		userId,
-		timestamp,
+		new Date().toISOString()
 	)
 
 	db.prepare(
@@ -652,20 +799,20 @@ function poopLeaderboardWithFilter(year, month) {
 	const result = db
 		.prepare(
 			`
-            SELECT u.id, u.phone, u.username, u.pfp, u.bio, u.frozen, u.money, 
-                   poops,
-                   ROW_NUMBER() OVER (ORDER BY poops DESC) AS rank
-            FROM (
-                SELECT p.user_id, 
-                       COUNT(*) AS poops
-                FROM poop p 
-                WHERE strftime('%Y', p.timestamp) = ? 
-                      AND strftime('%m', p.timestamp) = ?
-                GROUP BY p.user_id
-            ) AS poop_counts
-            JOIN user u ON poop_counts.user_id = u.id
-            ORDER BY poops DESC
-        `,
+        SELECT u.id, u.phone, u.username, u.pfp, u.bio, u.frozen, u.money, 
+               poops,
+               ROW_NUMBER() OVER (ORDER BY poops DESC) AS rank
+        FROM (
+            SELECT p.user_id, 
+                   COUNT(*) AS poops
+            FROM poop p 
+            WHERE strftime('%Y', p.timestamp) = ? 
+                  AND strftime('%m', p.timestamp) = ?
+            GROUP BY p.user_id
+        ) AS poop_counts
+        JOIN user u ON poop_counts.user_id = u.id
+        ORDER BY poops DESC
+    `
 		)
 		.all(yearStr, monthStr)
 
@@ -696,9 +843,10 @@ function allPoopWithFilter(year, month) {
 	return db
 		.prepare(
 			`SELECT p.*, u.username
-             FROM poop p
-             JOIN user u ON p.user_id = u.id
-             WHERE p.timestamp >= ? AND p.timestamp <= ?`,
+         FROM poop p
+		 JOIN user u
+		 ON (p.user_id = u.id)
+         WHERE p.timestamp >= ? AND p.timestamp <= ?`
 		)
 		.all(startOfMonthUtc, endOfMonthUtc)
 }
@@ -842,12 +990,34 @@ function poopStatsFromUserWithFilter(id, year, month) {
 }
 
 function poopStats() {
-	const now = moment().tz(timezone)
-	const todayStart = now.startOf('day').toISOString()
-	const todayEnd = now.endOf('day').toISOString()
+	const now = new Date()
+	const todayStart = new Date(
+		Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate())
+	)
+	const todayEnd = new Date(
+		Date.UTC(
+			now.getUTCFullYear(),
+			now.getUTCMonth(),
+			now.getUTCDate(),
+			23,
+			59,
+			59,
+			999
+		)
+	)
 
-	const startOfWeek = now.startOf('week').toISOString()
-	const startOfMonth = now.startOf('month').toISOString()
+	// Calculate start of the week and start of the month in UTC
+	const startOfWeek = new Date(todayStart)
+	startOfWeek.setUTCDate(todayStart.getUTCDate() - todayStart.getUTCDay())
+
+	const startOfMonth = new Date(todayStart)
+	startOfMonth.setUTCDate(1)
+
+	// Convert dates to ISO strings
+	const today = todayStart.toISOString()
+	const todayEndSqlite = todayEnd.toISOString()
+	const weekStart = startOfWeek.toISOString()
+	const monthStart = startOfMonth.toISOString()
 
 	const todayPoops = db
 		.prepare(
@@ -919,6 +1089,39 @@ function rawQuery(query) {
 	}
 }
 
+function addAchievementToUser(userId, achievementId) {
+	db.prepare(
+		`INSERT INTO user_achievement (user_id, achievement_id, timestamp) VALUES (?, ?, ?)`,
+	).run(userId, achievementId, new Date().toISOString())
+
+	db.prepare(
+		`UPDATE user SET money = (SELECT money FROM user WHERE id = ?) + (SELECT d.reward FROM achievement a JOIN difficulty d ON a.difficulty_id = d.id WHERE a.id = ?) WHERE id = ?`,
+	).run(userId, achievementId, userId)
+}
+
+function checkAchievementForUser(userId, achievementId) {
+	return (
+		db
+			.prepare(
+				`SELECT a.id FROM achievement a JOIN user_achievement ua ON a.id = ua.achievement_id 
+		JOIN user u ON u.id = ua.user_id WHERE u.id = ? AND a.id = ?`,
+			)
+			.get(userId, achievementId)?.id != null
+	)
+}
+
+function getUserAchievements(userId) {
+	return db
+		.prepare(
+			'SELECT a.* FROM user_achievement a JOIN user u ON a.user_id = u.id WHERE u.id = ?',
+		)
+		.all(userId)
+}
+
+function getAllAchievements() {
+	return db.prepare('SELECT a.* FROM achievement a').all()
+}
+
 module.exports = {
 	initDatabase,
 	login,
@@ -947,7 +1150,9 @@ module.exports = {
 	setMoney,
 	getRarities,
 	getCollectibles,
+	getAllCollectibles,
 	addCollectibleToUser,
+	addOpenedPack,
 	getUserCollectibles,
 	getUserCount,
 	getMonthlyUserCount,
@@ -967,4 +1172,9 @@ module.exports = {
 	getInactiveUsers,
 	deleteUser,
 	rawQuery,
+	addAchievementToUser,
+	checkAchievementForUser,
+	getUserAchievements,
+	getAllAchievements,
+	getAchievement
 }

@@ -1,8 +1,11 @@
 const {
 	getUserProfileById,
 	getUserProfileByUsername,
+	checkAchievementForUser,
 } = require('../../database')
 const { authenticate } = require('../../middleware/auth')
+const fs = require('fs')
+const path = require('path')
 
 module.exports = async function (fastify, options) {
 	fastify.patch('/edit', async (req, res) => {
@@ -26,6 +29,17 @@ module.exports = async function (fastify, options) {
 
 		if (user.pfp) {
 			user.pfp = pfp
+		}
+		checkAchievements(user)
+	})
+}
+
+function checkAchievements(user) {
+	const achievementsDir = path.resolve(`${__dirname}/../../achievements/action`)
+	fs.readdirSync(achievementsDir).forEach((file) => {
+		const achievement = require(`${achievementsDir}/${file}`)
+		if (!checkAchievementForUser(user.id, achievement.id)) {
+			achievement.check(user)
 		}
 	})
 }

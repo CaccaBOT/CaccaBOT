@@ -2,6 +2,7 @@ const { Client, LocalAuth } = require('whatsapp-web.js')
 const QRCode = require('qrcode-terminal')
 const {
 	addPoop,
+	checkAchievementForUser,
 	getUserProfileByPhone,
 	poopStreak,
 	createUser,
@@ -90,17 +91,19 @@ client.on('message_create', async (message) => {
 			),
 		)
 		const poop = getLastPoop()
-		//checkAchievements(poop, foundUser, message)
+		checkAchievements(poop, foundUser, message)
 	}
 })
 
-// function checkAchievements(poop, user, message) {
-// 	const achievementsDir = path.resolve(`${__dirname}/../achievements`)
-// 	fs.readdirSync(achievementsDir).forEach((file) => {
-// 		const achievement = require(`${achievementsDir}/${file}`)
-// 		achievement.check(poop, user, message)
-// 	})
-// }
+function checkAchievements(poop, user, message) {
+	const achievementsDir = path.resolve(`${__dirname}/../achievements/poop`)
+	fs.readdirSync(achievementsDir).forEach((file) => {
+		const achievement = require(`${achievementsDir}/${file}`)
+		if (!checkAchievementForUser(user.id, achievement.id)) {
+			achievement.check(poop, user, message)
+		}
+	})
+}
 
 async function parseMessage(message) {
 	if (Object.values(message.body).length == 0 || message.body == null) {

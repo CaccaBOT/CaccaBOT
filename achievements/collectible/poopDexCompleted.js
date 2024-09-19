@@ -1,7 +1,16 @@
+const {
+	getAllCollectibles,
+	getUserCollectibles,
+	addAchievementToUser,
+} = require('../../database')
+
 module.exports = {
 	id: 'POOPDEX_COMPLETED',
-	check: function (poop, user, message) {
-		//TODO: write implementation
-		// collect all collectibles
+	check: function (collectible, user) {
+		const collectibles = getAllCollectibles()
+		const user_collectibles = getUserCollectibles(user.id)
+		if (user_collectibles.length == collectibles.length) {
+			addAchievementToUser(user.id, this.id)
+		}
 	},
 }
