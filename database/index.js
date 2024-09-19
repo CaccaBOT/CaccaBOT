@@ -611,17 +611,17 @@ function getMonthlyPoopDistribution(date) {
 	return db
 		.prepare(
 			`
-	SELECT 
-		u.id,
-		u.username,
-		u.pfp,
-		ROUND((COUNT(p.id) * 100.0 / (SELECT COUNT(*) FROM poop WHERE strftime('%Y-%m', timestamp) = strftime('%Y-%m', ?))), 2) as percentage
-	FROM user u
-	JOIN poop p ON u.id = p.user_id
-	WHERE strftime('%Y-%m', p.timestamp) = strftime('%Y-%m', ?)
-	GROUP BY u.id, u.username
-	ORDER BY percentage DESC
-`
+            SELECT 
+                u.id,
+                u.username,
+                u.pfp,
+                ROUND((COUNT(p.id) * 100.0 / (SELECT COUNT(*) FROM poop WHERE strftime('%Y-%m', timestamp) = ?)), 2) as percentage
+            FROM user u
+            JOIN poop p ON u.id = p.user_id
+            WHERE strftime('%Y-%m', p.timestamp) = ?
+            GROUP BY u.id, u.username
+            ORDER BY percentage DESC
+        `,
 		)
 		.all(formattedDate, formattedDate)
 }
