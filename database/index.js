@@ -263,7 +263,7 @@ function getInactiveUsers(date) {
 	const inactiveUsers = db
 		.prepare(
 			`
-        SELECT u.id, u.username, u.phone
+        SELECT u.*
         FROM user u 
         WHERE NOT EXISTS (
             SELECT 1 
@@ -761,8 +761,6 @@ function getLastPoop() {
 
 function addPoop(userId) {
 	// this is voluntarily stored in UTC for best practice
-	const timestamp = moment().tz('UTC').format()
-
 	db.prepare(`INSERT INTO poop (user_id, timestamp) VALUES (?, ?)`).run(
 		userId,
 		new Date().toISOString()

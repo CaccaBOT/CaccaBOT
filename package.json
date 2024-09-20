@@ -4,11 +4,11 @@
 	"description": "",
 	"main": "index.js",
 	"scripts": {
-		"test": "node index.js",
+		"build": "tsc -p tsconfig.json",
 		"start": "node index.js"
 	},
-	"author": "",
-	"license": "ISC",
+	"author": "CaccaBOT Team",
+	"license": "GPL-2.0-only",
 	"dependencies": {
 		"@fastify/autoload": "^5.8.0",
 		"@fastify/cors": "^9.0.1",
@@ -28,5 +28,9 @@
 		"puppeteer": "^13.1.2",
 		"qrcode-terminal": "^0.12.0",
 		"whatsapp-web.js": "github:pedroslopez/whatsapp-web.js#webpack-exodus"
+	},
+	"devDependencies": {
+		"@types/node": "^22.5.5",
+		"typescript": "^5.6.2"
 	}
 }
