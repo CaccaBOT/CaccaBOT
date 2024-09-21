@@ -20,9 +20,7 @@ export const client = new Client({
 	authStrategy: new LocalAuth(),
 	puppeteer: { 
 		handleSIGINT: false,
-		puppeteer: {
-			timeout: 60000
-		}
+		timeout: 60000
 	},
 })
 
