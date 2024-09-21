@@ -1,6 +1,5 @@
 import { Message } from "whatsapp-web.js"
 import { Command, Info } from "../types/Command"
-//@ts-ignore
 import { updateUsername, updateProfilePicture, updateBio, getUserProfileByPhone, getUserProfileByUsername, checkAchievementForUser } from '../database/index'
 import path from 'path'
 import fs from 'fs'
@@ -10,7 +9,7 @@ const profile: Command = {
 	name: 'profile',
 	description: 'manage your profile',
 	execute: async (message: Message, info: Info) => {
-		const user = getUserProfileByPhone(message.author)
+		const user = getUserProfileByPhone(message.author!)
 		if (!user.id) {
 			message.reply(
 				`❌ You don't have a poop profile.\nIt'll be automatically created when you poop the first time`,

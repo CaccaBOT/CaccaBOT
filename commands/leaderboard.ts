@@ -1,5 +1,4 @@
 import { client } from '../whatsapp/index'
-//@ts-ignore
 import { poopLeaderboardWithFilter } from '../database/index'
 import { GroupChat, Message } from 'whatsapp-web.js'
 import config from '../config.json'

@@ -9,7 +9,6 @@ interface UploadPfpBody {
 	image: string,
 }
 
-
 const uploadPfpEndpoint = async function (server: FastifyInstance, options: RouteOptions) {
 	server.post('/pfp', async (req: FastifyRequest<{Body: UploadPfpBody}>, res: FastifyReply) => {
 		const { image } = req.body

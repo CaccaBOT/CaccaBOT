@@ -1,5 +1,4 @@
 import { Command, Info } from "../types/Command"
-//@ts-ignore
 import { getUserProfileByUsername } from '../database/index'
 import { Message } from "whatsapp-web.js"
 

@@ -1,5 +1,4 @@
 import { Command, Info } from "../types/Command"
-//@ts-ignore
 import { poopStats } from '../database'
 import { Message } from "whatsapp-web.js"
 

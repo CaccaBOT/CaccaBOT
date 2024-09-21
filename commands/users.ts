@@ -1,6 +1,5 @@
 import { Message } from "whatsapp-web.js"
 import { Command, Info } from "../types/Command"
-//@ts-ignore
 import { poopLeaderboard } from '../database/index'
 
 const users: Command = {

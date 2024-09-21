@@ -1,4 +1,3 @@
-//@ts-ignore
 import { addAchievementToUser } from '../../database'
 import { Achievement } from '../../types/Achievement'
 import { RawUser } from '../../types/User'

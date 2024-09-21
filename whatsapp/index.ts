@@ -5,18 +5,17 @@ import { Client, LocalAuth } from 'whatsapp-web.js'
 //@ts-ignore
 import QRCode from 'qrcode-terminal'
 //@ts-ignore
+import schedule from 'node-schedule'
 import { addPoop, checkAchievementForUser, getUserProfileByPhone, poopStreak, createUser, getLastPoop, deleteUser, getInactiveUsers } from '../database/index'
-//@ts-ignore
 import { detectPoop } from '../poop/parser'
 import config from '../config.json'
 import fs from 'fs'
 import path from 'path'
 import replies from '../storage/replies.json'
-//@ts-ignore
-import schedule from 'node-schedule'
 import moment from 'moment-timezone'
 import { RawUser } from "../types/User"
 import { Poop } from "../types/Poop"
+import { MessageInfo } from "../types/MessageInfo"
 export let commands: Command[] = []
 
 export const client = new Client({
@@ -102,9 +101,9 @@ function checkAchievements(poop: Poop, user: RawUser, message: Message) {
 	})
 }
 
-async function parseMessage(message: Message) {
+async function parseMessage(message: Message): Promise<MessageInfo | undefined> {
 	if (Object.values(message.body).length == 0 || message.body == null) {
-		return
+		return;
 	}
 
 	let info = {

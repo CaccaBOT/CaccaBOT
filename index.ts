@@ -1,8 +1,6 @@
 const server = require('fastify')({ bodyLimit: 8388608 })
 import {FastifyRequest, FastifyReply} from 'fastify'
-//@ts-ignore
 import { client } from './whatsapp/index'
-//@ts-ignore
 import { initDatabase } from './database/index'
 import dotenv from 'dotenv'
 import config from './config.json'

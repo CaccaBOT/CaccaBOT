@@ -1,4 +1,3 @@
-//@ts-ignore
 import { addAchievementToUser, getUserCollectibles, getAllCollectibles } from '../../database'
 import { Achievement } from '../../types/Achievement'
 import { CollectibleResponse } from '../../types/CollectibleResponse'

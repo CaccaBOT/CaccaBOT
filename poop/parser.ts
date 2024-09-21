@@ -13,7 +13,7 @@ const cases = [
 	'cacca=~((~cacca)-1)',
 ]
 
-function detectPoop(message: MessageInfo) {
+export function detectPoop(message: MessageInfo | undefined) {
 	if (message && message.content) {
 		if (cases.includes(message.content.toLowerCase().replaceAll(' ', ''))) {
 			return message.sender

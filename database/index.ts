@@ -1,12 +1,12 @@
 const db = require('better-sqlite3')('./storage/db.sqlite3')
-const crypto = require('crypto')
-const argon2 = require('argon2')
-const moment = require('moment-timezone')
-const config = require('../config.json')
+import crypto from 'crypto'
+import argon2 from 'argon2'
+import moment from 'moment-timezone'
+import config from '../config.json'
 
 const timezone = config.timezone || 'UTC'
 
-function initDatabase() {
+export function initDatabase() {
 	db.exec(`
         PRAGMA foreign_keys = ON;
 
@@ -244,11 +244,11 @@ function initDatabase() {
     `)
 }
 
-function getAchievement(achievementId) {
+export function getAchievement(achievementId: string) {
 	return db.prepare(`SELECT * FROM achievement WHERE id = ?`).get(achievementId)
 }
 
-function getInactiveUsers(date) {
+export function getInactiveUsers(date: Date) {
 	const startOfMonth = moment(date)
 		.tz(timezone)
 		.startOf('month')
@@ -278,15 +278,15 @@ function getInactiveUsers(date) {
 	return inactiveUsers
 }
 
-function deleteUser(userId) {
+export function deleteUser(userId: string) {
 	db.prepare(`DELETE FROM user WHERE id = ?`).run(userId)
 }
 
-function updateUsername(userId, username) {
+export function updateUsername(userId: string, username: string) {
 	db.prepare(`UPDATE user SET username = ? WHERE id = ?`).run(username, userId)
 }
 
-function getTotalPoopsPerDay() {
+export function getTotalPoopsPerDay() {
 	return db
 		.prepare(
 			`
@@ -314,17 +314,17 @@ function getTotalPoopsPerDay() {
 			`,
 		)
 		.all()
-		.reduce((acc, { date, poops }) => {
+		.reduce((acc: Record<string, number>, { date, poops }: Record<string, number>) => {
 			acc[date] = poops
 			return acc
 		}, {})
 }
 
-function getUserCount() {
+export function getUserCount() {
 	return db.prepare(`SELECT COUNT(*) as totalUsers FROM user`).get().totalUsers
 }
 
-function getMonthlyUserCount(date) {
+export function getMonthlyUserCount(date: string) {
 	const startOfMonth = moment(date)
 	.tz(timezone)
 	.startOf('month')
@@ -348,12 +348,12 @@ function getMonthlyUserCount(date) {
 		.get(startOfMonth, endOfMonth).monthlyUsers
 }
 
-function getCirculatingMoney() {
+export function getCirculatingMoney() {
 	return db.prepare(`SELECT SUM(money) as circulatingMoney FROM user`).get()
 		.circulatingMoney
 }
 
-function getCirculatingMoneyWithAssets() {
+export function getCirculatingMoneyWithAssets() {
 	return db
 		.prepare(
 			`SELECT 
@@ -369,7 +369,7 @@ function getCirculatingMoneyWithAssets() {
 		.get().circulatingMoneyWithAssets
 }
 
-function getDailyPoopCount(date) {
+export function getDailyPoopCount(date: string) {
 	const startOfDayUTC = moment
 		.tz(date, timezone)
 		.startOf('day')
@@ -418,7 +418,7 @@ function getDailyPoopCount(date) {
 	return { poops: currentCount, trend: Math.round(trend) }
 }
 
-function getWeeklyPoopCount(date) {
+export function getWeeklyPoopCount(date: string) {
 	const startOfCurrentWeekUTC = moment
 		.tz(date, timezone)
 		.startOf('week')
@@ -476,7 +476,7 @@ function getWeeklyPoopCount(date) {
 	return { poops: currentCount, trend: Math.round(trend) }
 }
 
-function getMonthlyPoopCount(date) {
+export function getMonthlyPoopCount(date: string) {
 	const startOfCurrentMonthUTC = moment
 		.tz(date, timezone)
 		.startOf('month')
@@ -534,7 +534,7 @@ function getMonthlyPoopCount(date) {
 	return { poops: currentCount, trend: Math.round(trend) }
 }
 
-function getTotalPoopCount() {
+export function getTotalPoopCount() {
 	return db
 		.prepare(
 			`
@@ -545,7 +545,7 @@ function getTotalPoopCount() {
 		.get()
 }
 
-function getDailyTopPooper(date) {
+export function getDailyTopPooper(date: string) {
 	const formattedDate = moment(date).tz(timezone).format('YYYY-MM-DD')
 	return db
 		.prepare(
@@ -562,7 +562,7 @@ function getDailyTopPooper(date) {
 		.get(formattedDate)
 }
 
-function getWeeklyTopPooper(date) {
+export function getWeeklyTopPooper(date: string) {
 	const startOfWeek = moment(date)
 		.tz(timezone)
 		.startOf('week')
@@ -585,7 +585,7 @@ function getWeeklyTopPooper(date) {
 		.get(startOfWeek, endOfWeek)
 }
 
-function getMonthlyTopPooper(date) {
+export function getMonthlyTopPooper(date: string) {
 	const formattedDate = moment(date).tz(timezone).format('YYYY-MM')
 	return db
 		.prepare(
@@ -602,7 +602,7 @@ function getMonthlyTopPooper(date) {
 		.get(formattedDate)
 }
 
-function getTopPooper() {
+export function getTopPooper() {
 	return db
 		.prepare(
 			`
@@ -617,7 +617,7 @@ function getTopPooper() {
 		.get()
 }
 
-function getMonthlyPoopDistribution(date) {
+export function getMonthlyPoopDistribution(date: string) {
 	const formattedDate = moment(date).tz(timezone).format('YYYY-MM')
 	return db
 		.prepare(
@@ -637,7 +637,7 @@ function getMonthlyPoopDistribution(date) {
 		.all(formattedDate, formattedDate)
 }
 
-async function login(username, password) {
+export async function login(username: string, password: string) {
 	const user = db.prepare(`SELECT * FROM user WHERE username = ?`).get(username)
 
 	if (!user) {
@@ -651,7 +651,7 @@ async function login(username, password) {
 	return user
 }
 
-function getUserByToken(token) {
+export function getUserByToken(token: string) {
 	const user = db.prepare(`SELECT * FROM user WHERE token = ?`).get(token)
 	if (user) {
 		user.frozen = Boolean(user.frozen)
@@ -660,32 +660,28 @@ function getUserByToken(token) {
 	return user
 }
 
-function generateToken(id) {
+export function generateToken(userId: string) {
 	const token = crypto.randomBytes(64).toString('hex')
-	db.prepare(`UPDATE user SET token = ? WHERE id = ?`).run(token, id)
+	db.prepare(`UPDATE user SET token = ? WHERE id = ?`).run(token, userId)
 	return token
 }
 
-async function updatePassword(id, password) {
+export async function updatePassword(userId: string, password: string) {
 	const hash = await argon2.hash(password)
-	db.prepare(`UPDATE user SET password = ? WHERE id = ?`).run(hash, id)
-	generateToken(id)
+	db.prepare(`UPDATE user SET password = ? WHERE id = ?`).run(hash, userId)
+	generateToken(userId)
 }
 
-async function updateUsername(id, username) {
-	db.prepare(`UPDATE user SET username = ? WHERE id = ?`).run(username, id)
-}
-
-function createUser(id, username, bio) {
-	let phone = sanitizePhone(id)
-	id = hashId(id)
+export function createUser(rawPhone: string, username: string, bio: string | null) {
+	const phone = sanitizePhone(rawPhone)
+	const id = hashId(phone)
 
 	db.prepare(
 		`INSERT INTO user (id, phone, username, bio) VALUES (?, ?, ?, ?)`,
 	).run(id, phone, username, bio)
 }
 
-function getUserCollectibles(userId) {
+export function getUserCollectibles(userId: string) {
 	return db
 		.prepare(
 			`
@@ -702,43 +698,43 @@ function getUserCollectibles(userId) {
 		.all(userId)
 }
 
-function setMoney(userId, amount) {
+export function setMoney(userId: string, amount: number) {
 	db.prepare(`UPDATE user SET money = ? WHERE id = ?`).run(amount, userId)
 }
 
-function addCollectibleToUser(userId, collectible) {
+export function addCollectibleToUser(userId: string, collectibleId: number) {
 	db.prepare(
 		`INSERT INTO user_collectible(user_id, collectible_id) VALUES(?, ?)`,
-	).run(userId, collectible)
+	).run(userId, collectibleId)
 }
 
-function addOpenedPack(userId) {
+export function addOpenedPack(userId: string) {
 	db.prepare(
 		`UPDATE user SET openedPacks = (SELECT openedPacks FROM user WHERE id = ?) + 1 WHERE id = ?`,
 	).run(userId, userId)
 }
 
-function getRarities() {
+export function getRarities() {
 	return db.prepare(`SELECT * FROM rarity`).all()
 }
 
-function getCollectibles(rarity) {
-	return db.prepare(`SELECT * FROM collectible WHERE rarity_id = ?`).all(rarity)
+export function getCollectibles(rarityId: number) {
+	return db.prepare(`SELECT * FROM collectible WHERE rarity_id = ?`).all(rarityId)
 }
 
-function getAllCollectibles() {
+export function getAllCollectibles() {
 	return db.prepare(`SELECT * FROM collectible`).all()
 }
 
-function getUserProfileById(id) {
+export function getUserProfileById(userId: string) {
 	return db
 		.prepare(
 			'SELECT u.*, COUNT(p.id) as poops FROM user u JOIN poop p ON u.id = p.user_id WHERE u.id = ?',
 		)
-		.get(id)
+		.get(userId)
 }
 
-function getUserProfileByUsername(username) {
+export function getUserProfileByUsername(username: string) {
 	return db
 		.prepare(
 			'SELECT u.*, COUNT(p.id) as poops FROM user u JOIN poop p ON u.id = p.user_id WHERE u.username = ?',
@@ -746,7 +742,7 @@ function getUserProfileByUsername(username) {
 		.get(username)
 }
 
-function getUserProfileByPhone(phone) {
+export function getUserProfileByPhone(phone: string) {
 	phone = sanitizePhone(phone)
 	return db
 		.prepare(
@@ -755,11 +751,11 @@ function getUserProfileByPhone(phone) {
 		.get(phone)
 }
 
-function getLastPoop() {
+export function getLastPoop() {
 	return db.prepare(`SELECT * FROM poop ORDER BY id DESC LIMIT 1`).get()
 }
 
-function addPoop(userId) {
+export function addPoop(userId: string) {
 	// this is voluntarily stored in UTC for best practice
 	db.prepare(`INSERT INTO poop (user_id, timestamp) VALUES (?, ?)`).run(
 		userId,
@@ -771,7 +767,7 @@ function addPoop(userId) {
 	).run(userId, userId)
 }
 
-function addPoopWithTimestamp(userId, timestamp) {
+export function addPoopWithTimestamp(userId: string, timestamp: string) {
 	db.prepare(`INSERT INTO poop (user_id, timestamp) VALUES (?, ?)`).run(
 		userId,
 		timestamp,
@@ -782,7 +778,7 @@ function addPoopWithTimestamp(userId, timestamp) {
 	).run(userId, userId)
 }
 
-function poopLeaderboard() {
+export function poopLeaderboard() {
 	const result = db
 		.prepare(
 			`
@@ -801,13 +797,13 @@ function poopLeaderboard() {
 		)
 		.all()
 
-	return result.map((row) => ({
+	return result.map((row: any) => ({
 		...row,
 		frozen: Boolean(row.frozen),
 	}))
 }
 
-function poopLeaderboardWithFilter(year, month) {
+export function poopLeaderboardWithFilter(year: number, month: number) {
 	const yearStr = year.toString()
 	const monthStr = month.toString().padStart(2, '0')
 
@@ -831,13 +827,13 @@ function poopLeaderboardWithFilter(year, month) {
 		)
 		.all(yearStr, monthStr)
 
-	return result.map((row) => ({
+	return result.map((row: any) => ({
 		...row,
 		frozen: Boolean(row.frozen),
 	}))
 }
 
-function allPoop() {
+export function allPoop() {
 	return db
 		.prepare(
 			'SELECT p.*, u.username as username FROM poop p JOIN user u ON p.user_id = u.id',
@@ -845,15 +841,17 @@ function allPoop() {
 		.all()
 }
 
-function allPoopWithFilter(year, month) {
-	const startOfMonthLocal = moment
-		.tz({ year, month: month - 1, day: 1 }, timezone)
-		.startOf('month')
-	const endOfMonthLocal = moment
-		.tz({ year, month: month - 1, day: 1 }, timezone)
-		.endOf('month')
-	const startOfMonthUtc = startOfMonthLocal.utc().toISOString()
-	const endOfMonthUtc = endOfMonthLocal.utc().toISOString()
+export function allPoopWithFilter(year: number, month: number) {
+	const startOfMonth = moment({year, month})
+	.tz(timezone)
+	.startOf('month')
+	.utc()
+	.toISOString()
+	const endOfMonth = moment({year, month})
+	.tz(timezone)
+	.endOf('month')
+	.utc()
+	.toISOString()
 
 	return db
 		.prepare(
@@ -863,18 +861,18 @@ function allPoopWithFilter(year, month) {
 		 ON (p.user_id = u.id)
          WHERE p.timestamp >= ? AND p.timestamp <= ?`
 		)
-		.all(startOfMonthUtc, endOfMonthUtc)
+		.all(startOfMonth, endOfMonth)
 }
 
-function getPoopsFromUser(id) {
+export function getPoopsFromUser(userId: string) {
 	return db
 		.prepare(
 			'SELECT p.* FROM poop p JOIN user u ON p.user_id = u.id WHERE u.id = ?',
 		)
-		.all(id)
+		.all(userId)
 }
 
-function getPoopsFromUserWithFilter(id, year, month) {
+export function getPoopsFromUserWithFilter(userId: string, year: number, month: number) {
 	const startOfMonth = new Date(Date.UTC(year, month - 1, 1))
 	const endOfMonth = new Date(Date.UTC(year, month, 0, 23, 59, 59, 999))
 
@@ -888,10 +886,10 @@ function getPoopsFromUserWithFilter(id, year, month) {
          JOIN user u ON p.user_id = u.id
          WHERE u.id = ? AND p.timestamp >= ? AND p.timestamp <= ?`,
 		)
-		.all(id, startOfMonthIso, endOfMonthIso)
+		.all(userId, startOfMonthIso, endOfMonthIso)
 }
 
-function poopStatsFromUser(id) {
+export function poopStatsFromUser(userId: string) {
 	const now = new Date()
 	const todayStart = new Date(
 		Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()),
@@ -923,23 +921,23 @@ function poopStatsFromUser(id) {
 		.prepare(
 			`SELECT COUNT(*) as today FROM poop WHERE timestamp BETWEEN ? AND ? AND poop.user_id = ?`,
 		)
-		.get(today, todayEndSqlite, id)
+		.get(today, todayEndSqlite, userId)
 
 	const weeklyPoops = db
 		.prepare(
 			`SELECT COUNT(*) as week FROM poop WHERE timestamp >= ? AND poop.user_id = ?`,
 		)
-		.get(weekStart, id)
+		.get(weekStart, userId)
 
 	const monthlyPoops = db
 		.prepare(
 			`SELECT COUNT(*) as month FROM poop WHERE timestamp >= ? AND poop.user_id = ?`,
 		)
-		.get(monthStart, id)
+		.get(monthStart, userId)
 
 	const totalPoops = db
 		.prepare(`SELECT COUNT(*) as total FROM poop WHERE poop.user_id = ?`)
-		.get(id)
+		.get(userId)
 
 	return {
 		today: todayPoops.today,
@@ -949,7 +947,7 @@ function poopStatsFromUser(id) {
 	}
 }
 
-function poopStreak(id) {
+export function poopStreak(userId: string) {
 	const DAY_IN_MILLISECONDS = 24 * 60 * 60 * 1000
 	let days = db
 		.prepare(
@@ -961,8 +959,8 @@ function poopStreak(id) {
 			ORDER BY days;
 		`,
 		)
-		.all(id)
-		.map((x) => x.days)
+		.all(userId)
+		.map((x: any) => x.days)
 
 	days.push(
 		`${new Date().getFullYear()}-${(new Date().getMonth() + 1)
@@ -973,7 +971,7 @@ function poopStreak(id) {
 	let streak = 0
 
 	for (let i = days.length - 1; i > 0; i--) {
-		const diff = new Date(days[i]) - new Date(days[i - 1])
+		const diff = new Date(days[i]).getTime() - new Date(days[i - 1]).getTime()
 		if (diff == DAY_IN_MILLISECONDS || diff == 0) {
 			streak++
 		} else {
@@ -984,7 +982,7 @@ function poopStreak(id) {
 	return streak
 }
 
-function poopStatsFromUserWithFilter(id, year, month) {
+export function poopStatsFromUserWithFilter(userId: string, year: number, month: number) {
 	const currentDate = moment().tz(timezone)
 	const daysConsidered =
 		year === currentDate.year() && month === currentDate.month() + 1
@@ -996,15 +994,15 @@ function poopStatsFromUserWithFilter(id, year, month) {
 					.date()
 
 	const monthlyLeaderboardPosition =
-		poopLeaderboardWithFilter(year, month).find((x) => x.id === id)?.rank ?? 0
-	const streak = poopStreak(id)
-	const poops = getPoopsFromUserWithFilter(id, year, month)
+		poopLeaderboardWithFilter(year, month).find((x: any) => x.id === userId)?.rank ?? 0
+	const streak = poopStreak(userId)
+	const poops = getPoopsFromUserWithFilter(userId, year, month)
 	const poopAverage = parseFloat((poops.length / daysConsidered).toFixed(2))
 
 	return { monthlyLeaderboardPosition, streak, poopAverage }
 }
 
-function poopStats() {
+export function poopStats() {
 	const now = new Date()
 	const todayStart = new Date(
 		Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate())
@@ -1021,18 +1019,11 @@ function poopStats() {
 		)
 	)
 
-	// Calculate start of the week and start of the month in UTC
 	const startOfWeek = new Date(todayStart)
 	startOfWeek.setUTCDate(todayStart.getUTCDate() - todayStart.getUTCDay())
 
 	const startOfMonth = new Date(todayStart)
 	startOfMonth.setUTCDate(1)
-
-	// Convert dates to ISO strings
-	const today = todayStart.toISOString()
-	const todayEndSqlite = todayEnd.toISOString()
-	const weekStart = startOfWeek.toISOString()
-	const monthStart = startOfMonth.toISOString()
 
 	const todayPoops = db
 		.prepare(
@@ -1058,45 +1049,35 @@ function poopStats() {
 	}
 }
 
-function updateUsername(id, username) {
-	db.prepare(
-		`
-        UPDATE user
-        SET username = ?
-        WHERE id = ?
-    `,
-	).run(username, id)
-}
-
-function updateProfilePicture(id, picture) {
+export function updateProfilePicture(userId: string, imageUrl: string | null) {
 	db.prepare(
 		`
         UPDATE user
         SET pfp = ?
         WHERE id = ?
     `,
-	).run(picture, id)
+	).run(imageUrl, userId)
 }
 
-function updateBio(id, bio) {
+export function updateBio(userId: string, bio: string) {
 	db.prepare(
 		`
 		UPDATE user
 		SET bio = ?
 		WHERE id = ?
 	`,
-	).run(bio, id)
+	).run(bio, userId)
 }
 
-function sanitizePhone(phone) {
-	return phone.match(/^\d+/)[0]
+export function sanitizePhone(phone: string) {
+	return phone.match(/^\d+/)![0]
 }
 
-function hashId(id) {
-	return crypto.createHash('md5').update(id.match(/^\d+/)[0]).digest('hex')
+export function hashId(id: string) {
+	return crypto.createHash('md5').update(id.match(/^\d+/)![0]).digest('hex')
 }
 
-function rawQuery(query) {
+export function rawQuery(query: string) {
 	if (query.toLowerCase().startsWith('select')) {
 		return db.prepare(query).all()
 	} else {
@@ -1104,7 +1085,7 @@ function rawQuery(query) {
 	}
 }
 
-function addAchievementToUser(userId, achievementId) {
+export function addAchievementToUser(userId: string, achievementId: string) {
 	db.prepare(
 		`INSERT INTO user_achievement (user_id, achievement_id, timestamp) VALUES (?, ?, ?)`,
 	).run(userId, achievementId, new Date().toISOString())
@@ -1114,7 +1095,7 @@ function addAchievementToUser(userId, achievementId) {
 	).run(userId, achievementId, userId)
 }
 
-function checkAchievementForUser(userId, achievementId) {
+export function checkAchievementForUser(userId: string, achievementId: string) {
 	return (
 		db
 			.prepare(
@@ -1125,7 +1106,7 @@ function checkAchievementForUser(userId, achievementId) {
 	)
 }
 
-function getUserAchievements(userId) {
+export function getUserAchievements(userId: string) {
 	return db
 		.prepare(
 			'SELECT a.* FROM user_achievement a JOIN user u ON a.user_id = u.id WHERE u.id = ?',
@@ -1133,63 +1114,6 @@ function getUserAchievements(userId) {
 		.all(userId)
 }
 
-function getAllAchievements() {
+export function getAllAchievements() {
 	return db.prepare('SELECT a.* FROM achievement a').all()
-}
-
-module.exports = {
-	initDatabase,
-	login,
-	updatePassword,
-	addPoop,
-	poopLeaderboard,
-	poopLeaderboardWithFilter,
-	poopStreak,
-	poopStats,
-	poopStatsFromUser,
-	poopStatsFromUserWithFilter,
-	allPoop,
-	allPoopWithFilter,
-	updateUsername,
-	updateProfilePicture,
-	updateBio,
-	getLastPoop,
-	getUserByToken,
-	getUserProfileById,
-	getUserProfileByUsername,
-	getUserProfileByPhone,
-	createUser,
-	getPoopsFromUser,
-	getPoopsFromUserWithFilter,
-	addPoopWithTimestamp,
-	setMoney,
-	getRarities,
-	getCollectibles,
-	getAllCollectibles,
-	addCollectibleToUser,
-	addOpenedPack,
-	getUserCollectibles,
-	getUserCount,
-	getMonthlyUserCount,
-	getCirculatingMoney,
-	getCirculatingMoneyWithAssets,
-	getDailyPoopCount,
-	getWeeklyPoopCount,
-	getMonthlyPoopCount,
-	getTotalPoopCount,
-	getDailyTopPooper,
-	getWeeklyTopPooper,
-	getMonthlyTopPooper,
-	getTopPooper,
-	getMonthlyPoopDistribution,
-	getTotalPoopsPerDay,
-	updateUsername,
-	getInactiveUsers,
-	deleteUser,
-	rawQuery,
-	addAchievementToUser,
-	checkAchievementForUser,
-	getUserAchievements,
-	getAllAchievements,
-	getAchievement
 }
