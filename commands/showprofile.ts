@@ -13,9 +13,7 @@ const showprofile: Command = {
 
 		const username = info.args[0]
 		const user = getUserProfileByUsername(username)
-
-		console.log(user)
-
+		
 		if (!user.id) {
 			message.reply('❌ User does not exist')
 			return

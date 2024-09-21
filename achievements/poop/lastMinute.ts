@@ -20,3 +20,5 @@ const lastMinute: Achievement = {
 		}
 	},
 }
+
+export default lastMinute;

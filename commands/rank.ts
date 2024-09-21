@@ -9,3 +9,5 @@ const rank: Command = {
 		commands.find((x) => x.name == 'leaderboard')?.execute(message, info)
 	},
 }
+
+export default rank;

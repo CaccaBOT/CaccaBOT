@@ -25,14 +25,14 @@ export const client = new Client({
 
 client.on('qr', (qr) => QRCode.generate(qr, { small: true }))
 
-client.on('ready', () => {
-	fs.readdirSync(`${path.resolve('./commands')}`)
-		.filter((file) => file.endsWith('.js'))
-		.forEach((file) => {
-			let cmd = require(`${path.resolve('./commands')}/${file}`)
-			commands.push(cmd)
-			console.info(`[COMMAND] ${cmd.name}`)
-		})
+client.on('ready', async () => {
+	const commandsDir = fs.readdirSync(`${path.resolve('./commands')}`)
+		.filter((file) => file.endsWith('.ts'))
+	for (const cmdFile of commandsDir) {
+		const cmd = await import(`${path.resolve('./commands')}/${cmdFile}`)
+		commands.push(cmd.default)
+		console.info(`[COMMAND] ${cmd.default.name}`)
+	}
 	console.log('[WHATSAPP] Ready on ' + client.info.wid.user)
 
 	if (config.monthlyPurge) {
@@ -93,8 +93,9 @@ client.on('message_create', async (message: Message) => {
 
 function checkAchievements(poop: Poop, user: RawUser, message: Message) {
 	const achievementsDir = path.resolve(`${__dirname}/../achievements/poop`)
-	fs.readdirSync(achievementsDir).forEach((file) => {
-		const achievement = require(`${achievementsDir}/${file}`)
+	fs.readdirSync(achievementsDir).forEach(async (file) => {
+		const achievementModule = await import(`${achievementsDir}/${file}`)
+		const achievement = achievementModule.default
 		if (!checkAchievementForUser(user.id, achievement.id)) {
 			achievement.check(poop, user, message)
 		}

@@ -47,8 +47,9 @@ function checkPackAchievements(collectible: CollectibleResponse, user: RawUser) 
 	const achievementsDir = path.resolve(
 		`${__dirname}/../../achievements/collectible`,
 	)
-	fs.readdirSync(achievementsDir).forEach((file) => {
-		const achievement = require(`${achievementsDir}/${file}`)
+	fs.readdirSync(achievementsDir).forEach(async (file) => {
+		const achievementModule = await import(`${achievementsDir}/${file}`)
+		const achievement = achievementModule.default
 		if (!checkAchievementForUser(user.id, achievement.id)) {
 			achievement.check(collectible, user)
 		}
