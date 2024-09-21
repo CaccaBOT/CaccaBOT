@@ -49,7 +49,7 @@ ENVIRONMENT=production
 SERVER_PORT=3000
 ```
 
-`ENVIRONMENT`: leave this untouched, production is the environment you want to run CaccaBOT on your group. Switch to `test` if you're writing features and testing locally.
+`ENVIRONMENT`: leave this untouched, production is the environment you want to run CaccaBOT on your group. Switch to `test` if you're writing features and testing locally
 
 `SERVER_PORT`: the webserver port, ideally leave this on port 3000 or a not well known port and manage routing with a reverse proxy like nginx
 
@@ -59,7 +59,7 @@ in order to run the server you have to enter the CaccaBOT directory and run the 
 
 ```
 cd CaccaBOT-Server
-node index.js
+ts-node index.ts
 ```
 
 However the process will close as soon as you close the SSH session on your remote machine.
@@ -69,8 +69,8 @@ To avoid that use a solution like `PM2`
 find the docs at https://pm2.keymetrics.io/
 
 ```bash
-npm install pm2 -g
-pm2 start index.js --name CaccaBOT
+npm install pm2 typescript ts-node -g
+pm2 start --interpreter ts-node --interpreter-args "--project tsconfig.json" index.ts --name CaccaBOT
 ```
 
 this will leave the process in the background even after the SSH session is closed
