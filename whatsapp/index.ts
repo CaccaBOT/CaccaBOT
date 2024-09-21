@@ -1,7 +1,5 @@
-import { GroupChat, Message } from "whatsapp-web.js"
+import { GroupChat, Message, Client, LocalAuth } from "whatsapp-web.js"
 import { Command } from "../types/Command"
-
-import { Client, LocalAuth } from 'whatsapp-web.js'
 //@ts-ignore
 import QRCode from 'qrcode-terminal'
 //@ts-ignore
@@ -20,7 +18,12 @@ export let commands: Command[] = []
 
 export const client = new Client({
 	authStrategy: new LocalAuth(),
-	puppeteer: { handleSIGINT: false },
+	puppeteer: { 
+		handleSIGINT: false,
+		puppeteer: {
+			timeout: 60000
+		}
+	},
 })
 
 client.on('qr', (qr) => QRCode.generate(qr, { small: true }))
