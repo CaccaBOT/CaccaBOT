@@ -1,20 +1,16 @@
-const {
-	setMoney,
-	getRarities,
-	getCollectibles,
-	addCollectibleToUser,
-	checkAchievementForUser,
-	addOpenedPack,
-} = require('../../database')
-const { authenticate } = require('../../middleware/auth')
-const { client } = require('../../whatsapp/index')
-const config = require('../../config.json')
-const { MessageMedia } = require('whatsapp-web.js')
-const path = require('path')
-const fs = require('fs')
+import { setMoney, getRarities, getCollectibles, addCollectibleToUser, checkAchievementForUser, addOpenedPack } from '../../database'
+import { authenticate } from '../../middleware/auth'
+import { client } from '../../whatsapp/index'
+import config from '../../config.json'
+import { MessageMedia } from 'whatsapp-web.js'
+import path from 'path'
+import fs from 'fs'
+import { FastifyInstance, FastifyReply, FastifyRequest, RouteOptions } from 'fastify'
+import { CollectibleResponse } from '../../types/CollectibleResponse'
+import { RawUser } from '../../types/User'
 
-module.exports = async function (fastify, options) {
-	fastify.get('/open', async (req, res) => {
+const openPackEndpoint = async function (server: FastifyInstance, options: RouteOptions) {
+	server.get('/open', async (req: FastifyRequest, res: FastifyReply) => {
 		const user = await authenticate(req, res)
 
 		res.code(401).send({error: 'This route will be available soon'})
@@ -47,7 +43,7 @@ module.exports = async function (fastify, options) {
 	})
 }
 
-function checkPackAchievements(collectible, user) {
+function checkPackAchievements(collectible: CollectibleResponse, user: RawUser) {
 	const achievementsDir = path.resolve(
 		`${__dirname}/../../achievements/collectible`,
 	)
@@ -59,7 +55,7 @@ function checkPackAchievements(collectible, user) {
 	})
 }
 
-function pickRarity(rarities) {
+function pickRarity(rarities: any) {
 	const randomChance = Math.random() * 100
 	let runningSum = 0
 
@@ -70,3 +66,5 @@ function pickRarity(rarities) {
 		}
 	}
 }
+
+export default openPackEndpoint;

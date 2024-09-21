@@ -1,14 +1,16 @@
-const {
-	updateUsername,
-	getUserProfileByUsername,
-	checkAchievementForUser,
-} = require('../../database')
-const { authenticate } = require('../../middleware/auth')
-const fs = require('fs')
-const path = require('path')
+import { FastifyInstance, FastifyReply, FastifyRequest, RouteOptions } from 'fastify'
+import { updateUsername, getUserProfileByUsername, checkAchievementForUser } from '../../database'
+import { authenticate } from '../../middleware/auth'
+import fs from 'fs'
+import path from 'path'
+import { RawUser } from '../../types/User'
 
-module.exports = async function (fastify, options) {
-	fastify.patch('/username', async (req, res) => {
+interface UpdateUsernameBody {
+	username: string
+}
+
+const updateUsernameEndpoint = async function (server: FastifyInstance, options: RouteOptions) {
+	server.patch('/username', async (req: FastifyRequest<{Body: UpdateUsernameBody}>, res: FastifyReply) => {
 		const { username } = req.body
 		const user = await authenticate(req, res)
 		if (!username) {
@@ -35,7 +37,7 @@ module.exports = async function (fastify, options) {
 	})
 }
 
-function checkAchievements(user) {
+function checkAchievements(user: RawUser) {
 	const achievementsDir = path.resolve(`${__dirname}/../../achievements/action`)
 	fs.readdirSync(achievementsDir).forEach((file) => {
 		const achievement = require(`${achievementsDir}/${file}`)
@@ -44,3 +46,5 @@ function checkAchievements(user) {
 		}
 	})
 }
+
+export default updateUsernameEndpoint;

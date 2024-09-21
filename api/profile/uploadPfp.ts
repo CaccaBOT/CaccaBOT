@@ -1,13 +1,17 @@
-const {
-	updateProfilePicture,
-	checkAchievementForUser,
-} = require('../../database')
-const { authenticate } = require('../../middleware/auth')
-const fs = require('fs')
-const path = require('path')
+import { updateProfilePicture, checkAchievementForUser } from '../../database'
+import { authenticate } from '../../middleware/auth'
+import fs from 'fs'
+import { FastifyInstance, FastifyReply, FastifyRequest, RouteOptions } from 'fastify'
+import path from 'path'
+import { RawUser } from '../../types/User'
 
-module.exports = async function (fastify, options) {
-	fastify.post('/pfp', async (req, res) => {
+interface UploadPfpBody {
+	image: string,
+}
+
+
+const uploadPfpEndpoint = async function (server: FastifyInstance, options: RouteOptions) {
+	server.post('/pfp', async (req: FastifyRequest<{Body: UploadPfpBody}>, res: FastifyReply) => {
 		const { image } = req.body
 		const user = await authenticate(req, res)
 
@@ -41,7 +45,7 @@ module.exports = async function (fastify, options) {
 	})
 }
 
-function checkAchievements(user) {
+function checkAchievements(user: RawUser) {
 	const achievementsDir = path.resolve(`${__dirname}/../../achievements/action`)
 	fs.readdirSync(achievementsDir).forEach((file) => {
 		const achievement = require(`${achievementsDir}/${file}`)
@@ -50,3 +54,5 @@ function checkAchievements(user) {
 		}
 	})
 }
+
+export default uploadPfpEndpoint;

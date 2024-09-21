@@ -1,25 +1,11 @@
-const {
-	getUserCount,
-	getMonthlyUserCount,
-	getCirculatingMoney,
-	getCirculatingMoneyWithAssets,
-	getDailyPoopCount,
-	getWeeklyPoopCount,
-	getMonthlyPoopCount,
-	getTotalPoopCount,
-	getDailyTopPooper,
-	getWeeklyTopPooper,
-	getMonthlyTopPooper,
-	getTopPooper,
-	getMonthlyPoopDistribution,
-	getTotalPoopsPerDay,
-} = require('../../database/index')
-const moment = require('moment-timezone')
-const config = require('../../config.json')
+import { FastifyInstance, FastifyReply, FastifyRequest, RouteOptions } from "fastify"
+import { getUserCount, getMonthlyUserCount, getCirculatingMoney, getCirculatingMoneyWithAssets, getDailyPoopCount, getWeeklyPoopCount, getMonthlyPoopCount, getTotalPoopCount, getDailyTopPooper, getWeeklyTopPooper, getMonthlyTopPooper, getTopPooper, getMonthlyPoopDistribution, getTotalPoopsPerDay } from '../../database/index'
+import moment from 'moment-timezone'
+import config from '../../config.json'
 const timezone = config.timezone || 'UTC'
 
-module.exports = async function (fastify, options) {
-	fastify.get('/stats', async (req, res) => {
+const statsAllEndpoint = async function (server: FastifyInstance, options: RouteOptions) {
+	server.get('/stats', async (req: FastifyRequest, res: FastifyReply) => {
 		const date = moment.tz(moment(), timezone)
 		.startOf('day')
 		.clone()
@@ -58,3 +44,5 @@ module.exports = async function (fastify, options) {
 		})
 	})
 }
+
+export default statsAllEndpoint;

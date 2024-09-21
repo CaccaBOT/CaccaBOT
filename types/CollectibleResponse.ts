@@ -1,10 +1,8 @@
-import { CollectibleRarity } from "./CollectibleRarity";
-
 export type CollectibleResponse = {
     id: number;        
     name: string;      
     description: string | undefined;
-    rarity: CollectibleRarity;      
+    rarity: 'Caccasmagorico' | 'Sensazianale' | 'Escrementale' | 'Merdume'    
     assetUrl: string | undefined;    
   };
   

@@ -1,1 +1,0 @@
-export type CollectibleRarity = 'Caccasmagorico' | 'Sensazianale' | 'Escrementale' | 'Merdume'

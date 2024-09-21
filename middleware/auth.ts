@@ -2,7 +2,7 @@ import { FastifyReply, FastifyRequest } from "fastify"
 //@ts-ignore
 import { getUserByToken } from '../database/index'
 
-async function authenticate(req: FastifyRequest, res: FastifyReply) {
+export async function authenticate(req: FastifyRequest, res: FastifyReply) {
 	const token = req.headers['x-auth-token']
 
 	if (!token) {
@@ -19,5 +19,3 @@ async function authenticate(req: FastifyRequest, res: FastifyReply) {
 
 	return user
 }
-
-module.exports = { authenticate }
