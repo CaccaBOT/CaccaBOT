@@ -421,27 +421,34 @@ export function getDailyPoopCount(date: string) {
 export function getWeeklyPoopCount(date: string) {
 	const startOfCurrentWeekUTC = moment
 		.tz(date, timezone)
-		.startOf('week')
+		.isoWeekday(1)
+		.startOf('day')
 		.clone()
 		.utc()
 		.toISOString()
+
 	const endOfCurrentWeekUTC = moment
 		.tz(date, timezone)
-		.endOf('week')
+		.isoWeekday(7)
+		.endOf('day')
 		.clone()
 		.utc()
 		.toISOString()
+
 	const startOfPreviousWeekUTC = moment
 		.tz(date, timezone)
 		.subtract(1, 'week')
-		.startOf('week')
+		.isoWeekday(1)
+		.startOf('day')
 		.clone()
 		.utc()
 		.toISOString()
+
 	const endOfPreviousWeekUTC = moment
 		.tz(date, timezone)
 		.subtract(1, 'week')
-		.endOf('week')
+		.isoWeekday(7)
+		.endOf('day')
 		.clone()
 		.utc()
 		.toISOString()
@@ -546,28 +553,46 @@ export function getTotalPoopCount() {
 }
 
 export function getDailyTopPooper(date: string) {
-	const formattedDate = moment(date).tz(timezone).format('YYYY-MM-DD')
+	const startOfDay = moment(date)
+	.tz(timezone)
+	.startOf('day')
+	.utc()
+	.toISOString()
+	const endOfDay = moment(date)
+	.tz(timezone)
+	.endOf('day')
+	.utc()
+	.toISOString()
+
 	return db
 		.prepare(
 			`
         SELECT u.id, u.username, u.pfp, COUNT(p.id) as poops
         FROM user u
         JOIN poop p ON u.id = p.user_id
-        WHERE DATE(p.timestamp) = DATE(?)
+        WHERE p.timestamp BETWEEN ? AND ?
         GROUP BY u.id
         ORDER BY poops DESC
         LIMIT 1
     `
 		)
-		.get(formattedDate)
+		.get(startOfDay, endOfDay)
 }
 
 export function getWeeklyTopPooper(date: string) {
 	const startOfWeek = moment(date)
 		.tz(timezone)
-		.startOf('week')
-		.format('YYYY-MM-DD')
-	const endOfWeek = moment(date).tz(timezone).endOf('week').format('YYYY-MM-DD')
+		.isoWeekday(1)
+		.startOf('day')
+		.utc()
+		.toISOString()
+	const endOfWeek = moment(date)
+		.tz(timezone)
+		.isoWeekday(7)
+		.endOf('day')
+		.utc()
+		.toISOString()
+
 	return db
 		.prepare(
 			`
@@ -586,20 +611,30 @@ export function getWeeklyTopPooper(date: string) {
 }
 
 export function getMonthlyTopPooper(date: string) {
-	const formattedDate = moment(date).tz(timezone).format('YYYY-MM')
+	const startOfMonth = moment(date)
+	.tz(timezone)
+	.startOf('month')
+	.utc()
+	.toISOString()
+	const endOfMonth = moment(date)
+	.tz(timezone)
+	.endOf('month')
+	.utc()
+	.toISOString()
+
 	return db
 		.prepare(
 			`
         SELECT u.id, u.username, u.pfp, COUNT(p.id) as poops
         FROM user u
         JOIN poop p ON u.id = p.user_id
-        WHERE strftime('%Y-%m', p.timestamp) = strftime('%Y-%m', ?)
+        WHERE p.timestamp BETWEEN ? AND ?
         GROUP BY u.id
         ORDER BY poops DESC
         LIMIT 1
     `
 		)
-		.get(formattedDate)
+		.get(startOfMonth, endOfMonth)
 }
 
 export function getTopPooper() {
@@ -618,7 +653,17 @@ export function getTopPooper() {
 }
 
 export function getMonthlyPoopDistribution(date: string) {
-	const formattedDate = moment(date).tz(timezone).format('YYYY-MM')
+	const startOfMonth = moment(date)
+	.tz(timezone)
+	.startOf('month')
+	.utc()
+	.toISOString()
+	const endOfMonth = moment(date)
+	.tz(timezone)
+	.endOf('month')
+	.utc()
+	.toISOString()
+
 	return db
 		.prepare(
 			`
@@ -626,15 +671,15 @@ export function getMonthlyPoopDistribution(date: string) {
                 u.id,
                 u.username,
                 u.pfp,
-                ROUND((COUNT(p.id) * 100.0 / (SELECT COUNT(*) FROM poop WHERE strftime('%Y-%m', timestamp) = ?)), 2) as percentage
+                ROUND((COUNT(p.id) * 100.0 / (SELECT COUNT(*) FROM poop WHERE timestamp BETWEEN ? AND ?)), 2) as percentage
             FROM user u
             JOIN poop p ON u.id = p.user_id
-            WHERE strftime('%Y-%m', p.timestamp) = ?
+        	WHERE p.timestamp BETWEEN ? AND ?
             GROUP BY u.id, u.username
             ORDER BY percentage DESC
         `,
 		)
-		.all(formattedDate, formattedDate)
+		.all(startOfMonth, endOfMonth, startOfMonth, endOfMonth)
 }
 
 export async function login(username: string, password: string) {
@@ -804,8 +849,14 @@ export function poopLeaderboard() {
 }
 
 export function poopLeaderboardWithFilter(year: number, month: number) {
-	const yearStr = year.toString()
-	const monthStr = month.toString().padStart(2, '0')
+	const startOfMonth = moment.tz({ year, month: month - 1 }, timezone)
+		.startOf('month')
+		.utc()
+		.toISOString()
+	const endOfMonth = moment.tz({ year, month: month - 1 }, timezone)
+		.endOf('month')
+		.utc()
+		.toISOString()
 
 	const result = db
 		.prepare(
@@ -817,20 +868,19 @@ export function poopLeaderboardWithFilter(year: number, month: number) {
             SELECT p.user_id, 
                    COUNT(*) AS poops
             FROM poop p 
-            WHERE strftime('%Y', p.timestamp) = ? 
-                  AND strftime('%m', p.timestamp) = ?
+            WHERE p.timestamp BETWEEN ? AND ?
             GROUP BY p.user_id
         ) AS poop_counts
         JOIN user u ON poop_counts.user_id = u.id
         ORDER BY poops DESC
     `
 		)
-		.all(yearStr, monthStr)
+		.all(startOfMonth, endOfMonth);
 
 	return result.map((row: any) => ({
 		...row,
 		frozen: Boolean(row.frozen),
-	}))
+	}));
 }
 
 export function allPoop() {
@@ -859,7 +909,7 @@ export function allPoopWithFilter(year: number, month: number) {
          FROM poop p
 		 JOIN user u
 		 ON (p.user_id = u.id)
-         WHERE p.timestamp >= ? AND p.timestamp <= ?`
+         WHERE p.timestamp BETWEEN ? AND ?`
 		)
 		.all(startOfMonth, endOfMonth)
 }
