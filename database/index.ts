@@ -682,6 +682,16 @@ export function getMonthlyPoopDistribution(date: string) {
 		.all(startOfMonth, endOfMonth, startOfMonth, endOfMonth)
 }
 
+export function logout(token: string) {
+	const user = db.prepare(`SELECT * FROM user WHERE token = ?`).get(token)
+
+	if (!user) {
+		return null
+	}
+
+	generateToken(user.id)
+}
+
 export async function login(username: string, password: string) {
 	const user = db.prepare(`SELECT * FROM user WHERE username = ?`).get(username)
 
