@@ -70,7 +70,7 @@ find the docs at https://pm2.keymetrics.io/
 
 ```bash
 npm install pm2 typescript ts-node -g
-pm2 start --interpreter ts-node --interpreter-args "--project tsconfig.json" index.ts --name CaccaBOT
+pm2 start --interpreter ts-node --interpreter-args "--project tsconfig.json --swc" index.ts --name CaccaBOT
 ```
 
 this will leave the process in the background even after the SSH session is closed
