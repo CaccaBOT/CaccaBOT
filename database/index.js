@@ -249,16 +249,16 @@ function getAchievement(achievementId) {
 }
 
 function getInactiveUsers(date) {
-	const startOfMonth = new Date(
-		date.getFullYear(),
-		date.getMonth(),
-		1
-	).toISOString()
-	const endOfMonth = new Date(
-		date.getFullYear(),
-		date.getMonth() + 1,
-		0
-	).toISOString()
+	const startOfMonth = moment(date)
+		.tz(timezone)
+		.startOf('month')
+		.utc()
+		.toISOString()
+	const endOfMonth = moment(date)
+		.tz(timezone)
+		.endOf('month')
+		.utc()
+		.toISOString()
 
 	const inactiveUsers = db
 		.prepare(
@@ -325,16 +325,27 @@ function getUserCount() {
 }
 
 function getMonthlyUserCount(date) {
+	const startOfMonth = moment(date)
+	.tz(timezone)
+	.startOf('month')
+	.utc()
+	.toISOString()
+	const endOfMonth = moment(date)
+	.tz(timezone)
+	.endOf('month')
+	.utc()
+	.toISOString()
+
 	return db
 		.prepare(
-			`
-	SELECT COUNT(DISTINCT u.id) as monthlyUsers
-	FROM user u
-	JOIN poop p ON u.id = p.user_id
-	WHERE strftime('%Y-%m', p.timestamp) = strftime('%Y-%m', ?)
-	`,
+		`
+			SELECT COUNT(DISTINCT u.id) as monthlyUsers
+			FROM user u
+			JOIN poop p ON u.id = p.user_id
+			WHERE p.timestamp BETWEEN ? AND ?
+		`,
 		)
-		.get(date).monthlyUsers
+		.get(startOfMonth, endOfMonth).monthlyUsers
 }
 
 function getCirculatingMoney() {

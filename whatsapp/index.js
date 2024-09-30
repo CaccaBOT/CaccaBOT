@@ -16,6 +16,7 @@ const fs = require('fs')
 const path = require('path')
 const replies = require('../storage/replies.json')
 const schedule = require('node-schedule')
+const moment = require('moment-timezone')
 let commands = []
 
 const client = new Client({
@@ -42,17 +43,13 @@ client.on('ready', () => {
 		)
 		schedule.scheduleJob('0 0 1 * *', async () => {
 			console.info(
-				'[PURGE] Running Monthly Purge for ' + new Date().toISOString(),
+				'[PURGE] Running Monthly Purge for ' + moment().subtract(1, 'month').format('MMMM YYYY'),
 			)
 			let purgeMsg = '*Running Monthly Purge*\n'
 			const chat = await client.getChatById(config.groupId)
 			if (chat.isGroup) {
 				const inactiveUsers = getInactiveUsers(
-					new Date(
-						new Date().getFullYear(),
-						new Date().getMonth() - 1,
-						new Date().getDay(),
-					),
+					moment().subtract(1, 'month').toDate()
 				)
 				purgeMsg += inactiveUsers.map((u) => u.username).join('\n')
 				for (const user of inactiveUsers) {
@@ -126,13 +123,8 @@ async function parseMessage(message) {
 
 	if (message.body.toLowerCase().startsWith(`${config.prefix} `)) {
 		info.isCommand = true
-
-		// analyze message by splitting it into an array with " " as separator
 		let msgContent = message.body.split(' ')
-		// set name of the command
 		info.command.name = msgContent[1]
-
-		// set the arguments of the command
 		for (let i = 2; i < msgContent.length; i++) {
 			info.command.args.push(msgContent[i])
 		}
