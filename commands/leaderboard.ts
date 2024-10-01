@@ -35,7 +35,7 @@ const leaderboard: Command = {
 				}\n`
 			}
 
-			leaderboardMsg += `\nThe leaderboard can be viewed here\n${config.frontendUrl}/leaderboard`
+			leaderboardMsg += `\nThe leaderboard can be viewed here\n${config.serverUrl}/leaderboard`
 		} else {
 			message.reply('This command is only available in groups')
 			return

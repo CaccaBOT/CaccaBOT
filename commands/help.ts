@@ -25,7 +25,7 @@ const help: Command = {
 
     helpString += `\n*Syntax*: ${config.prefix} <command> <arguments> (optional)\n`;
     helpString += `\nYou can add a poop by typing 'cacca++' with all its variants\n`;
-    helpString += `${config.frontendUrl}`;
+    helpString += `${config.serverUrl}`;
     helpString += `\nCaccaBOT ${config.version}-${process.env.ENVIRONMENT ?? 'test'}\n`;
 
     message.reply(helpString);

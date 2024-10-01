@@ -6,7 +6,7 @@ const manual: Command = {
 	name: 'manual',
 	description: 'view the poop manual',
 	execute: async (message: Message, info: Info) => {
-		message.reply(`${config.frontendUrl}/manual`)
+		message.reply(`${config.serverUrl}/manual`)
 	},
 }
 

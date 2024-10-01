@@ -22,8 +22,8 @@ git clone https://github.com/CaccaBOT/CaccaBOT-Server.git
 ```json
 {
 	"prefix": "cacca",
-	"version": "v4.4.0",
-	"frontendUrl": "https://caccabot.pages.dev",
+	"version": "v5.4.0",
+	"serverUrl": "https://caccabot.duckdns.org",
 	"groupId": null,
 	"whatsappModuleEnabled": true,
 	"monthlyPurge": true
@@ -34,7 +34,7 @@ git clone https://github.com/CaccaBOT/CaccaBOT-Server.git
 
 `version`: leave this untouched
 
-`frontendUrl`: where the frontend is hosted (we recommend GitHub pages or CloudFlare pages)
+`serverUrl`: where the server is hosted
 
 `groupId`: leave this untouched, when the bot will start and you'll try using a command it will send a message with the group ID, paste that id on this property to mark the group as the active CaccaBOT group
 

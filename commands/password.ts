@@ -21,7 +21,7 @@ const password: Command = {
 		updatePassword(user.id, password)
 		client.sendMessage(
 			message.author!,
-			`Your CaccaBOT password is: ${password}\nRemember to change it as soon as possible\n${config.frontendUrl}`,
+			`Your CaccaBOT password is: ${password}\nRemember to change it as soon as possible\n${config.serverUrl}`,
 		)
 	},
 }

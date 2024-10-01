@@ -6,6 +6,7 @@ import dotenv from 'dotenv'
 import config from './config.json'
 import fs from 'fs'
 import path from 'path'
+import fastifyStatic from '@fastify/static'
 dotenv.config()
 
 console.log(`
@@ -69,10 +70,34 @@ server.addHook('onRoute', (routeOptions: { url: string; method: string }) => {
 	}
 })
 
-server.register(require('@fastify/static'), {
-	root: path.join(__dirname, '/public'),
-	prefix: '/public/',
-})
+server.register(fastifyStatic, {
+	root: path.join(__dirname, 'public'),
+	prefix: '/public',
+});
+
+server.register(fastifyStatic, {
+    root: path.join(__dirname, '/public/client'),
+    prefix: '/',
+	decorateReply: false
+});
+
+server.register(fastifyStatic, {
+    root: path.join(__dirname, '/public/client/assets'),
+    prefix: '/assets/',
+	decorateReply: false
+});
+
+server.register(fastifyStatic, {
+    root: path.join(__dirname, '/public/collectibles'),
+    prefix: '/collectibles/',
+	decorateReply: false
+});
+
+server.register(fastifyStatic, {
+    root: path.join(__dirname, '/public/pfp'),
+    prefix: '/pfp/',
+	decorateReply: false
+});
 
 server.register(require('@fastify/cors'), {
 	origin: '*',
@@ -94,11 +119,10 @@ server.addHook('onRequest', (req: { method: any; url: any }, res: any, done: () 
 server.decorate('NotFound', (req: FastifyRequest, res: FastifyReply) => {
 	if (req.url.toLowerCase().startsWith('/api')) {
 		res.code(404).send({ error: 'This endpoint does not exist' })
-	} else if (req.url.toLowerCase().startsWith('/public')) {
-		res.code(404).send('File does not exist')
 	}
 
-	res.redirect(`${config.frontendUrl}${req.url}`)
+	const stream = fs.createReadStream(`${__dirname}/public/client/index.html`)
+    res.type('text/html').send(stream)
 })
 
 server.setNotFoundHandler(server.NotFound)

@@ -5,7 +5,7 @@
 	"main": "index.ts",
 	"scripts": {
 		"build": "tsc -p tsconfig.json",
-		"start": "node index.js"
+		"start": "node index.ts"
 	},
 	"author": "CaccaBOT Team",
 	"license": "GPL-2.0-only",

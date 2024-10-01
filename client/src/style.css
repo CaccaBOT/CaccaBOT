@@ -1,0 +1,64 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  scrollbar-color: initial !important;
+}
+
+body {
+  overflow-x: hidden;
+}
+
+body::-webkit-scrollbar {
+  width: 0.5rem;
+}
+
+body::-webkit-scrollbar-thumb {
+  background: linear-gradient(
+    oklch(0.6569 0.196 275.75),
+    oklch(0.748 0.26 342.55)
+  );
+  border-radius: 4px;
+}
+
+.rarity-legendary {
+  border: 8px solid #ffd600;
+}
+
+.rarity-epic {
+  border: 8px solid #9500ff;
+}
+
+.rarity-rare {
+  border: 8px solid #0068ff;
+}
+
+.rarity-common {
+  border: 8px solid #808080;
+}
+
+.text-rarity-legendary {
+  color: #ffd600;
+}
+
+.text-rarity-epic {
+  color: #9500ff;
+}
+
+.text-rarity-rare {
+  color: #0068ff;
+}
+
+.text-rarity-common {
+  color: #808080;
+}
+
+.loading {
+  transform: scale(1.5);
+}
+
+.dropdown:is(:not(details)) .dropdown-content {
+  visibility: visible;
+  opacity: 1;
+}
