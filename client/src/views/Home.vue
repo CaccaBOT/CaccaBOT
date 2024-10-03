@@ -33,7 +33,7 @@ onMounted(async () => {
   <div
     class="home-wrapper flex h-[85vh] w-full flex-col items-center justify-center"
   >
-    <img fetchpriority="high" class="mb-5 w-80" :src="homeImage" />
+    <img alt="CaccaBOT Logo" fetchpriority="high" class="mb-5 w-80" :src="homeImage" />
     <div class="prose text-center">
       <h1 class="mb-0">CaccaBOT</h1>
       <p class="m-0 text-2xl">{{ serverVersion }}</p>

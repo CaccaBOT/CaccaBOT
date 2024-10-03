@@ -71,7 +71,7 @@ function onFileChange(event: Event) {
       <div
         class="custom-shadow h-24 w-24 overflow-hidden rounded-full ring ring-primary ring-offset-2 ring-offset-base-100"
       >
-        <img
+        <img alt="Profile Picture"
           class="h-24 w-24"
           :src="previewSrc ?? sessionStore.session.pfp ?? noPfp"
         />

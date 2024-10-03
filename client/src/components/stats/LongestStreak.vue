@@ -15,7 +15,7 @@ const props = defineProps<{
       <div class="stat-figure text-secondary">
         <div class="avatar">
           <div class="w-16 rounded-full">
-            <img :src="props.user.pfp ?? noPfp" />
+            <img alt="Profile picture" :src="props.user.pfp ?? noPfp" />
           </div>
         </div>
       </div>

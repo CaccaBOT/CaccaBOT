@@ -147,7 +147,7 @@ function toggleNavMenu() {
           <div
             class="w-16 rounded-full bg-base-300 ring ring-primary ring-offset-2 ring-offset-base-100"
           >
-            <img fetchpriority="high" :src="sessionStore.session.pfp ?? noPfp" />
+            <img alt="CaccaBOT Logo" fetchpriority="high" :src="sessionStore.session.pfp ?? noPfp" />
           </div>
         </div>
         <NavMenu />

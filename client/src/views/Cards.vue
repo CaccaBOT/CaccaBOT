@@ -74,6 +74,7 @@ async function reset() {
     >
       <div class="position-relative card w-2/3 md:w-1/3 lg:w-1/5">
         <img
+          alt="Found card image"
           class="rounded-lg bg-base-300"
           :src="foundCard.asset_url"
           @click="reset"
@@ -104,7 +105,7 @@ async function reset() {
       class="lg:w-1/8 btn btn-error mx-auto w-2/3 sm:w-2/3 md:w-1/5"
     >
       You can't buy this item (5
-      <img class="merdollar h-[20px] w-[20px]" :src="merdollar" />)
+      <img alt="Merdollar" class="merdollar h-[20px] w-[20px]" :src="merdollar" />)
     </button>
   </div>
 </template>

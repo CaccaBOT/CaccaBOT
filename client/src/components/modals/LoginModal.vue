@@ -56,7 +56,7 @@ function dismissModal(event) {
         <div
           class="w-24 rounded-full ring ring-primary ring-offset-2 ring-offset-base-100"
         >
-          <img :src="noPfp" />
+          <img alt="No profile picture logo" :src="noPfp" />
         </div>
       </div>
       <div

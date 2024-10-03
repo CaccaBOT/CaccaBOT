@@ -48,7 +48,7 @@ onMounted(async () => {
             <div
               class="mb-2 w-20 rounded-full ring ring-primary ring-offset-2 ring-offset-base-100"
             >
-              <img :src="user.pfp ?? noPfp" />
+              <img alt="Profile picture" :src="user.pfp ?? noPfp" />
             </div>
           </div>
           <div class="h-100 flex flex-col items-center">

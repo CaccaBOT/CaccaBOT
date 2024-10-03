@@ -203,6 +203,7 @@ function getRarityClass(rarityId) {
           class="custom-shadow w-24 rounded-full ring ring-primary ring-offset-2 ring-offset-base-100"
         >
           <img
+            alt="Profile picture"
             :src="
               (isOwnProfile()
                 ? sessionStore.session.pfp
@@ -322,6 +323,7 @@ function getRarityClass(rarityId) {
             >{{ collectible.quantity }}</span
           >
           <img
+            alt="Collectible image"
             :class="getRarityClass(collectible.rarity)"
             class="collectible m-0 rounded-2xl"
             :src="collectible.asset_url"
