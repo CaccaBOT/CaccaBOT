@@ -58,7 +58,7 @@ server.register(require('@fastify/swagger-ui'), {
 	},
 })
 
-server.register(require('@fastify/autoload'), {
+server.register(import('@fastify/autoload'), {
 	dir: `${__dirname}/api`,
 	dirNameRoutePrefix: true,
 	options: { prefix: '/api' },
@@ -69,6 +69,8 @@ server.addHook('onRoute', (routeOptions: { url: string; method: string }) => {
 		console.log(`[ENDPOINT] ${routeOptions.method} ${routeOptions.url}`)
 	}
 })
+
+server.register(import('@fastify/compress'))
 
 server.register(fastifyStatic, {
 	root: path.join(__dirname, 'public'),
@@ -99,7 +101,7 @@ server.register(fastifyStatic, {
 	decorateReply: false
 });
 
-server.register(require('@fastify/cors'), {
+server.register(import('@fastify/cors'), {
 	origin: '*',
 })
 

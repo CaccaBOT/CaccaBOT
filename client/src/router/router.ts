@@ -11,28 +11,56 @@ import { useGlobalStore } from "../stores/global"
 import { useSessionStore } from "../stores/session"
 
 const routes = [
-  { path: "/", component: Home, name: "home" },
-  { path: "/stats", component: Stats, name: "stats" },
-  { path: "/leaderboard", component: Leaderboard, name: "leaderboard" },
+  { 
+    path: "/", 
+    component: () => import("../views/Home.vue"), 
+    name: "home" 
+  },
+  { 
+    path: "/stats", 
+    component: () => import("../views/Stats.vue"), 
+    name: "stats" 
+  },
+  { 
+    path: "/leaderboard", 
+    component: () => import("../views/Leaderboard.vue"), 
+    name: "leaderboard" 
+  },
   {
     path: "/leaderboard/:year/:month",
-    component: Leaderboard,
+    component: () => import("../views/Leaderboard.vue"),
     name: "monthlyLeaderboard",
   },
-  { path: "/profile/:id", component: Profile, name: "profile" },
+  { 
+    path: "/profile/:id", 
+    component: () => import("../views/Profile.vue"), 
+    name: "profile" 
+  },
   {
     path: "/profile/:id/:year/:month",
-    component: Profile,
+    component: () => import("../views/Profile.vue"),
     name: "monthlyProfile",
   },
   {
     path: "/profile/own",
-    component: Profile,
+    component: () => import("../views/Profile.vue"),
     name: "ownProfile",
   },
-  { path: "/users", component: Users, name: "users" },
-  { path: "/manual", component: Manual, name: "manual" },
-  { path: "/cards", component: Cards, name: "cards" },
+  { 
+    path: "/users", 
+    component: () => import("../views/Users.vue"), 
+    name: "users" 
+  },
+  { 
+    path: "/manual", 
+    component: () => import("../views/Manual.vue"), 
+    name: "manual" 
+  },
+  { 
+    path: "/cards", 
+    component: () => import("../views/Cards.vue"), 
+    name: "cards" 
+  },
 ]
 
 const router = createRouter({

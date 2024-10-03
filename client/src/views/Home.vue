@@ -1,11 +1,6 @@
 <script setup lang="ts">
-import router from "../router/router"
 import homeImage from "../assets/home.webp"
-import HeroiconsTrophy from "~icons/heroicons/trophy"
-import HeroiconsBookOpen from "~icons/heroicons/book-open"
-import HeroiconsChartBar from "~icons/heroicons/chart-bar"
 import HeroiconsDownload from "~icons/heroicons/arrow-down-tray"
-import HeroiconsUsers from "~icons/heroicons/users"
 import { onMounted, ref } from "vue"
 import { useAPIStore } from "../stores/api"
 import { useToast } from "vue-toastification"
@@ -38,7 +33,7 @@ onMounted(async () => {
   <div
     class="home-wrapper flex h-[85vh] w-full flex-col items-center justify-center"
   >
-    <img class="mb-5 w-80" :src="homeImage" />
+    <img fetchpriority="high" class="mb-5 w-80" :src="homeImage" />
     <div class="prose text-center">
       <h1 class="mb-0">CaccaBOT</h1>
       <p class="m-0 text-2xl">{{ serverVersion }}</p>

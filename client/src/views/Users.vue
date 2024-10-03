@@ -4,7 +4,6 @@ import { useAPIStore } from "../stores/api"
 import noPfp from "../assets/no_pfp.webp"
 import { User } from "../types/User.ts"
 import { useToast } from "vue-toastification"
-import merdollar from "../assets/merdollar.webp"
 import router from "../router/router.ts"
 import UserStatsBadge from "../components/UserStatsBadge.vue"
 

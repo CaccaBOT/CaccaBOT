@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onBeforeMount, onMounted, ref } from "vue"
+import { onMounted, ref } from "vue"
 import { useGlobalStore } from "../stores/global"
 import { useAPIStore } from "../stores/api"
 import CirculatingMerdollars from "../components/stats/CirculatingMerdollars.vue"
