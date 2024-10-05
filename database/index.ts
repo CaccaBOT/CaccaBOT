@@ -1043,23 +1043,18 @@ export function poopStreak(userId: string) {
 }
 
 export function poopStatsFromUserWithFilter(userId: string, year: number, month: number) {
-	const currentDate = moment().tz(timezone)
-	const daysConsidered =
-		year === currentDate.year() && month === currentDate.month() + 1
-			? currentDate.date()
-			: moment()
-					.year(year)
-					.month(month - 1)
-					.endOf('month')
-					.date()
-
+	const currentDate = moment().tz(timezone);
+	const isCurrentMonth = year == currentDate.year() && month == currentDate.month() + 1;
+	const daysConsidered = isCurrentMonth
+		? currentDate.date()
+		: moment().year(year).month(month - 1).endOf('month').date();
 	const monthlyLeaderboardPosition =
-		poopLeaderboardWithFilter(year, month).find((x: any) => x.id === userId)?.rank ?? 0
-	const streak = poopStreak(userId)
-	const poops = getPoopsFromUserWithFilter(userId, year, month)
-	const poopAverage = parseFloat((poops.length / daysConsidered).toFixed(2))
+		poopLeaderboardWithFilter(year, month).find((x: any) => x.id === userId)?.rank ?? 0;
+	const streak = poopStreak(userId);
+	const poops = getPoopsFromUserWithFilter(userId, year, month);
+	const poopAverage = parseFloat((poops.length / daysConsidered).toFixed(2));
 
-	return { monthlyLeaderboardPosition, streak, poopAverage }
+	return { monthlyLeaderboardPosition, streak, poopAverage };
 }
 
 export function poopStats() {
