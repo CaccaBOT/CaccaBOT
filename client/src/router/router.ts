@@ -1,12 +1,4 @@
 import { createRouter, createWebHistory } from "vue-router"
-
-import Leaderboard from "../views/Leaderboard.vue"
-import Home from "../views/Home.vue"
-import Profile from "../views/Profile.vue"
-import Stats from "../views/Stats.vue"
-import Users from "../views/Users.vue"
-import Manual from "../views/Manual.vue"
-import Cards from "../views/Cards.vue"
 import { useGlobalStore } from "../stores/global"
 import { useSessionStore } from "../stores/session"
 

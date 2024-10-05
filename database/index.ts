@@ -599,9 +599,7 @@ export function getWeeklyTopPooper(date: string) {
         SELECT u.id, u.username, u.pfp, COUNT(p.id) as poops
         FROM user u
         JOIN poop p ON u.id = p.user_id
-        WHERE DATE(p.timestamp) BETWEEN 
-            DATE(?, 'weekday 0', '-6 days') AND 
-            DATE(?, 'weekday 0')
+        WHERE DATE(p.timestamp) BETWEEN ? AND ?
         GROUP BY u.id
         ORDER BY poops DESC
         LIMIT 1
