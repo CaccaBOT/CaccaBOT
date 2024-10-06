@@ -78,7 +78,7 @@ function fillMissingDays(grouped) {
   return filled
 }
 
-async function fetchUserCollectibles(id) {
+async function fetchUserCollectibles(id: string) {
   userCollectibles.value = await (await client.getUserCollectibles(id)).json()
 }
 
@@ -94,7 +94,7 @@ async function fetchProfileStats(id) {
       monthlyUserPoops.value = await (
         await client.getMonthlyPoopsFromUser(id, date)
       ).json()
-
+      await fetchUserCollectibles(id)
     const groupedByDay = groupByDay(monthlyUserPoops.value)
     const filledData = fillMissingDays(groupedByDay)
 
@@ -162,7 +162,6 @@ onMounted(async () => {
   const id = (router.currentRoute.value.params.id ??
     sessionStore.session.id) as string
   await fetchProfileStats(id)
-  await fetchUserCollectibles(id)
 })
 
 function shouldShowToggleArrow() {
