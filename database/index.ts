@@ -87,60 +87,100 @@ export function initDatabase() {
 		INSERT OR IGNORE INTO difficulty(name, reward) VALUES ('Extreme', 100); 
 
 		INSERT OR IGNORE INTO collectible (name, description, rarity_id, asset_url)
-		VALUES ('VulcANO', 'Cacca con parte superiore a forma di vulcano che erutta magma', 
-				(SELECT id FROM rarity WHERE name = 'Merdume'), NULL);
-
-		INSERT OR IGNORE INTO collectible (name, description, rarity_id, asset_url)
-		VALUES ('Jeff Merdos', 'Cacca dorata con i baffi da nobile, un bastone e un monocolo', 
-				(SELECT id FROM rarity WHERE name = 'Caccasmagorico'), NULL);
+		VALUES ('Jeff Merdos', NULL, 
+				(SELECT id FROM rarity WHERE name = 'Sensazianale'), 'https://caccabot.duckdns.org/public/collectibles/jeffmerdos.webp');
 
 		INSERT OR IGNORE INTO collectible (name, description, rarity_id, asset_url)
 		VALUES ('Scopino', NULL, 
-				(SELECT id FROM rarity WHERE name = 'Merdume'), NULL);
+				(SELECT id FROM rarity WHERE name = 'Merdume'), 'https://caccabot.duckdns.org/public/collectibles/scopino.webp');
 
 		INSERT OR IGNORE INTO collectible (name, description, rarity_id, asset_url)
 		VALUES ('Cesso', NULL, 
-				(SELECT id FROM rarity WHERE name = 'Merdume'), NULL);
+				(SELECT id FROM rarity WHERE name = 'Merdume'), 'https://caccabot.duckdns.org/public/collectibles/cesso.webp');
 
 		INSERT OR IGNORE INTO collectible (name, description, rarity_id, asset_url)
 		VALUES ('Carta Igienica', NULL, 
-				(SELECT id FROM rarity WHERE name = 'Merdume'), NULL);
+				(SELECT id FROM rarity WHERE name = 'Merdume'), 'https://caccabot.duckdns.org/public/collectibles/cartaigienica.webp');
 
 		INSERT OR IGNORE INTO collectible (name, description, rarity_id, asset_url)
-		VALUES ('Cacapops', 'Cacca a forma di palline come quella dei conigli o dei cereali cocopops', 
-				(SELECT id FROM rarity WHERE name = 'Escrementale'), NULL);
+		VALUES ('Cacapops', NULL, 
+				(SELECT id FROM rarity WHERE name = 'Merdume'), 'https://caccabot.duckdns.org/public/collectibles/cacapops.webp');
 
 		INSERT OR IGNORE INTO collectible (name, description, rarity_id, asset_url)
-		VALUES ('Una giornata di merda', 'Merdachan al cesso', 
-				(SELECT id FROM rarity WHERE name = 'Caccasmagorico'), NULL);
+		VALUES ('Una giornata di merda', NULL, 
+				(SELECT id FROM rarity WHERE name = 'Caccasmagorico'), 'https://caccabot.duckdns.org/public/collectibles/una_giornata_di_merda.webp');
 
 		INSERT OR IGNORE INTO collectible (name, description, rarity_id, asset_url)
-		VALUES ('Supercacca', 'Cacca con mantello da supereroe e una grande "C" sul petto', 
-				(SELECT id FROM rarity WHERE name = 'Sensazianale'), NULL);
+		VALUES ('Supercacca', NULL, 
+				(SELECT id FROM rarity WHERE name = 'Escrementale'), 'https://caccabot.duckdns.org/public/collectibles/supercacca.webp');
 
 		INSERT OR IGNORE INTO collectible (name, description, rarity_id, asset_url)
-		VALUES ('Merdinfiore', 'Cacca da cui sboccia un fiore', 
-				(SELECT id FROM rarity WHERE name = 'Merdume'), NULL);
+		VALUES ('Merdinfiore', NULL, 
+				(SELECT id FROM rarity WHERE name = 'Escrementale'), 'https://caccabot.duckdns.org/public/collectibles/merdinfiore.webp');
 
 		INSERT OR IGNORE INTO collectible (name, description, rarity_id, asset_url)
-		VALUES ('Merdangelo', 'Cacca con ali e aureola', 
-				(SELECT id FROM rarity WHERE name = 'Sensazianale'), NULL);
+		VALUES ('Merdangelo', NULL, 
+				(SELECT id FROM rarity WHERE name = 'Escrementale'), 'https://caccabot.duckdns.org/public/collectibles/merdangelo.webp');
 
 		INSERT OR IGNORE INTO collectible (name, description, rarity_id, asset_url)
-		VALUES ('Robomerda', 'Cacca con sembianze robotiche', 
-				(SELECT id FROM rarity WHERE name = 'Sensazianale'), NULL);
+		VALUES ('Gelano', NULL, 
+				(SELECT id FROM rarity WHERE name = 'Merdume'), 'https://caccabot.duckdns.org/public/collectibles/gelano.webp');
 
 		INSERT OR IGNORE INTO collectible (name, description, rarity_id, asset_url)
-		VALUES ('Cesso di Jeff Merdos', 'Cesso dorato (di Jeff Merdos)', 
-				(SELECT id FROM rarity WHERE name = 'Caccasmagorico'), NULL);
+		VALUES ('Cesso di Jeff Merdos', NULL, 
+				(SELECT id FROM rarity WHERE name = 'Caccasmagorico'), 'https://caccabot.duckdns.org/public/collectibles/cesso_jeff_merdos.webp');
 
 		INSERT OR IGNORE INTO collectible (name, description, rarity_id, asset_url)
-		VALUES ('Cacca Samurai', 'Cacca con sembianze di un samurai (armatura, elmetto, spada)', 
-				(SELECT id FROM rarity WHERE name = 'Merdume'), NULL);
+		VALUES ('Cacca Samurai', NULL, 
+				(SELECT id FROM rarity WHERE name = 'Caccasmagorico'), 'https://caccabot.duckdns.org/public/collectibles/caccasamurai.webp');
 
 		INSERT OR IGNORE INTO collectible (name, description, rarity_id, asset_url)
 		VALUES ('Caccantante', NULL, 
-				(SELECT id FROM rarity WHERE name = 'Merdume'), NULL);
+				(SELECT id FROM rarity WHERE name = 'Sensazianale'), 'https://caccabot.duckdns.org/public/collectibles/caccantante.webp');
+				
+		INSERT OR IGNORE INTO collectible (name, description, rarity_id, asset_url)
+		VALUES ('Cheesmerdo', NULL, 
+				(SELECT id FROM rarity WHERE name = 'Merdume'), 'https://caccabot.duckdns.org/public/collectibles/cheesmerdo.webp');
+				
+		INSERT OR IGNORE INTO collectible (name, description, rarity_id, asset_url)
+		VALUES ('Merdella', NULL, 
+				(SELECT id FROM rarity WHERE name = 'Escrementale'), 'https://caccabot.duckdns.org/public/collectibles/merdella.webp');
+				
+		INSERT OR IGNORE INTO collectible (name, description, rarity_id, asset_url)
+		VALUES ('Merdiamante', NULL, 
+				(SELECT id FROM rarity WHERE name = 'Escrementale'), 'https://caccabot.duckdns.org/public/collectibles/merdiamante.webp');
+        
+		INSERT OR IGNORE INTO collectible (name, description, rarity_id, asset_url)
+		VALUES ('Caccodè', NULL, 
+				(SELECT id FROM rarity WHERE name = 'Merdume'), 'https://caccabot.duckdns.org/public/collectibles/caccode.webp');
+				
+		INSERT OR IGNORE INTO collectible (name, description, rarity_id, asset_url)
+		VALUES ('Fontanale', NULL, 
+				(SELECT id FROM rarity WHERE name = 'Merdume'), 'https://caccabot.duckdns.org/public/collectibles/fontanale.webp');
+				
+		INSERT OR IGNORE INTO collectible (name, description, rarity_id, asset_url)
+		VALUES ('Micismerdo', NULL, 
+				(SELECT id FROM rarity WHERE name = 'Merdume'), 'https://caccabot.duckdns.org/public/collectibles/micismerdo.webp');
+        
+		INSERT OR IGNORE INTO collectible (name, description, rarity_id, asset_url)
+		VALUES ('Caccometa', NULL, 
+				(SELECT id FROM rarity WHERE name = 'Sensazianale'), 'https://caccabot.duckdns.org/public/collectibles/caccometa.webp');
+				
+		INSERT OR IGNORE INTO collectible (name, description, rarity_id, asset_url)
+		VALUES ('Merdavid', NULL, 
+				(SELECT id FROM rarity WHERE name = 'Escrementale'), 'https://caccabot.duckdns.org/public/collectibles/merdavid.webp');
+        
+		INSERT OR IGNORE INTO collectible (name, description, rarity_id, asset_url)
+		VALUES ('Merdapocalypse', NULL, 
+				(SELECT id FROM rarity WHERE name = 'Caccasmagorico'), 'https://caccabot.duckdns.org/public/collectibles/merdapocalypse.webp');
+				
+		INSERT OR IGNORE INTO collectible (name, description, rarity_id, asset_url)
+		VALUES ('Lumacano', NULL, 
+				(SELECT id FROM rarity WHERE name = 'Merdume'), 'https://caccabot.duckdns.org/public/collectibles/lumacano.webp');
+        
+		INSERT OR IGNORE INTO collectible (name, description, rarity_id, asset_url)
+		VALUES ('Cacca Hacker', NULL, 
+				(SELECT id FROM rarity WHERE name = 'Sensazianale'), 'https://caccabot.duckdns.org/public/collectibles/caccahacker.webp');
 
 		INSERT OR IGNORE INTO achievement (id, name, description, difficulty_id)
 		VALUES ('CACCASTOMIZER', 'Caccastomizer', 'Modifica il profilo',

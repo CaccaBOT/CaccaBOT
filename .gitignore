@@ -4,6 +4,7 @@ node_modules/*
 # ignore intellij config
 .idea
 public/*
+!public/collectibles
 db.sqlite3
 logs/*
 .env

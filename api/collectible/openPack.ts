@@ -13,8 +13,6 @@ const openPackEndpoint = async function (server: FastifyInstance, options: Route
 	server.get('/open', async (req: FastifyRequest, res: FastifyReply) => {
 		const user = await authenticate(req, res)
 
-		res.code(401).send({error: 'This route will be available soon'})
-		return
 		if (user.money < 5) {
 			res.code(403).send({ error: "You can't afford this item" })
 			return
