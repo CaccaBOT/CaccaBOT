@@ -132,7 +132,7 @@ export function initDatabase() {
 
 		INSERT OR IGNORE INTO collectible (name, description, rarity_id, asset_url)
 		VALUES ('Cacca Samurai', NULL, 
-				(SELECT id FROM rarity WHERE name = 'Caccasmagorico'), 'https://caccabot.duckdns.org/public/collectibles/caccasamurai.webp');
+				(SELECT id FROM rarity WHERE name = 'Escrementale'), 'https://caccabot.duckdns.org/public/collectibles/caccasamurai.webp');
 
 		INSERT OR IGNORE INTO collectible (name, description, rarity_id, asset_url)
 		VALUES ('Caccantante', NULL, 
