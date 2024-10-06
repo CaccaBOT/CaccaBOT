@@ -12,6 +12,7 @@ const foundCard = ref({} as Card)
 const isOpening = ref(false)
 const packRef = ref(null)
 const rerender = ref(0)
+const showCredits = ref(false)
 
 async function openPack() {
   isOpening.value = true
@@ -60,6 +61,12 @@ async function reset() {
     .classList.remove(getRarityClass(foundCard.value.rarity))
   document.querySelector('.card-info > h2').classList.remove(getTextRarityClass(foundCard.value.rarity))
 }
+
+onMounted(() => {
+  setTimeout(() => {
+    showCredits.value = true
+  }, 350)
+})
 </script>
 
 <template>
@@ -107,6 +114,7 @@ async function reset() {
       You can't buy this item (5
       <img alt="Merdollar" class="merdollar h-[20px] w-[20px]" :src="merdollar" />)
     </button>
+    <span v-if="showCredits" class="absolute bottom-3 font-bold w-full text-center">Cards made by BaDo (BadoDab)</span>
   </div>
 </template>
 
