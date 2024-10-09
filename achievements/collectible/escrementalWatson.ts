@@ -1,7 +1,7 @@
-import { Achievement } from "../../types/Achievement"
-import { CollectibleResponse } from "../../types/CollectibleResponse";
-import { RawUser } from "../../types/User";
-import { addAchievementToUser } from '../../database';
+import { Achievement } from '../../types/Achievement'
+import { CollectibleResponse } from '../../types/CollectibleResponse'
+import { RawUser } from '../../types/User'
+import { addAchievementToUser } from '../../database'
 
 const escrementalWatson: Achievement = {
 	id: 'ESCREMENTAL_WATSON',
@@ -12,4 +12,4 @@ const escrementalWatson: Achievement = {
 	},
 }
 
-export default escrementalWatson;
+export default escrementalWatson

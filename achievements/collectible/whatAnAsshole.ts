@@ -12,4 +12,4 @@ const whatAnAsshole: Achievement = {
 	},
 }
 
-export default whatAnAsshole;
+export default whatAnAsshole

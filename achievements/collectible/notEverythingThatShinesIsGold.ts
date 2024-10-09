@@ -12,4 +12,4 @@ const notEverythingThatShinesIsGold: Achievement = {
 	},
 }
 
-export default notEverythingThatShinesIsGold;
+export default notEverythingThatShinesIsGold

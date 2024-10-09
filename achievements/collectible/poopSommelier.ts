@@ -1,4 +1,8 @@
-import { addAchievementToUser, getUserCollectibles, getAllCollectibles } from '../../database'
+import {
+	addAchievementToUser,
+	getUserCollectibles,
+	getAllCollectibles,
+} from '../../database'
 import { Achievement } from '../../types/Achievement'
 import { CollectibleResponse } from '../../types/CollectibleResponse'
 import { RawUser } from '../../types/User'
@@ -14,4 +18,4 @@ const poopSommelier: Achievement = {
 	},
 }
 
-export default poopSommelier;
+export default poopSommelier

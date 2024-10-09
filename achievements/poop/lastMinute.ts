@@ -16,9 +16,11 @@ const lastMinute: Achievement = {
 		if (date.isBetween(lastMinuteOfMonth, lastSecondOfMonth, null, '[]')) {
 			addAchievementToUser(user.id, this.id)
 			const achievement = getAchievement(this.id)
-			message.reply(`*[ACHIEVEMENT] ${user.username}* unlocked *${achievement.name}*`)
+			message.reply(
+				`*[ACHIEVEMENT] ${user.username}* unlocked *${achievement.name}*`,
+			)
 		}
 	},
 }
 
-export default lastMinute;
+export default lastMinute

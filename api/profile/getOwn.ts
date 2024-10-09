@@ -1,7 +1,15 @@
-import { FastifyInstance, FastifyReply, FastifyRequest, RouteOptions } from 'fastify'
+import {
+	FastifyInstance,
+	FastifyReply,
+	FastifyRequest,
+	RouteOptions,
+} from 'fastify'
 import { authenticate } from '../../middleware/auth'
 
-const getOwnEndpoint = async function (server: FastifyInstance, options: RouteOptions) {
+const getOwnEndpoint = async function (
+	server: FastifyInstance,
+	options: RouteOptions,
+) {
 	server.get('/', async (req: FastifyRequest, res: FastifyReply) => {
 		const user = await authenticate(req, res)
 		if (user) {
@@ -15,4 +23,4 @@ const getOwnEndpoint = async function (server: FastifyInstance, options: RouteOp
 	})
 }
 
-export default getOwnEndpoint;
+export default getOwnEndpoint

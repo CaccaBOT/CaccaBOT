@@ -16,7 +16,9 @@ const godIsShit: Achievement = {
 		if (timestamp[0] == easter[0] && timestamp[1] == easter[1]) {
 			addAchievementToUser(user.id, this.id)
 			const achievement = getAchievement(this.id)
-			message.reply(`*[ACHIEVEMENT] ${user.username}* unlocked *${achievement.name}*`)
+			message.reply(
+				`*[ACHIEVEMENT] ${user.username}* unlocked *${achievement.name}*`,
+			)
 		}
 	},
 }
@@ -35,4 +37,4 @@ function getEaster(year: number) {
 	return [month, day]
 }
 
-export default godIsShit;
+export default godIsShit

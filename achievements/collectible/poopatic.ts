@@ -12,4 +12,4 @@ const poopatic: Achievement = {
 	},
 }
 
-export default poopatic;
+export default poopatic

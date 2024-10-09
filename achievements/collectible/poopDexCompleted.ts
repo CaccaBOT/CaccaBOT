@@ -1,4 +1,8 @@
-import { getAllCollectibles, getUserCollectibles, addAchievementToUser } from '../../database'
+import {
+	getAllCollectibles,
+	getUserCollectibles,
+	addAchievementToUser,
+} from '../../database'
 import { Achievement } from '../../types/Achievement'
 import { CollectibleResponse } from '../../types/CollectibleResponse'
 import { RawUser } from '../../types/User'
@@ -14,4 +18,4 @@ const poopDexCompleted: Achievement = {
 	},
 }
 
-export default poopDexCompleted;
+export default poopDexCompleted

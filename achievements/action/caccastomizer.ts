@@ -9,4 +9,4 @@ const caccastomizer: Achievement = {
 	},
 }
 
-export default caccastomizer;
+export default caccastomizer

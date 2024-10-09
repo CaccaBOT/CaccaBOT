@@ -1,15 +1,30 @@
-import { setMoney, getRarities, getCollectibles, addCollectibleToUser, checkAchievementForUser, addOpenedPack } from '../../database'
+import {
+	setMoney,
+	getRarities,
+	getCollectibles,
+	addCollectibleToUser,
+	checkAchievementForUser,
+	addOpenedPack,
+} from '../../database'
 import { authenticate } from '../../middleware/auth'
 import { client } from '../../whatsapp/index'
 import config from '../../config.json'
 import { MessageMedia } from 'whatsapp-web.js'
 import path from 'path'
 import fs from 'fs'
-import { FastifyInstance, FastifyReply, FastifyRequest, RouteOptions } from 'fastify'
+import {
+	FastifyInstance,
+	FastifyReply,
+	FastifyRequest,
+	RouteOptions,
+} from 'fastify'
 import { CollectibleResponse } from '../../types/CollectibleResponse'
 import { RawUser } from '../../types/User'
 
-const openPackEndpoint = async function (server: FastifyInstance, options: RouteOptions) {
+const openPackEndpoint = async function (
+	server: FastifyInstance,
+	options: RouteOptions,
+) {
 	server.get('/open', async (req: FastifyRequest, res: FastifyReply) => {
 		const user = await authenticate(req, res)
 
@@ -41,7 +56,10 @@ const openPackEndpoint = async function (server: FastifyInstance, options: Route
 	})
 }
 
-function checkPackAchievements(collectible: CollectibleResponse, user: RawUser) {
+function checkPackAchievements(
+	collectible: CollectibleResponse,
+	user: RawUser,
+) {
 	const achievementsDir = path.resolve(
 		`${__dirname}/../../achievements/collectible`,
 	)
@@ -66,4 +84,4 @@ function pickRarity(rarities: any) {
 	}
 }
 
-export default openPackEndpoint;
+export default openPackEndpoint

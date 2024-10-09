@@ -13,9 +13,11 @@ const poopOnWheelchair: Achievement = {
 		if (hour == 1 && minute == 4) {
 			addAchievementToUser(user.id, this.id)
 			const achievement = getAchievement(this.id)
-			message.reply(`*[ACHIEVEMENT] ${user.username}* unlocked *${achievement.name}*`)
+			message.reply(
+				`*[ACHIEVEMENT] ${user.username}* unlocked *${achievement.name}*`,
+			)
 		}
 	},
 }
 
-export default poopOnWheelchair;
+export default poopOnWheelchair

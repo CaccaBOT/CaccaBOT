@@ -1,16 +1,40 @@
-import { FastifyInstance, FastifyReply, FastifyRequest, RouteOptions } from "fastify"
-import { getUserCount, getMonthlyUserCount, getCirculatingMoney, getCirculatingMoneyWithAssets, getDailyPoopCount, getWeeklyPoopCount, getMonthlyPoopCount, getTotalPoopCount, getDailyTopPooper, getWeeklyTopPooper, getMonthlyTopPooper, getTopPooper, getMonthlyPoopDistribution, getTotalPoopsPerDay } from '../../database/index'
+import {
+	FastifyInstance,
+	FastifyReply,
+	FastifyRequest,
+	RouteOptions,
+} from 'fastify'
+import {
+	getUserCount,
+	getMonthlyUserCount,
+	getCirculatingMoney,
+	getCirculatingMoneyWithAssets,
+	getDailyPoopCount,
+	getWeeklyPoopCount,
+	getMonthlyPoopCount,
+	getTotalPoopCount,
+	getDailyTopPooper,
+	getWeeklyTopPooper,
+	getMonthlyTopPooper,
+	getTopPooper,
+	getMonthlyPoopDistribution,
+	getTotalPoopsPerDay,
+} from '../../database/index'
 import moment from 'moment-timezone'
 import config from '../../config.json'
 const timezone = config.timezone || 'UTC'
 
-const statsAllEndpoint = async function (server: FastifyInstance, options: RouteOptions) {
+const statsAllEndpoint = async function (
+	server: FastifyInstance,
+	options: RouteOptions,
+) {
 	server.get('/stats', async (req: FastifyRequest, res: FastifyReply) => {
-		const date = moment.tz(moment(), timezone)
-		.startOf('day')
-		.clone()
-		.toISOString()
-		
+		const date = moment
+			.tz(moment(), timezone)
+			.startOf('day')
+			.clone()
+			.toISOString()
+
 		const users = {
 			total: getUserCount(),
 			monthly: getMonthlyUserCount(date),
@@ -45,4 +69,4 @@ const statsAllEndpoint = async function (server: FastifyInstance, options: Route
 	})
 }
 
-export default statsAllEndpoint;
+export default statsAllEndpoint

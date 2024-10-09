@@ -10,9 +10,11 @@ const demonicPoop: Achievement = {
 		if (user.money == 666) {
 			addAchievementToUser(user.id, this.id)
 			const achievement = getAchievement(this.id)
-			message.reply(`*[ACHIEVEMENT] ${user.username}* unlocked *${achievement.name}*`)
+			message.reply(
+				`*[ACHIEVEMENT] ${user.username}* unlocked *${achievement.name}*`,
+			)
 		}
 	},
 }
 
-export default demonicPoop;
+export default demonicPoop

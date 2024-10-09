@@ -13,4 +13,4 @@ const iSaidTheyAreShits: Achievement = {
 	},
 }
 
-export default iSaidTheyAreShits;
+export default iSaidTheyAreShits
