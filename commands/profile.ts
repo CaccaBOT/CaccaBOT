@@ -1,9 +1,7 @@
 import { Message } from "whatsapp-web.js"
 import { Command, Info } from "../types/Command"
-import { updateUsername, updateProfilePicture, updateBio, getUserProfileByPhone, getUserProfileByUsername, checkAchievementForUser } from '../database/index'
-import path from 'path'
-import fs from 'fs'
-import { RawUser } from "../types/User"
+import { updateUsername, updateProfilePicture, updateBio, getUserProfileByPhone, getUserProfileByUsername } from '../database/index'
+import achievementChecker from "../achievements/check"
 
 const profile: Command = {
 	name: 'profile',
@@ -42,20 +40,9 @@ const profile: Command = {
 				message.reply('❌ Invalid argument\nAvailable: pic, username, bio')
 				return
 		}
-		checkAchievements(user)
+		achievementChecker.checkActionBased(user)
 		message.reply('✅ Saved')
 	},
-}
-
-function checkAchievements(user: RawUser) {
-	const achievementsDir = path.resolve(`${__dirname}/../achievements/action`)
-	fs.readdirSync(achievementsDir).forEach(async (file) => {
-		const achievementModule = await import(`${achievementsDir}/${file}`)
-		const achievement = achievementModule.default
-		if (!checkAchievementForUser(user.id, achievement.id)) {
-			achievement.check(user)
-		}
-	})
 }
 
 export default profile;

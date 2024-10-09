@@ -4,7 +4,7 @@ import { Command } from "../types/Command"
 import QRCode from 'qrcode-terminal'
 //@ts-ignore
 import schedule from 'node-schedule'
-import { addPoop, checkAchievementForUser, getUserProfileByPhone, poopStreak, createUser, getLastPoop, deleteUser, getInactiveUsers } from '../database/index'
+import { addPoop, getUserProfileByPhone, poopStreak, createUser, getLastPoop, deleteUser, getInactiveUsers } from '../database/index'
 import { detectPoop } from '../poop/parser'
 import config from '../config.json'
 import fs from 'fs'
@@ -12,8 +12,8 @@ import path from 'path'
 import replies from '../storage/replies.json'
 import moment from 'moment-timezone'
 import { RawUser } from "../types/User"
-import { Poop } from "../types/Poop"
 import { MessageInfo } from "../types/MessageInfo"
+import achievementChecker from "../achievements/check"
 export let commands: Command[] = []
 
 export const client = new Client({
@@ -88,20 +88,9 @@ client.on('message_create', async (message: Message) => {
 			),
 		)
 		const poop = getLastPoop()
-		checkAchievements(poop, foundUser, message)
+		achievementChecker.checkPoopBased(foundUser, poop, message)
 	}
 })
-
-function checkAchievements(poop: Poop, user: RawUser, message: Message) {
-	const achievementsDir = path.resolve(`${__dirname}/../achievements/poop`)
-	fs.readdirSync(achievementsDir).forEach(async (file) => {
-		const achievementModule = await import(`${achievementsDir}/${file}`)
-		const achievement = achievementModule.default
-		if (!checkAchievementForUser(user.id, achievement.id)) {
-			achievement.check(poop, user, message)
-		}
-	})
-}
 
 async function parseMessage(message: Message): Promise<MessageInfo | undefined> {
 	if (Object.values(message.body).length == 0 || message.body == null) {

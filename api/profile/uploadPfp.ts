@@ -1,9 +1,11 @@
-import { updateProfilePicture, checkAchievementForUser } from '../../database'
+import { updateProfilePicture } from '../../database'
 import { authenticate } from '../../middleware/auth'
 import fs from 'fs'
 import { FastifyInstance, FastifyReply, FastifyRequest, RouteOptions } from 'fastify'
 import path from 'path'
 import { RawUser } from '../../types/User'
+import config from '../../config.json'
+import achievementChecker from '../../achievements/check'
 
 interface UploadPfpBody {
 	image: string,
@@ -37,21 +39,10 @@ const uploadPfpEndpoint = async function (server: FastifyInstance, options: Rout
 
 		fs.writeFileSync(filePath, buffer)
 
-		const imageUrl = `https://caccabot.duckdns.org/public/pfp/${filename}`
+		const imageUrl = `${config.serverUrl}/public/pfp/${filename}`
 		updateProfilePicture(user.id, imageUrl)
-		checkAchievements(user)
+		achievementChecker.checkActionBased(user)
 		return res.send({ url: imageUrl })
-	})
-}
-
-function checkAchievements(user: RawUser) {
-	const achievementsDir = path.resolve(`${__dirname}/../../achievements/action`)
-	fs.readdirSync(achievementsDir).forEach(async (file) => {
-		const achievementModule = await import(`${achievementsDir}/${file}`)
-		const achievement = achievementModule.default
-		if (!checkAchievementForUser(user.id, achievement.id)) {
-			achievement.check(user)
-		}
 	})
 }
 

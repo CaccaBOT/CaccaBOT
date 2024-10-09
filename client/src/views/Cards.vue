@@ -114,7 +114,7 @@ onMounted(() => {
       You can't buy this item (5
       <img alt="Merdollar" class="merdollar h-[20px] w-[20px]" :src="merdollar" />)
     </button>
-    <span v-if="showCredits" class="absolute bottom-3 font-bold w-full text-center">Cards made by BaDo (BadoDab)</span>
+    <span v-if="showCredits" class="absolute bottom-3 font-bold w-full text-center">Cards made by BaDo (BaDoDab)</span>
   </div>
 </template>
 

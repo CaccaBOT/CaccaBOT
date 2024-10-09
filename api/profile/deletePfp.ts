@@ -1,28 +1,14 @@
 import { FastifyInstance, FastifyReply, FastifyRequest, RouteOptions } from "fastify"
-import { RawUser } from "../../types/User"
-
-import { updateProfilePicture, checkAchievementForUser } from '../../database'
+import { updateProfilePicture } from '../../database'
 import { authenticate } from '../../middleware/auth'
-import fs from 'fs'
-import path from 'path'
+import achievementChecker from "../../achievements/check"
 
 const deletePfpEndpoint = async function (server: FastifyInstance, options: RouteOptions) {
 	server.delete('/pfp', async (req: FastifyRequest, res: FastifyReply) => {
 		const user = await authenticate(req, res)
 		updateProfilePicture(user.id, null)
-		checkAchievements(user)
+		achievementChecker.checkActionBased(user)
 		res.code(200).send()
-	})
-}
-
-function checkAchievements(user: RawUser) {
-	const achievementsDir = path.resolve(`${__dirname}/../../achievements/action`)
-	fs.readdirSync(achievementsDir).forEach(async (file) => {
-		const achievementModule = await import(`${achievementsDir}/${file}`)
-		const achievement = achievementModule.default
-		if (!checkAchievementForUser(user.id, achievement.id)) {
-			achievement.check(user)
-		}
 	})
 }
 
