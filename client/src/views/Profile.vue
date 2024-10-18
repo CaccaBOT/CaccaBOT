@@ -307,9 +307,9 @@ function getRarityClass(rarityId) {
       </div>
 
       <div
-        class="inventory m-5 flex flex-row flex-wrap"
+        class="inventory m-5 flex flex-row flex-wrap justify-center md:justify-start"
         :style="{
-          height: inventoryExpanded ? 'auto' : '250px',
+          height: inventoryExpanded ? 'auto' : '240px',
           overflow: inventoryExpanded ? 'visible' : 'hidden',
         }"
       >

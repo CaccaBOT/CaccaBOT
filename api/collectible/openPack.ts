@@ -3,23 +3,19 @@ import {
 	getRarities,
 	getCollectibles,
 	addCollectibleToUser,
-	checkAchievementForUser,
 	addOpenedPack,
 } from '../../database'
 import { authenticate } from '../../middleware/auth'
 import { client } from '../../whatsapp/index'
 import config from '../../config.json'
 import { MessageMedia } from 'whatsapp-web.js'
-import path from 'path'
-import fs from 'fs'
 import {
 	FastifyInstance,
 	FastifyReply,
 	FastifyRequest,
 	RouteOptions,
 } from 'fastify'
-import { CollectibleResponse } from '../../types/CollectibleResponse'
-import { RawUser } from '../../types/User'
+import achievementChecker from '../../achievements/check'
 
 const openPackEndpoint = async function (
 	server: FastifyInstance,
@@ -51,24 +47,8 @@ const openPackEndpoint = async function (
 				caption: `*[PACK] ${user.username}* found *${collectible.name}* (${collectible.rarity})`,
 			})
 		}
-		checkPackAchievements(collectible, user)
+		achievementChecker.checkCollectibleBased(collectible, user)
 		res.code(200).send(collectible)
-	})
-}
-
-function checkPackAchievements(
-	collectible: CollectibleResponse,
-	user: RawUser,
-) {
-	const achievementsDir = path.resolve(
-		`${__dirname}/../../achievements/collectible`,
-	)
-	fs.readdirSync(achievementsDir).forEach(async (file) => {
-		const achievementModule = await import(`${achievementsDir}/${file}`)
-		const achievement = achievementModule.default
-		if (!checkAchievementForUser(user.id, achievement.id)) {
-			achievement.check(collectible, user)
-		}
 	})
 }
 
