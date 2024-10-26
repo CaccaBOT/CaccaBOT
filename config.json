@@ -1,9 +1,9 @@
 {
 	"prefix": "cacca",
-	"version": "v6.1.1",
+	"version": "v6.2.0",
 	"serverUrl": "https://caccabot.duckdns.org",
 	"groupId": "120363283575526755@g.us",
-	"whatsappModuleEnabled": true,
+	"whatsappModuleEnabled": false,
 	"monthlyPurge": true,
 	"timezone": "Europe/Rome"
 }

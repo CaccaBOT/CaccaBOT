@@ -15,10 +15,9 @@ import HeroiconsArrowDownCircle from "~icons/heroicons/arrow-down-circle"
 import { Poop } from "../types/Profile.ts"
 import { DisplayedResult } from "../types/DisplayedResult.ts"
 import { useSessionStore } from "../stores/session.ts"
-import { useToast } from "vue-toastification"
+import Achievements from "../components/profile/Achievements.vue"
 import UserStatsBadge from "../components/UserStatsBadge.vue"
 
-const toast = useToast()
 const globalStore = useGlobalStore()
 const { client } = useAPIStore()
 const sessionStore = useSessionStore()
@@ -26,6 +25,7 @@ const userStats = ref({} as UserStats)
 const userCollectibles = ref([])
 const isEditingUsername = ref(false)
 const isEditingBio = ref(false)
+const userAchievements = ref([])
 
 const monthlyUserPoops = ref([] as Poop[])
 
@@ -82,6 +82,10 @@ async function fetchUserCollectibles(id: string) {
   userCollectibles.value = await (await client.getUserCollectibles(id)).json()
 }
 
+async function fetchUserAchievements(id: string) {
+  userAchievements.value = await (await client.getUserAchievements(id)).json()
+}
+
 async function fetchProfileStats(id) {
   if (router.currentRoute.value.name == "monthlyProfile" || isOwnProfile()) {
     const date = new Date(
@@ -95,6 +99,7 @@ async function fetchProfileStats(id) {
         await client.getMonthlyPoopsFromUser(id, date)
       ).json()
       await fetchUserCollectibles(id)
+      await fetchUserAchievements(id)
     const groupedByDay = groupByDay(monthlyUserPoops.value)
     const filledData = fillMissingDays(groupedByDay)
 
@@ -341,6 +346,7 @@ function getRarityClass(rarityId) {
         />
       </div>
     </div>
+    <Achievements :userAchievements="userAchievements"/>
     <div
       v-show="userStats.monthlyLeaderboardPosition != null"
       class="chart mx-auto w-[95%]"

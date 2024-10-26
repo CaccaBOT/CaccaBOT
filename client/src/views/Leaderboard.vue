@@ -217,7 +217,7 @@ function updateNewMonth() {
               >
                 <div class="avatar">
                   <div class="mask mask-circle h-16 w-16">
-                    <img alt="Profile picture" :src="user.pfp ?? noPfp" />
+                    <img alt="Profile picture" :src="user.pfp ?? noPfp"/>
                   </div>
                 </div>
                 <div>

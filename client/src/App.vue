@@ -1,13 +1,21 @@
 <script setup lang="ts">
 import Header from "./components/Header.vue"
 import LoginModal from "./components/modals/LoginModal.vue"
-import router from "./router/router"
 import { useSessionStore } from "./stores/session"
 import { useHead } from "@unhead/vue"
 import { baseURL } from "./services/API.ts"
 import ChangePasswordModal from "./components/modals/ChangePasswordModal.vue"
 import ChangePfpModal from "./components/modals/ChangePfpModal.vue"
 import ChangeUsernameModal from "./components/modals/ChangeUsernameModal.vue"
+import { useAchievementStore } from "./stores/achievement.ts"
+import { onMounted } from "vue"
+import { useAPIStore } from "./stores/api.ts"
+import { useGlobalStore } from "./stores/global.ts"
+import { useToast } from "vue-toastification"
+const toast = useToast()
+const globalStore = useGlobalStore()
+const { client } = useAPIStore()
+const achievementStore = useAchievementStore()
 
 const sessionStore = useSessionStore()
 sessionStore.load()
@@ -20,6 +28,17 @@ useHead({
       crossorigin: "anonymous",
     },
   ],
+})
+
+onMounted(async () => {
+  try {
+    const { version } = await (await client.getVersion()).json()
+    globalStore.version = version
+  } catch (e) {
+    toast.error("Failed to fetch server version")
+  }
+
+  await achievementStore.loadAchievements()
 })
 </script>
 

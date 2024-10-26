@@ -53,6 +53,11 @@ const routes = [
     component: () => import("../views/Cards.vue"), 
     name: "cards" 
   },
+  {
+    path: "/admin",
+    component: () => import("../views/admin/Dashboard.vue"),
+    name: "admin"
+  }
 ]
 
 const router = createRouter({

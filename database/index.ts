@@ -1202,7 +1202,7 @@ export function checkAchievementForUser(userId: string, achievementId: string) {
 export function getUserAchievements(userId: string) {
 	return db
 		.prepare(
-			'SELECT a.* FROM user_achievement a JOIN user u ON a.user_id = u.id WHERE u.id = ?',
+			'SELECT a.* FROM user_achievement a JOIN user u ON a.user_id = u.id WHERE u.id = ? ORDER BY a.timestamp DESC',
 		)
 		.all(userId)
 }

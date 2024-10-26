@@ -6,6 +6,7 @@ import { useToast } from "vue-toastification"
 
 export const useGlobalStore = defineStore("global", {
   state: () => ({
+    version: null as string,
     leaderboard: [] as Leaderboard,
     profile: {} as Profile,
     isFetching: false,
