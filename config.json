@@ -3,7 +3,7 @@
 	"version": "v6.2.0",
 	"serverUrl": "https://caccabot.duckdns.org",
 	"groupId": "120363283575526755@g.us",
-	"whatsappModuleEnabled": false,
+	"whatsappModuleEnabled": true,
 	"monthlyPurge": true,
 	"timezone": "Europe/Rome"
 }
