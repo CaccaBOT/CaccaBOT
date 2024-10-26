@@ -12,6 +12,7 @@ import { onMounted } from "vue"
 import { useAPIStore } from "./stores/api.ts"
 import { useGlobalStore } from "./stores/global.ts"
 import { useToast } from "vue-toastification"
+import ChangeThemeModal from "./components/modals/ChangeThemeModal.vue"
 const toast = useToast()
 const globalStore = useGlobalStore()
 const { client } = useAPIStore()
@@ -38,6 +39,12 @@ onMounted(async () => {
     toast.error("Failed to fetch server version")
   }
 
+  const theme = localStorage.getItem('theme')
+
+  if (theme != null) {
+    document.querySelector('html').setAttribute('data-theme', theme)
+  }
+
   await achievementStore.loadAchievements()
 })
 </script>
@@ -55,6 +62,9 @@ onMounted(async () => {
   />
   <ChangePfpModal
     v-show="sessionStore.session.id && sessionStore.showChangePfpModal"
+  />
+  <ChangeThemeModal
+    v-show="sessionStore.session.id && sessionStore.showChangeThemeModal"
   />
   <router-view v-slot="{ Component, route }">
     <Transition name="bounce">

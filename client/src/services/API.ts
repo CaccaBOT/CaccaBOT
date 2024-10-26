@@ -93,6 +93,7 @@ export default class API {
         "Content-Type": "application/json",
         "X-Auth-Token": this.sessionStore.session.token,
       },
+      body: JSON.stringify({})
     })
   }
 

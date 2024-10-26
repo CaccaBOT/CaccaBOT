@@ -92,7 +92,9 @@ server.register(fastifyStatic, {
 server.register(fastifyStatic, {
     root: path.join(__dirname, '/public/collectibles'),
     prefix: '/collectibles/',
-	decorateReply: false
+	decorateReply: false,
+	maxAge: '1d',
+    immutable: true,
 });
 
 server.register(fastifyStatic, {

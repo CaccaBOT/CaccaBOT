@@ -2,6 +2,7 @@
 import router from "../router/router"
 import HeroiconsLogout from "~icons/heroicons/arrow-left-end-on-rectangle"
 import HeroiconsUser from "~icons/heroicons/user"
+import HeroiconsEye from "~icons/heroicons/eye"
 import MaterialSymbolsPassword from "~icons/material-symbols/password"
 import { useSessionStore } from "../stores/session"
 const sessionStore = useSessionStore()
@@ -10,6 +11,10 @@ function showChangePasswordModal() {
   if (sessionStore.session.id) {
     sessionStore.showChangePasswordModal = true
   }
+}
+
+function showChangeThemeModal() {
+  sessionStore.showChangeThemeModal = true
 }
 
 function logout() {
@@ -39,6 +44,12 @@ function logout() {
         <button @click="showChangePasswordModal">
           <MaterialSymbolsPassword class="text-xl" />
           Change Password
+        </button>
+      </li>
+      <li>
+        <button @click="showChangeThemeModal">
+          <HeroiconsEye class="text-xl" />
+          Change Theme
         </button>
       </li>
       <li>
