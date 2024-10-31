@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import { ref, watch } from "vue"
 import { useSessionStore } from "../../stores/session"
-import { useAPIStore } from "../../stores/api"
-import { useToast } from "vue-toastification"
+
 const sessionStore = useSessionStore()
 
 const themes = [

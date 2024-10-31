@@ -19,7 +19,7 @@ createApp(App)
   .use(createPinia())
   .use(createHead())
   .use(Toast, {
-    timeout: 2000,
+    timeout: 2500,
     position: POSITION.TOP_CENTER,
   } as PluginOptions)
   .mount("#app")
