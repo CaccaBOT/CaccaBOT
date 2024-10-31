@@ -3,285 +3,30 @@ import crypto from 'crypto'
 import argon2 from 'argon2'
 import moment from 'moment-timezone'
 import config from '../config.json'
+import fs from 'fs'
+import path from 'path'
+import { Migration } from '../types/Migration'
 
 const timezone = config.timezone || 'UTC'
 
 export function initDatabase() {
-	db.exec(`
-        PRAGMA foreign_keys = ON;
+	const migrationFiles = fs.readdirSync(path.join(__dirname, './migrations'))
+	let executedMigrations: Migration[] = []
 
-        CREATE TABLE IF NOT EXISTS user (
-            id TEXT PRIMARY KEY,
-            phone TEXT,
-            username TEXT,
-			password TEXT,
-			frozen INTEGER DEFAULT 0,
-			token TEXT,
-            pfp TEXT,
-            bio TEXT,
-			money INTEGER DEFAULT 0,
-			openedPacks INTEGER DEFAULT 0
-        );
+	try { executedMigrations = [...db.prepare(`SELECT * FROM _migration`).all()] } catch (e) { }
 
-        CREATE TABLE IF NOT EXISTS poop (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            user_id TEXT,
-            timestamp TIMESTAMP,
-            FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE CASCADE ON UPDATE CASCADE
-        );
+	if (executedMigrations.length === 0) {
+		console.info(`[DATABASE] Database is uninitialized, all migrations will be run`)
+	}
 
-		CREATE TABLE IF NOT EXISTS rarity (
-			id INTEGER PRIMARY KEY AUTOINCREMENT,
-			name TEXT UNIQUE,
-			chance INTEGER
-		);
-
-		CREATE TABLE IF NOT EXISTS collectible (
-			id INTEGER PRIMARY KEY AUTOINCREMENT,
-			name TEXT UNIQUE,
-			description TEXT,
-			rarity_id INTEGER,
-			asset_url TEXT,
-			FOREIGN KEY (rarity_id) REFERENCES rarity(id)
-		);
-
-		CREATE TABLE IF NOT EXISTS user_collectible (
-			id INTEGER PRIMARY KEY AUTOINCREMENT,
-            user_id TEXT,
-            collectible_id INTEGER,
-            FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE CASCADE ON UPDATE CASCADE,
-            FOREIGN KEY (collectible_id) REFERENCES collectible(id) ON DELETE CASCADE ON UPDATE CASCADE
-        );
-
-		CREATE TABLE IF NOT EXISTS difficulty (
-			id INTEGER PRIMARY KEY AUTOINCREMENT,
-			name TEXT UNIQUE,
-			reward INTEGER
-		);
-
-		CREATE TABLE IF NOT EXISTS achievement (
-			id TEXT UNIQUE,
-			name TEXT UNIQUE,
-			description TEXT,
-			difficulty_id INTEGER,
-			FOREIGN KEY (difficulty_id) REFERENCES difficulty(id)
-		);
-
-		CREATE TABLE IF NOT EXISTS user_achievement (
-			id INTEGER PRIMARY KEY AUTOINCREMENT,
-            user_id TEXT,
-            achievement_id TEXT,
-			timestamp TIMESTAMP,
-            FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE CASCADE ON UPDATE CASCADE,
-            FOREIGN KEY (achievement_id) REFERENCES achievement(id) ON DELETE CASCADE ON UPDATE CASCADE
-        );
-
-		INSERT OR IGNORE INTO rarity(name, chance) VALUES ('Merdume', 59);
-		INSERT OR IGNORE INTO rarity(name, chance) VALUES ('Escrementale', 30); 
-		INSERT OR IGNORE INTO rarity(name, chance) VALUES ('Sensazianale', 10); 
-		INSERT OR IGNORE INTO rarity(name, chance) VALUES ('Caccasmagorico', 1); 
-
-		INSERT OR IGNORE INTO difficulty(name, reward) VALUES ('Easy', 1);
-		INSERT OR IGNORE INTO difficulty(name, reward) VALUES ('Medium', 5); 
-		INSERT OR IGNORE INTO difficulty(name, reward) VALUES ('Hard', 15); 
-		INSERT OR IGNORE INTO difficulty(name, reward) VALUES ('Extreme', 100); 
-
-		INSERT OR IGNORE INTO collectible (name, description, rarity_id, asset_url)
-		VALUES ('Jeff Merdos', NULL, 
-				(SELECT id FROM rarity WHERE name = 'Sensazianale'), 'https://caccabot.duckdns.org/public/collectibles/jeffmerdos.webp');
-
-		INSERT OR IGNORE INTO collectible (name, description, rarity_id, asset_url)
-		VALUES ('Scopino', NULL, 
-				(SELECT id FROM rarity WHERE name = 'Merdume'), 'https://caccabot.duckdns.org/public/collectibles/scopino.webp');
-
-		INSERT OR IGNORE INTO collectible (name, description, rarity_id, asset_url)
-		VALUES ('Cesso', NULL, 
-				(SELECT id FROM rarity WHERE name = 'Merdume'), 'https://caccabot.duckdns.org/public/collectibles/cesso.webp');
-
-		INSERT OR IGNORE INTO collectible (name, description, rarity_id, asset_url)
-		VALUES ('Carta Igienica', NULL, 
-				(SELECT id FROM rarity WHERE name = 'Merdume'), 'https://caccabot.duckdns.org/public/collectibles/cartaigienica.webp');
-
-		INSERT OR IGNORE INTO collectible (name, description, rarity_id, asset_url)
-		VALUES ('Cacapops', NULL, 
-				(SELECT id FROM rarity WHERE name = 'Merdume'), 'https://caccabot.duckdns.org/public/collectibles/cacapops.webp');
-
-		INSERT OR IGNORE INTO collectible (name, description, rarity_id, asset_url)
-		VALUES ('Una giornata di merda', NULL, 
-				(SELECT id FROM rarity WHERE name = 'Caccasmagorico'), 'https://caccabot.duckdns.org/public/collectibles/una_giornata_di_merda.webp');
-
-		INSERT OR IGNORE INTO collectible (name, description, rarity_id, asset_url)
-		VALUES ('Supercacca', NULL, 
-				(SELECT id FROM rarity WHERE name = 'Escrementale'), 'https://caccabot.duckdns.org/public/collectibles/supercacca.webp');
-
-		INSERT OR IGNORE INTO collectible (name, description, rarity_id, asset_url)
-		VALUES ('Merdinfiore', NULL, 
-				(SELECT id FROM rarity WHERE name = 'Escrementale'), 'https://caccabot.duckdns.org/public/collectibles/merdinfiore.webp');
-
-		INSERT OR IGNORE INTO collectible (name, description, rarity_id, asset_url)
-		VALUES ('Merdangelo', NULL, 
-				(SELECT id FROM rarity WHERE name = 'Escrementale'), 'https://caccabot.duckdns.org/public/collectibles/merdangelo.webp');
-
-		INSERT OR IGNORE INTO collectible (name, description, rarity_id, asset_url)
-		VALUES ('Gelano', NULL, 
-				(SELECT id FROM rarity WHERE name = 'Merdume'), 'https://caccabot.duckdns.org/public/collectibles/gelano.webp');
-
-		INSERT OR IGNORE INTO collectible (name, description, rarity_id, asset_url)
-		VALUES ('Cesso di Jeff Merdos', NULL, 
-				(SELECT id FROM rarity WHERE name = 'Caccasmagorico'), 'https://caccabot.duckdns.org/public/collectibles/cesso_jeff_merdos.webp');
-
-		INSERT OR IGNORE INTO collectible (name, description, rarity_id, asset_url)
-		VALUES ('Cacca Samurai', NULL, 
-				(SELECT id FROM rarity WHERE name = 'Escrementale'), 'https://caccabot.duckdns.org/public/collectibles/caccasamurai.webp');
-
-		INSERT OR IGNORE INTO collectible (name, description, rarity_id, asset_url)
-		VALUES ('Caccantante', NULL, 
-				(SELECT id FROM rarity WHERE name = 'Sensazianale'), 'https://caccabot.duckdns.org/public/collectibles/caccantante.webp');
-				
-		INSERT OR IGNORE INTO collectible (name, description, rarity_id, asset_url)
-		VALUES ('Cheesmerdo', NULL, 
-				(SELECT id FROM rarity WHERE name = 'Merdume'), 'https://caccabot.duckdns.org/public/collectibles/cheesmerdo.webp');
-				
-		INSERT OR IGNORE INTO collectible (name, description, rarity_id, asset_url)
-		VALUES ('Merdella', NULL, 
-				(SELECT id FROM rarity WHERE name = 'Escrementale'), 'https://caccabot.duckdns.org/public/collectibles/merdella.webp');
-				
-		INSERT OR IGNORE INTO collectible (name, description, rarity_id, asset_url)
-		VALUES ('Merdiamante', NULL, 
-				(SELECT id FROM rarity WHERE name = 'Escrementale'), 'https://caccabot.duckdns.org/public/collectibles/merdiamante.webp');
-        
-		INSERT OR IGNORE INTO collectible (name, description, rarity_id, asset_url)
-		VALUES ('Caccodè', NULL, 
-				(SELECT id FROM rarity WHERE name = 'Merdume'), 'https://caccabot.duckdns.org/public/collectibles/caccode.webp');
-				
-		INSERT OR IGNORE INTO collectible (name, description, rarity_id, asset_url)
-		VALUES ('Fontanale', NULL, 
-				(SELECT id FROM rarity WHERE name = 'Merdume'), 'https://caccabot.duckdns.org/public/collectibles/fontanale.webp');
-				
-		INSERT OR IGNORE INTO collectible (name, description, rarity_id, asset_url)
-		VALUES ('Micismerdo', NULL, 
-				(SELECT id FROM rarity WHERE name = 'Merdume'), 'https://caccabot.duckdns.org/public/collectibles/micismerdo.webp');
-        
-		INSERT OR IGNORE INTO collectible (name, description, rarity_id, asset_url)
-		VALUES ('Caccometa', NULL, 
-				(SELECT id FROM rarity WHERE name = 'Sensazianale'), 'https://caccabot.duckdns.org/public/collectibles/caccometa.webp');
-				
-		INSERT OR IGNORE INTO collectible (name, description, rarity_id, asset_url)
-		VALUES ('Merdavid', NULL, 
-				(SELECT id FROM rarity WHERE name = 'Escrementale'), 'https://caccabot.duckdns.org/public/collectibles/merdavid.webp');
-        
-		INSERT OR IGNORE INTO collectible (name, description, rarity_id, asset_url)
-		VALUES ('Merdapocalypse', NULL, 
-				(SELECT id FROM rarity WHERE name = 'Caccasmagorico'), 'https://caccabot.duckdns.org/public/collectibles/merdapocalypse.webp');
-				
-		INSERT OR IGNORE INTO collectible (name, description, rarity_id, asset_url)
-		VALUES ('Lumacano', NULL, 
-				(SELECT id FROM rarity WHERE name = 'Merdume'), 'https://caccabot.duckdns.org/public/collectibles/lumacano.webp');
-        
-		INSERT OR IGNORE INTO collectible (name, description, rarity_id, asset_url)
-		VALUES ('Cacca Hacker', NULL, 
-				(SELECT id FROM rarity WHERE name = 'Sensazianale'), 'https://caccabot.duckdns.org/public/collectibles/caccahacker.webp');
-
-		INSERT OR IGNORE INTO achievement (id, name, description, difficulty_id)
-		VALUES ('CACCASTOMIZER', 'Caccastomizer', 'Modifica il profilo',
-				(SELECT id FROM difficulty WHERE name = 'Easy'));
-		
-		INSERT OR IGNORE INTO achievement (id, name, description, difficulty_id)
-		VALUES ('I_BECAME_RICH', 'Sono diventato ricco', 'Guadagna il tuo primo merdollaro',
-				(SELECT id FROM difficulty WHERE name = 'Easy'));
-		
-		INSERT OR IGNORE INTO achievement (id, name, description, difficulty_id)
-		VALUES ('THE_FIRST_OF_A_LONG_TIME', 'La prima di una lunga storia', 'Apri il tuo primo cacchetto',
-				(SELECT id FROM difficulty WHERE name = 'Easy'));
-		
-		INSERT OR IGNORE INTO achievement (id, name, description, difficulty_id)
-		VALUES ('POOPATIC', 'Caccapatico', 'Apri il tuo 50esimo cacchetto',
-				(SELECT id FROM difficulty WHERE name = 'Medium'));
-		
-		INSERT OR IGNORE INTO achievement (id, name, description, difficulty_id)
-		VALUES ('DEMONIC_POOP', 'Cacca indemoniata', 'Accumula esattamente 666 merdollari',
-				(SELECT id FROM difficulty WHERE name = 'Hard'));
-		
-		INSERT OR IGNORE INTO achievement (id, name, description, difficulty_id)
-		VALUES ('INSTANT_EFFECT', 'Presa Diretta', 'Caga dopo pranzo (12:00 - 14:00)',
-				(SELECT id FROM difficulty WHERE name = 'Easy'));
-		
-		INSERT OR IGNORE INTO achievement (id, name, description, difficulty_id)
-		VALUES ('TIME_FOR_A_SNACK', 'È Tempo Della Merdenda', 'Caga dopo la merenda (16:00 - 18:00)',
-				(SELECT id FROM difficulty WHERE name = 'Easy'));
-		
-		INSERT OR IGNORE INTO achievement (id, name, description, difficulty_id)
-		VALUES ('POOP_ON_WHEELCHAIR', 'Cacca A Rotelle', 'Caga alle 01:04 (sei disabile)',
-				(SELECT id FROM difficulty WHERE name = 'Medium'));
-		
-		INSERT OR IGNORE INTO achievement (id, name, description, difficulty_id)
-		VALUES ('SKIBIDI_TOILET', 'Skibidi Toilet', 'Caga alle 03:00 di notte (per evocare Skibidi Toilet)',
-				(SELECT id FROM difficulty WHERE name = 'Medium'));
-		
-		INSERT OR IGNORE INTO achievement (id, name, description, difficulty_id)
-		VALUES ('SMOKE_POOP_EVERYDAY', 'Smoke Poop Everyday', 'Caga alle 04:20 (passacene un po)',
-				(SELECT id FROM difficulty WHERE name = 'Medium'));
-		
-		INSERT OR IGNORE INTO achievement (id, name, description, difficulty_id)
-		VALUES ('LAST_MINUTE', 'Last Minute', 'Caga all''ultimo minuto prima del reset',
-				(SELECT id FROM difficulty WHERE name = 'Hard'));
-		
-		INSERT OR IGNORE INTO achievement (id, name, description, difficulty_id)
-		VALUES ('FAST_AND_FECIOUS', 'Fast & Fecious', 'Sii il primo a cagare dopo il reset',
-				(SELECT id FROM difficulty WHERE name = 'Hard'));
-		
-		INSERT OR IGNORE INTO achievement (id, name, description, difficulty_id)
-		VALUES ('GOD_IS_SHIT', 'Dio Merda', 'Caga il giorno di Pasqua',
-				(SELECT id FROM difficulty WHERE name = 'Hard'));
-		
-		INSERT OR IGNORE INTO achievement (id, name, description, difficulty_id)
-		VALUES ('SHITTY_FAGGOT', 'Frocio di merda', 'Caga durante il Pride Month',
-				(SELECT id FROM difficulty WHERE name = 'Medium'));
-		
-		INSERT OR IGNORE INTO achievement (id, name, description, difficulty_id)
-		VALUES ('PATRIOTIC_POOP', 'Merda patriottica', 'Caga durante il giorno della Repubblica',
-				(SELECT id FROM difficulty WHERE name = 'Hard'));
-		
-		INSERT OR IGNORE INTO achievement (id, name, description, difficulty_id)
-		VALUES ('I_SAID_THEY_ARE_SHITS', 'L''ho detto che sono delle merde!', 'Colleziona una caccarta Merdume',
-				(SELECT id FROM difficulty WHERE name = 'Easy'));
-		
-		INSERT OR IGNORE INTO achievement (id, name, description, difficulty_id)
-		VALUES ('ESCREMENTAL_WATSON', 'Escrementale, Watson', 'Colleziona una caccarta Escrementale',
-				(SELECT id FROM difficulty WHERE name = 'Easy'));
-		
-		INSERT OR IGNORE INTO achievement (id, name, description, difficulty_id)
-		VALUES ('NOT_EVERYTHING_THAT_SHINES_IS_GOLD', 'Tutto ciò che splende non è oro', 'Colleziona una caccarta Sensazianale',
-				(SELECT id FROM difficulty WHERE name = 'Easy'));
-		
-		INSERT OR IGNORE INTO achievement (id, name, description, difficulty_id)
-		VALUES ('WHAT_AN_ASSHOLE', 'Che buco di culo', 'Colleziona una caccarta Caccasmagorica',
-				(SELECT id FROM difficulty WHERE name = 'Easy'));
-		
-		INSERT OR IGNORE INTO achievement (id, name, description, difficulty_id)
-		VALUES ('POOP_SOMMELIER', 'Il sommelier della merda', 'Colleziona la metà delle caccarte',
-				(SELECT id FROM difficulty WHERE name = 'Hard'));
-		
-		INSERT OR IGNORE INTO achievement (id, name, description, difficulty_id)
-		VALUES ('POOPDEX_COMPLETED', 'Caccadex Completato', 'Colleziona tutte le caccarte',
-				(SELECT id FROM difficulty WHERE name = 'Extreme'));
-		
-		INSERT OR IGNORE INTO achievement (id, name, description, difficulty_id)
-		VALUES ('PENTAKILL', 'Pentakill', 'Caga 5 volte nello stesso giorno',
-				(SELECT id FROM difficulty WHERE name = 'Hard'));
-		
-		INSERT OR IGNORE INTO achievement (id, name, description, difficulty_id)
-		VALUES ('SCAT_LOVER', 'Scat Lover', 'Accumula 69 cagate di fila',
-				(SELECT id FROM difficulty WHERE name = 'Hard'));
-		
-		INSERT OR IGNORE INTO achievement (id, name, description, difficulty_id)
-		VALUES ('ONE_MONTH_OF_SHIT', 'Un mese di merda', 'Accumula 30 cagate di fila',
-				(SELECT id FROM difficulty WHERE name = 'Medium'));
-		
-		INSERT OR IGNORE INTO achievement (id, name, description, difficulty_id)
-		VALUES ('A_YEAR_OF_SHIT', 'Un anno di merda', 'Accumula 365 cagate di fila',
-				(SELECT id FROM difficulty WHERE name = 'Extreme'));
-    `)
+	for (const file of migrationFiles) {
+		if (!executedMigrations.find(m => m.filename === file)) {
+			console.log(`[DATABASE] Running migration ${file}`)
+			const migration = fs.readFileSync(path.join(__dirname, `./migrations/${file}`), 'utf-8')
+			db.exec(migration)
+			db.prepare(`INSERT INTO _migration(filename, timestamp) VALUES(?, ?)`).run(file, new Date().toISOString())
+		}
+	}
 }
 
 export function getAchievement(achievementId: string) {
