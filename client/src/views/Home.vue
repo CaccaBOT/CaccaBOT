@@ -25,8 +25,9 @@ onMounted(async () => {
   >
     <img alt="CaccaBOT Logo" width="20rem" height="20rem" fetchpriority="high" class="mb-5 w-80" :src="homeImage" />
     <div class="prose text-center">
-      <h1 class="mb-0">CaccaBOT</h1>
-      <p class="m-0 text-2xl">{{ globalStore.version }}</p>
+      <h1 class="mb-2">{{ globalStore.instance.name }}</h1>
+      <p class="m-0 mb-4 text-xl">{{ globalStore.instance.description }}</p>
+      <p class="m-0 text-2xl">{{ globalStore.instance.version }}</p>
     </div>
     <button
       v-show="installPrompt != null"

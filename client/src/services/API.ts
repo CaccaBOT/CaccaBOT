@@ -14,8 +14,8 @@ export default class API {
     return await fetch(`${baseAPIURL}/achievement/${userId}`)
   }
 
-  async getVersion() {
-    return await fetch(`${baseAPIURL}/internals/version`)
+  async getInstanceInfo() {
+    return await fetch(`${baseAPIURL}/instance/info`)
   }
   
   async login(username: string, password: string) {

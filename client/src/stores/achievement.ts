@@ -14,14 +14,14 @@ export const useAchievementStore = defineStore("achievements", {
         const globalStore = useGlobalStore()
         if (localStorage.getItem('achievements') != null) {
             const { version, achievements } = JSON.parse(localStorage.getItem('achievements'))
-            if (globalStore.version === version) {
+            if (globalStore.instance.version === version) {
                 this.achievements = achievements
                 return
             }
         }
 
         this.achievements = await (await client.getAllAchievements()).json()
-        this.version = globalStore.version
+        this.version = globalStore.instance.version
         this.saveAchievements()
     },
     saveAchievements() {

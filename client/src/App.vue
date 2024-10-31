@@ -33,8 +33,10 @@ useHead({
 
 onMounted(async () => {
   try {
-    const { version } = await (await client.getVersion()).json()
-    globalStore.version = version
+    const instanceInfo = await (await client.getInstanceInfo()).json()
+    globalStore.instance.name = instanceInfo.name
+    globalStore.instance.description = instanceInfo.description
+    globalStore.instance.version = instanceInfo.version
   } catch (e) {
     toast.error("Failed to fetch server version")
   }

@@ -21,6 +21,8 @@ git clone https://github.com/CaccaBOT/CaccaBOT-Server.git
 
 ```json
 {
+	"name": "CaccaBOT",
+	"description": "Welcome to CaccaBOT",
 	"prefix": "cacca",
 	"version": "v5.4.0",
 	"serverUrl": "https://caccabot.duckdns.org",
@@ -29,6 +31,9 @@ git clone https://github.com/CaccaBOT/CaccaBOT-Server.git
 	"monthlyPurge": true
 }
 ```
+`name`: the name of your instance (will appear on the home page)
+
+`description`: the description of your instance (will appear on the home page)
 
 `prefix`: the magic word for the bot to interpret commands inside the group
 
