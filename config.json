@@ -2,7 +2,7 @@
 	"name": "CaccaBOT Legacy",
 	"description": "The first CaccaBOT instance of earth!",
 	"prefix": "cacca",
-	"version": "v6.4.0",
+	"version": "v6.4.1",
 	"serverUrl": "https://caccabot.duckdns.org",
 	"groupId": "120363283575526755@g.us",
 	"whatsappModuleEnabled": true,

@@ -834,10 +834,10 @@ export function poopStatsFromUserWithFilter(userId: string, year: number, month:
 	const monthlyLeaderboardPosition =
 		poopLeaderboardWithFilter(year, month).find((x: any) => x.id === userId)?.rank ?? 0;
 	const streak = poopStreak(userId);
-	const poops = getPoopsFromUserWithFilter(userId, year, month);
-	const poopAverage = parseFloat((poops.length / daysConsidered).toFixed(2));
+	const monthlyPoops = getPoopsFromUserWithFilter(userId, year, month)?.length;
+	const poopAverage = parseFloat((monthlyPoops / daysConsidered).toFixed(2));
 
-	return { monthlyLeaderboardPosition, streak, poopAverage };
+	return { monthlyLeaderboardPosition, streak, poopAverage, monthlyPoops };
 }
 
 export function poopStats() {

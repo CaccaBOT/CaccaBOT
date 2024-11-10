@@ -5,7 +5,7 @@ import {
 	RouteOptions,
 } from 'fastify'
 
-const { poopStatsFromUserWithFilter } = require('../../database/index')
+import { poopStatsFromUserWithFilter } from '../../database/index'
 
 interface Params {
 	id: string
