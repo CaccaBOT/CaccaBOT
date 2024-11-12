@@ -165,6 +165,7 @@ async function reset() {
   document.querySelector(".card-wrapper")?.classList.add("hidden")
   document.querySelector(".card-wrapper")?.classList.remove("zoom-in")
   document.querySelector("#openPack")?.classList.remove("fade-out")
+  document.querySelector("#notEnoughMoney")?.classList.remove("fade-out")
   document.querySelector(".card")?.classList.remove(
     "rarity-common",
     "rarity-rare",

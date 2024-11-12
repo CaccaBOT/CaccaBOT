@@ -23,7 +23,8 @@ async function openPack() {
   packRef.value.open()
   sessionStore.session.money = sessionStore.session.money - 5
   foundCard.value = await response.json()
-  document.querySelector("#openPack").classList.add("fade-out")
+  document.querySelector("#openPack")?.classList.add("fade-out")
+  document.querySelector("#notEnoughMoney")?.classList.add("fade-out")
   document
     .querySelector(".card")
     .classList.add(getRarityClass(foundCard.value.rarity))
@@ -108,6 +109,7 @@ onMounted(() => {
       Open Pack (5 <img class="merdollar h-[20px] w-[20px]" :src="merdollar" />)
     </button>
     <button
+      id="notEnoughMoney"
       v-if="sessionStore.session.money < 5"
       class="lg:w-1/8 btn btn-error mx-auto w-2/3 sm:w-2/3 md:w-1/5"
     >

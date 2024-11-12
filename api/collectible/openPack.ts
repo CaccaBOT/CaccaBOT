@@ -47,7 +47,7 @@ const openPackEndpoint = async function (
 				caption: `*[PACK] ${user.username}* found *${collectible.name}* (${collectible.rarity})`,
 			})
 		}
-		achievementChecker.checkCollectibleBased(collectible, user)
+		achievementChecker.checkCollectibleBased(user, collectible)
 		res.code(200).send(collectible)
 	})
 }
