@@ -42,7 +42,7 @@ function getRarityClass(rarityId) {
   return rarityMap[rarityId]
 }
 
-function getTextRarityClass(rarityId) {
+function getTextRarityClass(rarityId: string) {
   let rarityMap = {
     Merdume: "text-rarity-common",
     Escrementale: "text-rarity-rare",
