@@ -31,7 +31,7 @@ let width = window.innerWidth / 3
 let height = window.innerHeight * 0.7
 let confettiSize = 50
 let confettiNumber = 50
-let model: any;
+let model: any
 
 function updateDimensions() {
   const screenWidth = window.innerWidth
@@ -90,57 +90,56 @@ function loadModel(scene: Scene) {
   loader.setDRACOLoader(dracoLoader)
 
   loader.load("card-pack.glb", (gltf) => {
-  model = gltf.scene
-  model.scale.set(1, 1, 1)
-  
-  model.tick = (delta: number) => {
-    if (!userInteracting) {
-      model.rotation.y += delta * rotationSpeed
-    }
+    model = gltf.scene
+    model.scale.set(1, 1, 1)
 
-    if (!shrinking && rotationSpeed >= 2) {
-      rotationSpeed *= exponentialFactor
-      if (rotationSpeed > 300) {
-        shrinking = true
+    model.tick = (delta: number) => {
+      if (!userInteracting) {
+        model.rotation.y += delta * rotationSpeed
+      }
+
+      if (!shrinking && rotationSpeed >= 2) {
+        rotationSpeed *= exponentialFactor
+        if (rotationSpeed > 300) {
+          shrinking = true
+        }
+      }
+
+      if (shrinking) {
+        model.scale.multiplyScalar(0.95)
+
+        if (model.scale.x < 0.001) {
+          scene.remove(model)
+          stopAnimation()
+          document.querySelector(".card-pack")?.classList.add("hidden")
+          document.querySelector(".card-wrapper")?.classList.remove("hidden")
+          document.querySelector(".card-wrapper")?.classList.add("zoom-in")
+          document.querySelector(".card-info")?.classList.remove("hidden")
+          showConfetti()
+
+          rotationSpeed = 1
+          shrinking = false
+        }
       }
     }
 
-    if (shrinking) {
-      model.scale.multiplyScalar(0.95)
-
-      if (model.scale.x < 0.001) {
-        scene.remove(model)
-        stopAnimation()
-        document.querySelector(".card-pack")?.classList.add("hidden")
-        document.querySelector(".card-wrapper")?.classList.remove("hidden")
-        document.querySelector(".card-wrapper")?.classList.add("zoom-in")
-        document.querySelector(".card-info")?.classList.remove("hidden")
-        showConfetti()
-
-        rotationSpeed = 1
-        shrinking = false
-      }
-    }
-  }
-  
-  scene.add(model)
-})
-
+    scene.add(model)
+  })
 }
 
-let animationId: number;
+let animationId: number
 
 function animate() {
-  const delta = clock.getDelta();
+  const delta = clock.getDelta()
   if (model && typeof model.tick === "function") {
-    model.tick(delta);
+    model.tick(delta)
   }
-  renderer.render(scene, camera);
-  animationId = requestAnimationFrame(animate);
+  renderer.render(scene, camera)
+  animationId = requestAnimationFrame(animate)
 }
 
 function stopAnimation() {
-  cancelAnimationFrame(animationId);
+  cancelAnimationFrame(animationId)
 }
 
 function onWindowResize() {
@@ -166,19 +165,21 @@ async function reset() {
   document.querySelector(".card-wrapper")?.classList.remove("zoom-in")
   document.querySelector("#openPack")?.classList.remove("fade-out")
   document.querySelector("#notEnoughMoney")?.classList.remove("fade-out")
-  document.querySelector(".card")?.classList.remove(
-    "rarity-common",
-    "rarity-rare",
-    "rarity-epic",
-    "rarity-legendary",
-  )
+  document
+    .querySelector(".card")
+    ?.classList.remove(
+      "rarity-common",
+      "rarity-rare",
+      "rarity-epic",
+      "rarity-legendary",
+    )
 }
 
 function showConfetti() {
   confetti.addConfetti({
     emojis: ["💩", "🚽", "🧻"],
     emojiSize: confettiSize,
-    confettiNumber
+    confettiNumber,
   })
 }
 

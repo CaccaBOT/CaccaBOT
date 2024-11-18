@@ -11,7 +11,7 @@ export const useSessionStore = defineStore("session", {
     showChangeUsernameModal: false,
     showChangePfpModal: false,
     showMobileNavbar: false,
-    showChangeThemeModal: false
+    showChangeThemeModal: false,
   }),
   getters: {},
   actions: {

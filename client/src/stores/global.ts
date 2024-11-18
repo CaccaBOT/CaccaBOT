@@ -9,7 +9,7 @@ export const useGlobalStore = defineStore("global", {
     instance: {
       name: null,
       description: null,
-      version: null
+      version: null,
     },
     leaderboard: [] as Leaderboard,
     profile: {} as Profile,
@@ -28,7 +28,8 @@ export const useGlobalStore = defineStore("global", {
       try {
         this.isFetching = true
         const apiStore = useAPIStore()
-        let leaderboardResponse = await apiStore.client.getMonthlyLeaderboard(date)
+        let leaderboardResponse =
+          await apiStore.client.getMonthlyLeaderboard(date)
         this.isFetching = false
         if (leaderboardResponse.ok) {
           this.$state.leaderboard = await leaderboardResponse.json()

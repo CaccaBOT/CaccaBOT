@@ -10,25 +10,30 @@ export const useAchievementStore = defineStore("achievements", {
   }),
   actions: {
     async loadAchievements() {
-        const { client } = useAPIStore()
-        const globalStore = useGlobalStore()
-        if (localStorage.getItem('achievements') != null) {
-            const { version, achievements } = JSON.parse(localStorage.getItem('achievements'))
-            if (globalStore.instance.version === version) {
-                this.achievements = achievements
-                return
-            }
+      const { client } = useAPIStore()
+      const globalStore = useGlobalStore()
+      if (localStorage.getItem("achievements") != null) {
+        const { version, achievements } = JSON.parse(
+          localStorage.getItem("achievements"),
+        )
+        if (globalStore.instance.version === version) {
+          this.achievements = achievements
+          return
         }
+      }
 
-        this.achievements = await (await client.getAllAchievements()).json()
-        this.version = globalStore.instance.version
-        this.saveAchievements()
+      this.achievements = await (await client.getAllAchievements()).json()
+      this.version = globalStore.instance.version
+      this.saveAchievements()
     },
     saveAchievements() {
-        localStorage.setItem('achievements', JSON.stringify({
-            version: this.version,
-            achievements: this.achievements
-        }))
-    }
-  }
+      localStorage.setItem(
+        "achievements",
+        JSON.stringify({
+          version: this.version,
+          achievements: this.achievements,
+        }),
+      )
+    },
+  },
 })

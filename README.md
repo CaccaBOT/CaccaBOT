@@ -31,6 +31,7 @@ git clone https://github.com/CaccaBOT/CaccaBOT-Server.git
 	"monthlyPurge": true
 }
 ```
+
 `name`: the name of your instance (will appear on the home page)
 
 `description`: the description of your instance (will appear on the home page)

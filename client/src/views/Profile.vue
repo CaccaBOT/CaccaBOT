@@ -47,9 +47,7 @@ async function fetchProfileStats(id) {
       globalStore.selectedDate.getFullYear(),
       globalStore.selectedDate.getMonth() + 1,
     )
-    userStats.value = await (
-      await client.getMonthlyUserStats(id, date)
-    ).json()
+    userStats.value = await (await client.getMonthlyUserStats(id, date)).json()
     monthlyUserPoops.value = await (
       await client.getMonthlyPoopsFromUser(id, date)
     ).json()
@@ -74,38 +72,67 @@ onMounted(async () => {
 
 <template>
   <div class="profile-wrapper">
-    <div v-show="globalStore.profile.username == null"
-      class="loader-wrapper flex h-[85vh] w-full items-center justify-center">
+    <div
+      v-show="globalStore.profile.username == null"
+      class="loader-wrapper flex h-[85vh] w-full items-center justify-center"
+    >
       <span class="loading loading-spinner loading-lg"></span>
     </div>
     <div v-show="globalStore.profile.username" class="profile-info-wrapper">
       <div class="profile-header mx-auto mt-8 text-center">
         <div class="avatar">
-          <div v-show="globalStore.profile.username"
-            class="custom-shadow w-24 rounded-full ring ring-primary ring-offset-2 ring-offset-base-100">
-            <img alt="Profile picture" :src="(isOwnProfile()
-                ? sessionStore.session.pfp
-                : globalStore.profile.pfp) ?? noPfp
-              " />
+          <div
+            v-show="globalStore.profile.username"
+            class="custom-shadow w-24 rounded-full ring ring-primary ring-offset-2 ring-offset-base-100"
+          >
+            <img
+              alt="Profile picture"
+              :src="
+                (isOwnProfile()
+                  ? sessionStore.session.pfp
+                  : globalStore.profile.pfp) ?? noPfp
+              "
+            />
           </div>
-          <div v-show="isOwnProfile()"
-            class="absolute bottom-[-5px] left-[-5px] h-[2.5rem] w-[2.5rem] cursor-pointer rounded-full bg-primary">
-            <div class="flex h-full items-center justify-center" @click="sessionStore.showChangePfpModal = true">
+          <div
+            v-show="isOwnProfile()"
+            class="absolute bottom-[-5px] left-[-5px] h-[2.5rem] w-[2.5rem] cursor-pointer rounded-full bg-primary"
+          >
+            <div
+              class="flex h-full items-center justify-center"
+              @click="sessionStore.showChangePfpModal = true"
+            >
               <HeroiconsPencil class="mx-auto text-center" color="black" />
             </div>
           </div>
         </div>
         <div v-show="globalStore.profile.username" class="username">
-          <h1 class="mx-auto w-max outline-none" :contenteditable="isEditingUsername">
+          <h1
+            class="mx-auto w-max outline-none"
+            :contenteditable="isEditingUsername"
+          >
             {{ globalStore.profile.username }}
-            <HeroiconsPencil v-show="isOwnProfile() && !isEditingUsername"
-              class="ml-1 inline cursor-pointer text-[1.25rem]" @click="sessionStore.showChangeUsernameModal = true" />
+            <HeroiconsPencil
+              v-show="isOwnProfile() && !isEditingUsername"
+              class="ml-1 inline cursor-pointer text-[1.25rem]"
+              @click="sessionStore.showChangeUsernameModal = true"
+            />
           </h1>
         </div>
-        <UserStatsBadge class="text-lg" :poops="globalStore.profile.poops" :money="globalStore.profile.money" />
+        <UserStatsBadge
+          class="text-lg"
+          :poops="globalStore.profile.poops"
+          :money="globalStore.profile.money"
+        />
       </div>
-      <div v-show="globalStore.profile.username" class="card mx-auto mt-5 w-5/6 bg-base-200 text-center shadow-xl">
-        <div class="prose card-body mx-auto text-center" v-show="globalStore.profile.bio">
+      <div
+        v-show="globalStore.profile.username"
+        class="card mx-auto mt-5 w-5/6 bg-base-200 text-center shadow-xl"
+      >
+        <div
+          class="prose card-body mx-auto text-center"
+          v-show="globalStore.profile.bio"
+        >
           <h1 class="quote-top">“</h1>
           <p>
             {{ globalStore.profile.bio ?? "This user has not set a bio yet." }}
@@ -113,10 +140,10 @@ onMounted(async () => {
           <h1 class="quote-bottom">“</h1>
         </div>
       </div>
-      <PoopUserStats :stats="userStats"/>
+      <PoopUserStats :stats="userStats" />
       <Inventory :userCollectibles="userCollectibles" />
       <Achievements :userAchievements="userAchievements" />
-      <ProfilePoopChart :poops="monthlyUserPoops"/>
+      <ProfilePoopChart :poops="monthlyUserPoops" />
     </div>
   </div>
 </template>

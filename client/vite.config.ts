@@ -44,9 +44,9 @@ export default defineConfig({
       targets: [
         {
           src: "robots.txt", // Source path relative to your project root
-          dest: "." // Destination path in the build directory
-        }
-      ]
+          dest: ".", // Destination path in the build directory
+        },
+      ],
     }),
   ],
 })

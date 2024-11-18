@@ -1,6 +1,6 @@
 import { useSessionStore } from "../stores/session"
 
-export const baseURL = import.meta.env.VITE_API_URL;
+export const baseURL = import.meta.env.VITE_API_URL
 export const baseAPIURL = `${baseURL}/api`
 
 export default class API {
@@ -17,7 +17,7 @@ export default class API {
   async getInstanceInfo() {
     return await fetch(`${baseAPIURL}/instance/info`)
   }
-  
+
   async login(username: string, password: string) {
     return await fetch(`${baseAPIURL}/auth/login`, {
       method: "POST",
@@ -93,7 +93,7 @@ export default class API {
         "Content-Type": "application/json",
         "X-Auth-Token": this.sessionStore.session.token,
       },
-      body: JSON.stringify({})
+      body: JSON.stringify({}),
     })
   }
 

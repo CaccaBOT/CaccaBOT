@@ -41,10 +41,10 @@ onMounted(async () => {
     toast.error("Failed to fetch server version")
   }
 
-  const theme = localStorage.getItem('theme')
+  const theme = localStorage.getItem("theme")
 
   if (theme != null) {
-    document.querySelector('html').setAttribute('data-theme', theme)
+    document.querySelector("html").setAttribute("data-theme", theme)
   }
 
   await achievementStore.loadAchievements()

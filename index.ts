@@ -1,5 +1,5 @@
 const server = require('fastify')({ bodyLimit: 8388608 })
-import {FastifyRequest, FastifyReply} from 'fastify'
+import { FastifyRequest, FastifyReply } from 'fastify'
 import { client } from './whatsapp/index'
 import { initDatabase } from './database/index'
 import dotenv from 'dotenv'
@@ -49,10 +49,18 @@ server.register(require('@fastify/swagger-ui'), {
 		},
 	},
 	uiHooks: {
-		onRequest: function (request: FastifyRequest, reply: FastifyReply, next: () => void) {
+		onRequest: function (
+			request: FastifyRequest,
+			reply: FastifyReply,
+			next: () => void,
+		) {
 			next()
 		},
-		preHandler: function (request: FastifyRequest, reply: FastifyReply, next: () => void) {
+		preHandler: function (
+			request: FastifyRequest,
+			reply: FastifyReply,
+			next: () => void,
+		) {
 			next()
 		},
 	},
@@ -75,50 +83,53 @@ server.register(import('@fastify/compress'))
 server.register(fastifyStatic, {
 	root: path.join(__dirname, 'public'),
 	prefix: '/public',
-});
+})
 
 server.register(fastifyStatic, {
-    root: path.join(__dirname, '/public/client'),
-    prefix: '/',
-	decorateReply: false
-});
+	root: path.join(__dirname, '/public/client'),
+	prefix: '/',
+	decorateReply: false,
+})
 
 server.register(fastifyStatic, {
-    root: path.join(__dirname, '/public/client/assets'),
-    prefix: '/assets/',
-	decorateReply: false
-});
+	root: path.join(__dirname, '/public/client/assets'),
+	prefix: '/assets/',
+	decorateReply: false,
+})
 
 server.register(fastifyStatic, {
-    root: path.join(__dirname, '/public/collectibles'),
-    prefix: '/collectibles/',
+	root: path.join(__dirname, '/public/collectibles'),
+	prefix: '/collectibles/',
 	decorateReply: false,
 	maxAge: '1d',
-    immutable: true,
-});
+	immutable: true,
+})
 
 server.register(fastifyStatic, {
-    root: path.join(__dirname, '/public/pfp'),
-    prefix: '/pfp/',
-	decorateReply: false
-});
+	root: path.join(__dirname, '/public/pfp'),
+	prefix: '/pfp/',
+	decorateReply: false,
+})
 
 server.register(import('@fastify/cors'), {
 	origin: '*',
 })
 
-server.addHook('onRequest', (req: { method: any; url: any }, res: any, done: () => void) => {
-	const log = `${new Date().toISOString()} | ${req.method} | ${req.url}`
-	if (!fs.existsSync(`${__dirname}/logs`)) {
-		fs.mkdirSync(`${__dirname}/logs`)
-	}
-	fs.appendFileSync(
-		`${__dirname}/logs/${new Date().toISOString().slice(0, 10)}.log`,
-		`${log}\n`,
-	)
-	console.info(log)
-	done()
-})
+server.addHook(
+	'onRequest',
+	(req: { method: any; url: any }, res: any, done: () => void) => {
+		const log = `${new Date().toISOString()} | ${req.method} | ${req.url}`
+		if (!fs.existsSync(`${__dirname}/logs`)) {
+			fs.mkdirSync(`${__dirname}/logs`)
+		}
+		fs.appendFileSync(
+			`${__dirname}/logs/${new Date().toISOString().slice(0, 10)}.log`,
+			`${log}\n`,
+		)
+		console.info(log)
+		done()
+	},
+)
 
 server.decorate('NotFound', (req: FastifyRequest, res: FastifyReply) => {
 	if (req.url.toLowerCase().startsWith('/api')) {
@@ -126,7 +137,7 @@ server.decorate('NotFound', (req: FastifyRequest, res: FastifyReply) => {
 	}
 
 	const stream = fs.createReadStream(`${__dirname}/public/client/index.html`)
-    res.type('text/html').send(stream)
+	res.type('text/html').send(stream)
 })
 
 server.setNotFoundHandler(server.NotFound)

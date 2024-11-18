@@ -12,10 +12,10 @@ const getInstanceInfoEndpoint = async function (
 	options: RouteOptions,
 ) {
 	server.get('/info', async (req: FastifyRequest, res: FastifyReply) => {
-		res.code(200).send({ 
+		res.code(200).send({
 			name: config.name,
 			description: config.description,
-			version: config.version 
+			version: config.version,
 		})
 	})
 }

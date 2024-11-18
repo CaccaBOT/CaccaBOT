@@ -1,5 +1,5 @@
 export type UserAchievement = {
-    id: number,
-    achievement_id: string
-    timestamp: string
+  id: number
+  achievement_id: string
+  timestamp: string
 }

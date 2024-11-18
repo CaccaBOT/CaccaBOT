@@ -3,30 +3,30 @@ import { useGlobalStore } from "../stores/global"
 import { useSessionStore } from "../stores/session"
 
 const routes = [
-  { 
-    path: "/", 
-    component: () => import("../views/Home.vue"), 
-    name: "home" 
+  {
+    path: "/",
+    component: () => import("../views/Home.vue"),
+    name: "home",
   },
-  { 
-    path: "/stats", 
-    component: () => import("../views/Stats.vue"), 
-    name: "stats" 
+  {
+    path: "/stats",
+    component: () => import("../views/Stats.vue"),
+    name: "stats",
   },
-  { 
-    path: "/leaderboard", 
-    component: () => import("../views/Leaderboard.vue"), 
-    name: "leaderboard" 
+  {
+    path: "/leaderboard",
+    component: () => import("../views/Leaderboard.vue"),
+    name: "leaderboard",
   },
   {
     path: "/leaderboard/:year/:month",
     component: () => import("../views/Leaderboard.vue"),
     name: "monthlyLeaderboard",
   },
-  { 
-    path: "/profile/:id", 
-    component: () => import("../views/Profile.vue"), 
-    name: "profile" 
+  {
+    path: "/profile/:id",
+    component: () => import("../views/Profile.vue"),
+    name: "profile",
   },
   {
     path: "/profile/:id/:year/:month",
@@ -38,31 +38,31 @@ const routes = [
     component: () => import("../views/Profile.vue"),
     name: "ownProfile",
   },
-  { 
-    path: "/users", 
-    component: () => import("../views/Users.vue"), 
-    name: "users" 
+  {
+    path: "/users",
+    component: () => import("../views/Users.vue"),
+    name: "users",
   },
-  { 
-    path: "/manual", 
-    component: () => import("../views/Manual.vue"), 
-    name: "manual" 
+  {
+    path: "/manual",
+    component: () => import("../views/Manual.vue"),
+    name: "manual",
   },
-  { 
-    path: "/cards", 
-    component: () => import("../views/Cards.vue"), 
-    name: "cards" 
+  {
+    path: "/cards",
+    component: () => import("../views/Cards.vue"),
+    name: "cards",
   },
   {
     path: "/admin",
     component: () => import("../views/admin/Dashboard.vue"),
-    name: "admin"
+    name: "admin",
   },
   {
     path: "/:pathMatch(.*)*",
     component: () => import("../views/NotFound.vue"),
-    name: "notFound"
-  }
+    name: "notFound",
+  },
 ]
 
 const router = createRouter({

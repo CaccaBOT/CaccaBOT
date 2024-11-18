@@ -174,7 +174,8 @@ function updateNewMonth() {
       </button>
     </div>
 
-    <img alt="No poops found"
+    <img
+      alt="No poops found"
       class="mx-auto sm:w-full md:w-1/3"
       v-show="globalStore.leaderboard.length === 0 && !globalStore.isFetching"
       :src="noPoopsFound"
@@ -217,7 +218,7 @@ function updateNewMonth() {
               >
                 <div class="avatar">
                   <div class="mask mask-circle h-16 w-16">
-                    <img alt="Profile picture" :src="user.pfp ?? noPfp"/>
+                    <img alt="Profile picture" :src="user.pfp ?? noPfp" />
                   </div>
                 </div>
                 <div>

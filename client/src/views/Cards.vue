@@ -28,7 +28,9 @@ async function openPack() {
   document
     .querySelector(".card")
     .classList.add(getRarityClass(foundCard.value.rarity))
-  document.querySelector('.card-info > h2').classList.add(getTextRarityClass(foundCard.value.rarity))
+  document
+    .querySelector(".card-info > h2")
+    .classList.add(getTextRarityClass(foundCard.value.rarity))
 }
 
 function getRarityClass(rarityId) {
@@ -60,7 +62,9 @@ async function reset() {
   document
     .querySelector(".card")
     .classList.remove(getRarityClass(foundCard.value.rarity))
-  document.querySelector('.card-info > h2').classList.remove(getTextRarityClass(foundCard.value.rarity))
+  document
+    .querySelector(".card-info > h2")
+    .classList.remove(getTextRarityClass(foundCard.value.rarity))
 }
 
 onMounted(() => {
@@ -71,7 +75,9 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="cards-wrapper flex sm:h-[75vh] md:h-[80vh] flex-col justify-between">
+  <div
+    class="cards-wrapper flex flex-col justify-between sm:h-[75vh] md:h-[80vh]"
+  >
     <div
       class="card-pack flex cursor-pointer flex-row items-center justify-center"
     >
@@ -114,9 +120,17 @@ onMounted(() => {
       class="lg:w-1/8 btn btn-error mx-auto w-2/3 sm:w-2/3 md:w-1/5"
     >
       You can't buy this item (5
-      <img alt="Merdollar" class="merdollar h-[20px] w-[20px]" :src="merdollar" />)
+      <img
+        alt="Merdollar"
+        class="merdollar h-[20px] w-[20px]"
+        :src="merdollar"
+      />)
     </button>
-    <span v-if="showCredits" class="absolute bottom-3 font-bold w-full text-center">Cards made by BaDo (BaDoDab)</span>
+    <span
+      v-if="showCredits"
+      class="absolute bottom-3 w-full text-center font-bold"
+      >Cards made by BaDo (BaDoDab)</span
+    >
   </div>
 </template>
 

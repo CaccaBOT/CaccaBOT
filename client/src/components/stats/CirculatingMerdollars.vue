@@ -13,7 +13,8 @@ const props = defineProps<{
         <div class="stat-title">Circulating Merdollars</div>
         <div class="stat-value flex items-center justify-center text-success">
           {{ props.value.toLocaleString() }}
-          <img alt="Merdollar"
+          <img
+            alt="Merdollar"
             class="merdollar ml-2 inline h-[50px] w-[50px]"
             :src="merdollar"
           />
