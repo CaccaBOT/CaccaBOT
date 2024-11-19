@@ -3,24 +3,29 @@ import { useAchievementStore } from "../../stores/achievement"
 import { Achievement } from "../../types/Achievement"
 import { UserAchievement } from "../../types/UserAchievement"
 import HeroiconsTrophy from "~icons/heroicons/trophy"
+import { computed } from "vue"
+
 const achievementStore = useAchievementStore()
 const props = defineProps<{
   userAchievements: UserAchievement[]
 }>()
-const achievements = achievementStore.achievements
+
+const achievements = computed(() => achievementStore.achievements)
+const isLoading = computed(() => achievements.value.length === 0)
+
 function getAchievement(id: string) {
-  return achievements.find((a) => a.id === id)
+  return achievements.value.find((a) => a.id === id)
 }
 
-function getDifficultyClass(achievement: Achievement) {
-  let difficultyMap = {
+function getDifficultyClass(achievement?: Achievement) {
+  const difficultyMap = {
     1: "text-rarity-common",
     2: "text-rarity-rare",
     3: "text-rarity-epic",
     4: "text-rarity-legendary",
   }
 
-  return difficultyMap[achievement?.difficulty_id]
+  return difficultyMap[achievement?.difficulty_id] || ""
 }
 
 function formatDate(timestamp: string) {
@@ -43,10 +48,11 @@ function formatDate(timestamp: string) {
       <h2>Achievements</h2>
     </div>
 
-    <div class="achievements flex flex-row flex-wrap justify-center">
+    <div v-if="!isLoading" class="achievements flex flex-row flex-wrap justify-center">
       <div
         class="achievement m-4 mb-5 flex w-80 cursor-pointer flex-row items-center justify-start rounded-xl bg-base-300 p-2"
         v-for="userAchievement of userAchievements"
+        :key="userAchievement.achievement_id"
       >
         <div class="icon-wrapper m-4 rounded-full bg-base-100 p-4">
           <HeroiconsTrophy
@@ -58,7 +64,7 @@ function formatDate(timestamp: string) {
         </div>
         <div class="flex h-full w-full flex-col">
           <h4 class="mt-5 p-0 text-lg font-bold">
-            {{ getAchievement(userAchievement.achievement_id)?.name }}
+            {{ getAchievement(userAchievement.achievement_id)?.name || "Unknown" }}
           </h4>
           <p class="ml-auto mt-auto text-sm font-thin text-gray-400">
             {{ formatDate(userAchievement.timestamp) }}
@@ -68,5 +74,3 @@ function formatDate(timestamp: string) {
     </div>
   </div>
 </template>
-
-<style scoped></style>
