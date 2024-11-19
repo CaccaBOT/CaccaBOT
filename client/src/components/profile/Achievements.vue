@@ -58,7 +58,7 @@ function formatDate(timestamp: string) {
         </div>
         <div class="flex h-full w-full flex-col">
           <h4 class="mt-5 p-0 text-lg font-bold">
-            {{ getAchievement(userAchievement.achievement_id).name }}
+            {{ getAchievement(userAchievement.achievement_id)?.name }}
           </h4>
           <p class="ml-auto mt-auto text-sm font-thin text-gray-400">
             {{ formatDate(userAchievement.timestamp) }}
