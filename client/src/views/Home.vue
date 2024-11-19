@@ -20,6 +20,7 @@ onMounted(async () => {
 </script>
 
 <template>
+  <div>
   <div
     v-if="!globalStore.instance.name"
     class="loader-wrapper flex h-[85vh] w-full items-center justify-center"
@@ -58,6 +59,7 @@ onMounted(async () => {
       >Send suggestions here!</a
     >
   </div>
+</div>
 </template>
 
 <style scoped>
