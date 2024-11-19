@@ -42,7 +42,7 @@ const themes = [
 const theme = ref("")
 
 watch(theme, () => {
-  const themeId = theme.value.toLowerCase()
+  const themeId = theme.value?.toLowerCase()
   document.querySelector("html").setAttribute("data-theme", themeId)
   localStorage.setItem("theme", themeId)
 })

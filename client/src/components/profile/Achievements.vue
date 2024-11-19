@@ -20,7 +20,7 @@ function getDifficultyClass(achievement: Achievement) {
     4: "text-rarity-legendary",
   }
 
-  return difficultyMap[achievement.difficulty_id]
+  return difficultyMap[achievement?.difficulty_id]
 }
 
 function formatDate(timestamp: string) {
