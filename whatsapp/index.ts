@@ -18,11 +18,11 @@ export let commands: Command[] = []
 
 export const client = new Client({
 	authStrategy: new LocalAuth(),
-	puppeteer: { 
+	puppeteer: {
 		handleSIGINT: false,
 		timeout: 60000,
 		args: [
-			'--no-sandbox'
+			'--no-sandbox',
 		]
 	},
 })
@@ -156,7 +156,7 @@ async function parseMessage(message: Message): Promise<MessageInfo | undefined> 
 	if (info.isCommand) {
 		try {
 			const command = commands.find((cmd) => cmd.name === info.command.name);
-			
+
 			if (command) {
 				command.execute(message, info.command)
 			}
