@@ -18,7 +18,7 @@ jobs:
 
       - name: Create image name
         id: image_name
-        run: echo "IMAGE_NAME=ghcr.io/${{ github.repository }}" | tr '[:upper:]' '[:lower:]' > "$GITHUB_ENV"
+        run: echo "IMAGE_NAME=ghcr.io/$(echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]')" > "$GITHUB_ENV"
 
       # create a unique tag for each build for debugging
       - name: Set Docker tag
