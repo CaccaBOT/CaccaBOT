@@ -21,7 +21,7 @@ const leaderboard: Command = {
 		let chat = await message.getChat() as GroupChat
 		let mentions = [] as any
 
-		if (chat.isGroup) {
+		// if (chat.isGroup) {
 			let participants = chat.participants
 
 			for (const participant of participants) {
@@ -36,10 +36,10 @@ const leaderboard: Command = {
 			}
 
 			leaderboardMsg += `\nThe leaderboard can be viewed here\n${config.serverUrl}/leaderboard`
-		} else {
-			message.reply('This command is only available in groups')
-			return
-		}
+		// } else {
+		// 	message.reply('This command is only available in groups')
+		// 	return
+		// }
 
 		chat.sendMessage(leaderboardMsg, { mentions })
 	},
