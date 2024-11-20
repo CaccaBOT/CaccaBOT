@@ -20,7 +20,10 @@ export const client = new Client({
 	authStrategy: new LocalAuth(),
 	puppeteer: { 
 		handleSIGINT: false,
-		timeout: 60000
+		timeout: 60000,
+		args: [
+			'--no-sandbox'
+		]
 	},
 })
 

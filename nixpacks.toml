@@ -1,0 +1,19 @@
+# see https://discord.com/channels/713503345364697088/1156732499515428956
+[build]
+nixpacksVersion = "1.15.0"
+
+[phases.setup]
+nixPkgs = ['...', 'nodePackages_latest.ts-node']
+nixLibs = []
+
+[variables]
+NIXPACKS_NODE_VERSION = '20'
+
+[phases.install]
+cmds = ['pnpm install --frozen-lockfile', 'cd client && pnpm install --frozen-lockfile', 'node node_modules/puppeteer/install.js']
+
+[phases.build]
+cmds = ['cd client && pnpm run build-bypass-errors']
+
+[start]
+cmd = 'ts-node --project tsconfig.json --swc index.ts'
