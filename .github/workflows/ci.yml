@@ -29,9 +29,11 @@ jobs:
         run: echo "DATE_STAMP=$(date +%s)" > "$GITHUB_ENV"
 
       - name: Build and push Docker images
-        uses: iloveitaly/github-action-nixpacks@main
+        uses: PolpOnline/github-action-nixpacks@main
         with:
           push: true
+          cache: true
+          cache_tag: ${{ env.IMAGE_NAME }}:latest
           tags: |
             ${{ env.IMAGE_NAME }}:sha-${{ env.DATE_STAMP }}
             ${{ env.IMAGE_NAME }}:latest
