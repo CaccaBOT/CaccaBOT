@@ -23,11 +23,6 @@ jobs:
         id: image_name
         run: echo "IMAGE_NAME=ghcr.io/$(echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]')" > "$GITHUB_ENV"
 
-      # create a unique tag for each build for debugging
-      - name: Set Docker tag
-        id: date
-        run: echo "DATE_STAMP=$(date +%s)" > "$GITHUB_ENV"
-
       - name: Build and push Docker images
         uses: PolpOnline/github-action-nixpacks@main
         with:
@@ -35,5 +30,5 @@ jobs:
           cache: true
           cache_tag: ${{ env.IMAGE_NAME }}:latest
           tags: |
-            ${{ env.IMAGE_NAME }}:id-${{ env.DATE_STAMP }}
+            ${{ env.IMAGE_NAME }}:${{ github.sha }}
             ${{ env.IMAGE_NAME }}:latest
