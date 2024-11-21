@@ -1,6 +1,6 @@
 # CaccaBOT Server
 
-This project was made to keep track of poops from every participant of a WhatsApp group designed for that purpose
+This project was made to keep track of poops from every participant of a WhatsApp group designed for that purpose.
 
 ## Installation
 
