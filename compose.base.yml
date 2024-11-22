@@ -16,10 +16,10 @@ services:
     labels:
       - "com.centurylinklabs.watchtower.enable=true"
     volumes:
-      - /storage/db:/app/storage/db
-      - /storage/wweb_js_auth:/app/.wweb_js_auth
-      - /storage/wweb_js_cache:/app/.wweb_js_cache
-      - /storage/pfp:/app/public/pfp
+      - /home/ubuntu/caccabot_data/storage:/app/storage/
+      - /home/ubuntu/caccabot_data/wweb_js_auth:/app/.wweb_js_auth
+      - /home/ubuntu/caccabot_data/wweb_js_cache:/app/.wweb_js_cache
+      - /home/ubuntu/caccabot_data/pfp:/app/public/pfp
     environment:
       - ENVIRONMENT=production
       - SERVER_PORT=3000
@@ -32,4 +32,4 @@ services:
       - "3000"
 
 volumes:
-  storage:
+  caccabot_data:
