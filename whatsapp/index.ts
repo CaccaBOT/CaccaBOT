@@ -9,7 +9,7 @@ import { detectPoop } from '../poop/parser'
 import config from '../config.json'
 import fs from 'fs'
 import path from 'path'
-import replies from '../storage/replies.json'
+import replies from './replies.json'
 import moment from 'moment-timezone'
 import { RawUser } from "../types/User"
 import { MessageInfo } from "../types/MessageInfo"
