@@ -13,7 +13,7 @@ NIXPACKS_NODE_VERSION = '20'
 cmds = ['pnpm install --frozen-lockfile', 'cd client && pnpm install --frozen-lockfile', 'node node_modules/puppeteer/install.js']
 
 [phases.build]
-cmds = ['cd client && pnpm run build-bypass-errors', 'cd .. && mkdir -p public/client', 'cp -r client/dist/ public/client']
+cmds = ['cd client && pnpm run build-bypass-errors', 'cd .. && mkdir -p public/client', 'mv client/dist/ public/client']
 
 [start]
 cmd = 'ts-node --project tsconfig.json --swc index.ts'
