@@ -1,0 +1,35 @@
+services:
+  watchtower:
+    image: containrrr/watchtower
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - WATCHTOWER_CLEANUP=true
+      - WATCHTOWER_POLL_INTERVAL=30
+      - WATCHTOWER_LABEL_ENABLE=true
+    deploy:
+      update_config:
+        order: start-first
+
+  caccabot:
+    image: ghcr.io/caccabot/caccabot:latest
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+    volumes:
+      - /storage/db:/app/storage/db
+      - /storage/wweb_js_auth:/app/.wweb_js_auth
+      - /storage/wweb_js_cache:/app/.wweb_js_cache
+      - /storage/pfp:/app/public/pfp
+    environment:
+      - ENVIRONMENT=production
+      - SERVER_PORT=3000
+    deploy:
+      update_config:
+        order: start-first
+    ports:
+      - "3000:3000"
+    expose:
+      - "3000"
+
+volumes:
+  storage:
