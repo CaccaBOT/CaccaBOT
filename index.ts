@@ -1,4 +1,4 @@
-const server = require('fastify')({ bodyLimit: 8388608 })
+const server = require('fastify')({ bodyLimit: 8388608, http2: true })
 import { FastifyRequest, FastifyReply } from 'fastify'
 import { client } from './whatsapp/index'
 import { initDatabase } from './database/index'
