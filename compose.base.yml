@@ -45,8 +45,8 @@ services:
       - "traefik.http.middlewares.test-compress.compress.defaultEncoding=zstd"
     volumes:
       - /home/ubuntu/caccabot_data/storage:/app/storage/
-      - /home/ubuntu/caccabot_data/wweb_js_auth:/app/.wweb_js_auth
-      - /home/ubuntu/caccabot_data/wweb_js_cache:/app/.wweb_js_cache
+      - /home/ubuntu/caccabot_data/wwebjs_auth:/app/.wwebjs_auth
+      - /home/ubuntu/caccabot_data/wwebjs_cache:/app/.wwebjs_cache
       - /home/ubuntu/caccabot_data/pfp:/app/public/pfp
     environment:
       - ENVIRONMENT=production
