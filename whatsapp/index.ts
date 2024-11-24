@@ -9,7 +9,6 @@ import { detectPoop } from '../poop/parser'
 import config from '../config.json'
 import fs from 'fs'
 import path from 'path'
-import replies from './replies.json'
 import moment from 'moment-timezone'
 import { RawUser } from "../types/User"
 import { MessageInfo } from "../types/MessageInfo"
@@ -83,13 +82,7 @@ client.on('message_create', async (message: Message) => {
 			foundUser = getUserProfileByPhone(id)
 		}
 		addPoop(foundUser.id)
-		const streak = poopStreak(foundUser.id)
-		message.reply(
-			replies[Math.floor(Math.random() * replies.length)].replace(
-				'{streak}',
-				streak.toString(),
-			),
-		)
+		message.reply(`✅ Saved`)
 		const poop = getLastPoop()
 		achievementChecker.checkPoopBased(foundUser, poop, message)
 	}
