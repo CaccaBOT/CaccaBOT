@@ -733,50 +733,79 @@ export function getPoopsFromUserWithFilter(userId: string, year: number, month: 
 }
 
 export function poopStatsFromUser(userId: string) {
-	const now = new Date()
-	const todayStart = new Date(
-		Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()),
-	)
-	const todayEnd = new Date(
-		Date.UTC(
-			now.getUTCFullYear(),
-			now.getUTCMonth(),
-			now.getUTCDate(),
-			23,
-			59,
-			59,
-			999,
-		),
-	)
+	const startOfDay = moment.tz({ 
+		year: moment().year(),
+		month: moment().month(),
+		day: moment().date() },
+		timezone)
+		.startOf('day')
+		.utc()
+		.toISOString()
 
-	const startOfWeek = new Date(todayStart)
-	startOfWeek.setUTCDate(todayStart.getUTCDate() - todayStart.getUTCDay())
+	const endOfDay = moment.tz({ 
+		year: moment().year(),
+		month: moment().month(),
+		day: moment().date() },
+		timezone)
+		.endOf('day')
+		.utc()
+		.toISOString()
 
-	const startOfMonth = new Date(todayStart)
-	startOfMonth.setUTCDate(1)
+	const startOfWeek = moment.tz({ 
+		year: moment().year(),
+		month: moment().month(),
+		day: moment().date() },
+		timezone)
+		.startOf('week')
+		.add(1, 'day')
+		.startOf('day')
+		.utc()
+		.toISOString();
 
-	const today = todayStart.toISOString()
-	const todayEndSqlite = todayEnd.toISOString()
-	const weekStart = startOfWeek.toISOString()
-	const monthStart = startOfMonth.toISOString()
+	const endOfWeek = moment.tz({
+		year: moment().year(),
+		month: moment().month(),
+		day: moment().date() },
+		timezone)
+		.startOf('week')
+		.add(7, 'days')
+		.subtract(1, 'second')
+		.utc()
+		.toISOString();
+
+	const startOfMonth = moment.tz({
+		year: moment().year(),
+		month: moment().month() },
+		timezone)
+		.startOf('month')
+		.utc()
+		.toISOString()
+
+	const endOfMonth = moment.tz({
+		year: moment().year(),
+		month: moment().month() },
+		timezone)
+		.endOf('month')
+		.utc()
+		.toISOString()
 
 	const todayPoops = db
 		.prepare(
 			`SELECT COUNT(*) as today FROM poop WHERE timestamp BETWEEN ? AND ? AND poop.user_id = ?`,
 		)
-		.get(today, todayEndSqlite, userId)
+		.get(startOfDay, endOfDay, userId)
 
 	const weeklyPoops = db
 		.prepare(
 			`SELECT COUNT(*) as week FROM poop WHERE timestamp >= ? AND poop.user_id = ?`,
 		)
-		.get(weekStart, userId)
+		.get(startOfWeek, endOfWeek, userId)
 
 	const monthlyPoops = db
 		.prepare(
 			`SELECT COUNT(*) as month FROM poop WHERE timestamp >= ? AND poop.user_id = ?`,
 		)
-		.get(monthStart, userId)
+		.get(startOfMonth, endOfMonth, userId)
 
 	const totalPoops = db
 		.prepare(`SELECT COUNT(*) as total FROM poop WHERE poop.user_id = ?`)
@@ -841,41 +870,80 @@ export function poopStatsFromUserWithFilter(userId: string, year: number, month:
 }
 
 export function poopStats() {
-	const now = new Date()
-	const todayStart = new Date(
-		Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate())
-	)
-	const todayEnd = new Date(
-		Date.UTC(
-			now.getUTCFullYear(),
-			now.getUTCMonth(),
-			now.getUTCDate(),
-			23,
-			59,
-			59,
-			999
-		)
-	)
+	const startOfDay = moment.tz({ 
+		year: moment().year(),
+		month: moment().month(),
+		day: moment().date() },
+		timezone)
+		.startOf('day')
+		.utc()
+		.toISOString()
 
-	const startOfWeek = new Date(todayStart)
-	startOfWeek.setUTCDate(todayStart.getUTCDate() - todayStart.getUTCDay())
+	const endOfDay = moment.tz({ 
+		year: moment().year(),
+		month: moment().month(),
+		day: moment().date() },
+		timezone)
+		.endOf('day')
+		.utc()
+		.toISOString()
 
-	const startOfMonth = new Date(todayStart)
-	startOfMonth.setUTCDate(1)
+	const startOfWeek = moment.tz({ 
+		year: moment().year(),
+		month: moment().month(),
+		day: moment().date() },
+		timezone)
+		.startOf('week')
+		.add(1, 'day')
+		.startOf('day')
+		.utc()
+		.toISOString()
+
+	const endOfWeek = moment.tz({
+		year: moment().year(),
+		month: moment().month(),
+		day: moment().date() },
+		timezone)
+		.startOf('week')
+		.add(7, 'days')
+		.subtract(1, 'second')
+		.utc()
+		.toISOString()
+
+	const startOfMonth = moment.tz({
+		year: moment().year(),
+		month: moment().month()},
+		timezone)
+		.startOf('month')
+		.utc()
+		.toISOString()
+
+	const endOfMonth = moment.tz({
+		year: moment().year(),
+		month: moment().month()},
+		timezone)
+		.endOf('month')
+		.utc()
+		.toISOString()
+
+		console.log(startOfDay)
+		console.log(endOfDay)
+		console.log(startOfWeek)
+		console.log(endOfWeek)
+		console.log(startOfMonth)
+		console.log(endOfMonth)
 
 	const todayPoops = db
-		.prepare(
-			`SELECT COUNT(*) as today FROM poop WHERE timestamp BETWEEN ? AND ?`,
-		)
-		.get(todayStart, todayEnd)
+		.prepare(`SELECT COUNT(*) as today FROM poop WHERE timestamp BETWEEN ? AND ?`)
+		.get(startOfDay, endOfDay)
 
 	const weeklyPoops = db
-		.prepare(`SELECT COUNT(*) as week FROM poop WHERE timestamp >= ?`)
-		.get(startOfWeek)
+		.prepare(`SELECT COUNT(*) as week FROM poop WHERE timestamp BETWEEN ? AND ?`)
+		.get(startOfWeek, endOfWeek)
 
 	const monthlyPoops = db
-		.prepare(`SELECT COUNT(*) as month FROM poop WHERE timestamp >= ?`)
-		.get(startOfMonth)
+		.prepare(`SELECT COUNT(*) as month FROM poop WHERE timestamp BETWEEN ? AND ?`)
+		.get(startOfMonth, endOfMonth)
 
 	const totalPoops = db.prepare(`SELECT COUNT(*) as total FROM poop`).get()
 

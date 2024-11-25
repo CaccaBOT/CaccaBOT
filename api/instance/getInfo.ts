@@ -6,6 +6,7 @@ import {
 } from 'fastify'
 
 import config from '../../config.json'
+import { version } from '../../package.json'
 
 const getInstanceInfoEndpoint = async function (
 	server: FastifyInstance,
@@ -15,7 +16,7 @@ const getInstanceInfoEndpoint = async function (
 		res.code(200).send({
 			name: config.name,
 			description: config.description,
-			version: config.version,
+			version: `v${version}`,
 		})
 	})
 }

@@ -1,4 +1,4 @@
-const server = require('fastify')({ bodyLimit: 8388608, http2: true })
+const server = require('fastify')({ bodyLimit: 8388608, http2: process.env.ENVIRONMENT == 'production' })
 import { FastifyRequest, FastifyReply } from 'fastify'
 import { client } from './whatsapp/index'
 import { initDatabase } from './database/index'
@@ -7,6 +7,7 @@ import config from './config.json'
 import fs from 'fs'
 import path from 'path'
 import fastifyStatic from '@fastify/static'
+import { version } from './package.json'
 dotenv.config()
 
 console.log(`
@@ -30,7 +31,7 @@ server.register(require('@fastify/swagger'), {
 		info: {
 			title: 'CaccaBOT API',
 			description: 'CaccaBOT API Documentation',
-			version: config.version,
+			version,
 		},
 		host: `caccabot.duckdns.org`,
 		schemes: ['https'],

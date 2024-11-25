@@ -24,7 +24,6 @@ git clone https://github.com/CaccaBOT/CaccaBOT-Server.git
 	"name": "CaccaBOT",
 	"description": "Welcome to CaccaBOT",
 	"prefix": "cacca",
-	"version": "v5.4.0",
 	"serverUrl": "https://caccabot.duckdns.org",
 	"groupId": null,
 	"whatsappModuleEnabled": true,

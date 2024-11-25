@@ -4,7 +4,7 @@ import { Command } from "../types/Command"
 import QRCode from 'qrcode-terminal'
 //@ts-ignore
 import schedule from 'node-schedule'
-import { addPoop, getUserProfileByPhone, poopStreak, createUser, getLastPoop, deleteUser, getInactiveUsers } from '../database/index'
+import { addPoop, getUserProfileByPhone, createUser, getLastPoop, deleteUser, getInactiveUsers, poopStatsFromUserWithFilter } from '../database/index'
 import { detectPoop } from '../poop/parser'
 import config from '../config.json'
 import fs from 'fs'
@@ -82,8 +82,17 @@ client.on('message_create', async (message: Message) => {
 			foundUser = getUserProfileByPhone(id)
 		}
 		addPoop(foundUser.id)
-		message.reply(`✅ Saved`)
+		const stats = poopStatsFromUserWithFilter('8cc1f73372d837b92f90249cd6c7654e', moment().get('year'), moment().get('month') + 1)
 		const poop = getLastPoop()
+		message.reply(
+			'✅ Saved' +
+			'\nID: ' + poop.id +
+			'\nTimestamp: ' + poop.timestamp +
+			'\nRank: ' + stats.monthlyLeaderboardPosition +
+			'\nStreak: ' + stats.streak +
+			'\nDaily AVG: ' + stats.poopAverage +
+			'\nMonthly: ' + stats.monthlyPoops
+		)
 		achievementChecker.checkPoopBased(foundUser, poop, message)
 	}
 })
