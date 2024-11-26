@@ -1,5 +1,5 @@
-import { Message } from "whatsapp-web.js"
-import { Command, Info } from "../types/Command"
+import { Message } from 'whatsapp-web.js'
+import { Command, Info } from '../types/Command'
 import { rawQuery } from '../database'
 
 const query: Command = {
@@ -18,4 +18,4 @@ const query: Command = {
 	},
 }
 
-export default query;
+export default query

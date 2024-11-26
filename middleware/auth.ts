@@ -1,4 +1,4 @@
-import { FastifyReply, FastifyRequest } from "fastify"
+import { FastifyReply, FastifyRequest } from 'fastify'
 import { getUserByToken } from '../database'
 
 export async function authenticate(req: FastifyRequest, res: FastifyReply) {

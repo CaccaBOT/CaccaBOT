@@ -1,5 +1,5 @@
-import { Message } from "whatsapp-web.js"
-import { Command, Info } from "../types/Command"
+import { Message } from 'whatsapp-web.js'
+import { Command, Info } from '../types/Command'
 import { updatePassword, getUserProfileByPhone } from '../database/index'
 import crypto from 'crypto'
 import { client } from '../whatsapp/index'
@@ -26,4 +26,4 @@ const password: Command = {
 	},
 }
 
-export default password;
+export default password

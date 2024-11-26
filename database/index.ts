@@ -13,18 +13,27 @@ export function initDatabase() {
 	const migrationFiles = fs.readdirSync(path.join(__dirname, './migrations'))
 	let executedMigrations: Migration[] = []
 
-	try { executedMigrations = [...db.prepare(`SELECT * FROM _migration`).all()] } catch (e) { }
+	try {
+		executedMigrations = [...db.prepare(`SELECT * FROM _migration`).all()]
+	} catch (e) {}
 
 	if (executedMigrations.length === 0) {
-		console.info(`[DATABASE] Database is uninitialized, all migrations will be run`)
+		console.info(
+			`[DATABASE] Database is uninitialized, all migrations will be run`,
+		)
 	}
 
 	for (const file of migrationFiles) {
-		if (!executedMigrations.find(m => m.filename === file)) {
+		if (!executedMigrations.find((m) => m.filename === file)) {
 			console.log(`[DATABASE] Running migration ${file}`)
-			const migration = fs.readFileSync(path.join(__dirname, `./migrations/${file}`), 'utf-8')
+			const migration = fs.readFileSync(
+				path.join(__dirname, `./migrations/${file}`),
+				'utf-8',
+			)
 			db.exec(migration)
-			db.prepare(`INSERT INTO _migration(filename, timestamp) VALUES(?, ?)`).run(file, new Date().toISOString())
+			db.prepare(
+				`INSERT INTO _migration(filename, timestamp) VALUES(?, ?)`,
+			).run(file, new Date().toISOString())
 		}
 	}
 }
@@ -56,7 +65,7 @@ export function getInactiveUsers(date: Date) {
             WHERE p.user_id = u.id 
             AND p.timestamp BETWEEN ? AND ?
         )
-    `
+    `,
 		)
 		.all(startOfMonth, endOfMonth)
 
@@ -99,10 +108,16 @@ export function getTotalPoopsPerDay() {
 			`,
 		)
 		.all()
-		.reduce((acc: Record<string, number>, { date, poops }: Record<string, number>) => {
-			acc[date] = poops
-			return acc
-		}, {})
+		.reduce(
+			(
+				acc: Record<string, number>,
+				{ date, poops }: Record<string, number>,
+			) => {
+				acc[date] = poops
+				return acc
+			},
+			{},
+		)
 }
 
 export function getUserCount() {
@@ -111,19 +126,19 @@ export function getUserCount() {
 
 export function getMonthlyUserCount(date: string) {
 	const startOfMonth = moment(date)
-	.tz(timezone)
-	.startOf('month')
-	.utc()
-	.toISOString()
+		.tz(timezone)
+		.startOf('month')
+		.utc()
+		.toISOString()
 	const endOfMonth = moment(date)
-	.tz(timezone)
-	.endOf('month')
-	.utc()
-	.toISOString()
+		.tz(timezone)
+		.endOf('month')
+		.utc()
+		.toISOString()
 
 	return db
 		.prepare(
-		`
+			`
 			SELECT COUNT(DISTINCT u.id) as monthlyUsers
 			FROM user u
 			JOIN poop p ON u.id = p.user_id
@@ -339,15 +354,11 @@ export function getTotalPoopCount() {
 
 export function getDailyTopPooper(date: string) {
 	const startOfDay = moment(date)
-	.tz(timezone)
-	.startOf('day')
-	.utc()
-	.toISOString()
-	const endOfDay = moment(date)
-	.tz(timezone)
-	.endOf('day')
-	.utc()
-	.toISOString()
+		.tz(timezone)
+		.startOf('day')
+		.utc()
+		.toISOString()
+	const endOfDay = moment(date).tz(timezone).endOf('day').utc().toISOString()
 
 	return db
 		.prepare(
@@ -359,7 +370,7 @@ export function getDailyTopPooper(date: string) {
         GROUP BY u.id
         ORDER BY poops DESC
         LIMIT 1
-    `
+    `,
 		)
 		.get(startOfDay, endOfDay)
 }
@@ -388,22 +399,22 @@ export function getWeeklyTopPooper(date: string) {
         GROUP BY u.id
         ORDER BY poops DESC
         LIMIT 1
-    `
+    `,
 		)
 		.get(startOfWeek, endOfWeek)
 }
 
 export function getMonthlyTopPooper(date: string) {
 	const startOfMonth = moment(date)
-	.tz(timezone)
-	.startOf('month')
-	.utc()
-	.toISOString()
+		.tz(timezone)
+		.startOf('month')
+		.utc()
+		.toISOString()
 	const endOfMonth = moment(date)
-	.tz(timezone)
-	.endOf('month')
-	.utc()
-	.toISOString()
+		.tz(timezone)
+		.endOf('month')
+		.utc()
+		.toISOString()
 
 	return db
 		.prepare(
@@ -415,7 +426,7 @@ export function getMonthlyTopPooper(date: string) {
         GROUP BY u.id
         ORDER BY poops DESC
         LIMIT 1
-    `
+    `,
 		)
 		.get(startOfMonth, endOfMonth)
 }
@@ -437,15 +448,15 @@ export function getTopPooper() {
 
 export function getMonthlyPoopDistribution(date: string) {
 	const startOfMonth = moment(date)
-	.tz(timezone)
-	.startOf('month')
-	.utc()
-	.toISOString()
+		.tz(timezone)
+		.startOf('month')
+		.utc()
+		.toISOString()
 	const endOfMonth = moment(date)
-	.tz(timezone)
-	.endOf('month')
-	.utc()
-	.toISOString()
+		.tz(timezone)
+		.endOf('month')
+		.utc()
+		.toISOString()
 
 	return db
 		.prepare(
@@ -510,7 +521,11 @@ export async function updatePassword(userId: string, password: string) {
 	generateToken(userId)
 }
 
-export function createUser(rawPhone: string, username: string, bio: string | null) {
+export function createUser(
+	rawPhone: string,
+	username: string,
+	bio: string | null,
+) {
 	const phone = sanitizePhone(rawPhone)
 	const id = hashId(phone)
 
@@ -557,7 +572,9 @@ export function getRarities() {
 }
 
 export function getCollectibles(rarityId: number) {
-	return db.prepare(`SELECT * FROM collectible WHERE rarity_id = ?`).all(rarityId)
+	return db
+		.prepare(`SELECT * FROM collectible WHERE rarity_id = ?`)
+		.all(rarityId)
 }
 
 export function getAllCollectibles() {
@@ -597,7 +614,7 @@ export function addPoop(userId: string) {
 	// this is voluntarily stored in UTC for best practice
 	db.prepare(`INSERT INTO poop (user_id, timestamp) VALUES (?, ?)`).run(
 		userId,
-		new Date().toISOString()
+		new Date().toISOString(),
 	)
 
 	db.prepare(
@@ -642,11 +659,13 @@ export function poopLeaderboard() {
 }
 
 export function poopLeaderboardWithFilter(year: number, month: number) {
-	const startOfMonth = moment.tz({ year, month: month - 1 }, timezone)
+	const startOfMonth = moment
+		.tz({ year, month: month - 1 }, timezone)
 		.startOf('month')
 		.utc()
 		.toISOString()
-	const endOfMonth = moment.tz({ year, month: month - 1 }, timezone)
+	const endOfMonth = moment
+		.tz({ year, month: month - 1 }, timezone)
 		.endOf('month')
 		.utc()
 		.toISOString()
@@ -666,7 +685,7 @@ export function poopLeaderboardWithFilter(year: number, month: number) {
         ) AS poop_counts
         JOIN user u ON poop_counts.user_id = u.id
         ORDER BY poops DESC
-    `
+    `,
 		)
 		.all(startOfMonth, endOfMonth)
 
@@ -685,16 +704,16 @@ export function allPoop() {
 }
 
 export function allPoopWithFilter(year: number, month: number) {
-	const startOfMonth = moment({year, month})
-	.tz(timezone)
-	.startOf('month')
-	.utc()
-	.toISOString()
-	const endOfMonth = moment({year, month})
-	.tz(timezone)
-	.endOf('month')
-	.utc()
-	.toISOString()
+	const startOfMonth = moment({ year, month })
+		.tz(timezone)
+		.startOf('month')
+		.utc()
+		.toISOString()
+	const endOfMonth = moment({ year, month })
+		.tz(timezone)
+		.endOf('month')
+		.utc()
+		.toISOString()
 
 	return db
 		.prepare(
@@ -702,7 +721,7 @@ export function allPoopWithFilter(year: number, month: number) {
          FROM poop p
 		 JOIN user u
 		 ON (p.user_id = u.id)
-         WHERE p.timestamp BETWEEN ? AND ?`
+         WHERE p.timestamp BETWEEN ? AND ?`,
 		)
 		.all(startOfMonth, endOfMonth)
 }
@@ -715,7 +734,11 @@ export function getPoopsFromUser(userId: string) {
 		.all(userId)
 }
 
-export function getPoopsFromUserWithFilter(userId: string, year: number, month: number) {
+export function getPoopsFromUserWithFilter(
+	userId: string,
+	year: number,
+	month: number,
+) {
 	const startOfMonth = new Date(Date.UTC(year, month - 1, 1))
 	const endOfMonth = new Date(Date.UTC(year, month, 0, 23, 59, 59, 999))
 
@@ -733,58 +756,82 @@ export function getPoopsFromUserWithFilter(userId: string, year: number, month: 
 }
 
 export function poopStatsFromUser(userId: string) {
-	const startOfDay = moment.tz({ 
-		year: moment().year(),
-		month: moment().month(),
-		day: moment().date() },
-		timezone)
+	const startOfDay = moment
+		.tz(
+			{
+				year: moment().year(),
+				month: moment().month(),
+				day: moment().date(),
+			},
+			timezone,
+		)
 		.startOf('day')
 		.utc()
 		.toISOString()
 
-	const endOfDay = moment.tz({ 
-		year: moment().year(),
-		month: moment().month(),
-		day: moment().date() },
-		timezone)
+	const endOfDay = moment
+		.tz(
+			{
+				year: moment().year(),
+				month: moment().month(),
+				day: moment().date(),
+			},
+			timezone,
+		)
 		.endOf('day')
 		.utc()
 		.toISOString()
 
-	const startOfWeek = moment.tz({ 
-		year: moment().year(),
-		month: moment().month(),
-		day: moment().date() },
-		timezone)
+	const startOfWeek = moment
+		.tz(
+			{
+				year: moment().year(),
+				month: moment().month(),
+				day: moment().date(),
+			},
+			timezone,
+		)
 		.startOf('week')
 		.add(1, 'day')
 		.startOf('day')
 		.utc()
-		.toISOString();
+		.toISOString()
 
-	const endOfWeek = moment.tz({
-		year: moment().year(),
-		month: moment().month(),
-		day: moment().date() },
-		timezone)
+	const endOfWeek = moment
+		.tz(
+			{
+				year: moment().year(),
+				month: moment().month(),
+				day: moment().date(),
+			},
+			timezone,
+		)
 		.startOf('week')
 		.add(7, 'days')
 		.subtract(1, 'second')
 		.utc()
-		.toISOString();
+		.toISOString()
 
-	const startOfMonth = moment.tz({
-		year: moment().year(),
-		month: moment().month() },
-		timezone)
+	const startOfMonth = moment
+		.tz(
+			{
+				year: moment().year(),
+				month: moment().month(),
+			},
+			timezone,
+		)
 		.startOf('month')
 		.utc()
 		.toISOString()
 
-	const endOfMonth = moment.tz({
-		year: moment().year(),
-		month: moment().month() },
-		timezone)
+	const endOfMonth = moment
+		.tz(
+			{
+				year: moment().year(),
+				month: moment().month(),
+			},
+			timezone,
+		)
 		.endOf('month')
 		.utc()
 		.toISOString()
@@ -854,95 +901,135 @@ export function poopStreak(userId: string) {
 	return streak
 }
 
-export function poopStatsFromUserWithFilter(userId: string, year: number, month: number) {
-	const currentDate = moment().tz(timezone);
-	const isCurrentMonth = year == currentDate.year() && month == currentDate.month() + 1;
+export function poopStatsFromUserWithFilter(
+	userId: string,
+	year: number,
+	month: number,
+) {
+	const currentDate = moment().tz(timezone)
+	const isCurrentMonth =
+		year == currentDate.year() && month == currentDate.month() + 1
 	const daysConsidered = isCurrentMonth
 		? currentDate.date()
-		: moment().year(year).month(month - 1).endOf('month').date();
+		: moment()
+				.year(year)
+				.month(month - 1)
+				.endOf('month')
+				.date()
 	const monthlyLeaderboardPosition =
-		poopLeaderboardWithFilter(year, month).find((x: any) => x.id === userId)?.rank ?? 0;
-	const streak = poopStreak(userId);
-	const monthlyPoops = getPoopsFromUserWithFilter(userId, year, month)?.length;
-	const poopAverage = parseFloat((monthlyPoops / daysConsidered).toFixed(2));
+		poopLeaderboardWithFilter(year, month).find((x: any) => x.id === userId)
+			?.rank ?? 0
+	const streak = poopStreak(userId)
+	const monthlyPoops = getPoopsFromUserWithFilter(userId, year, month)?.length
+	const poopAverage = parseFloat((monthlyPoops / daysConsidered).toFixed(2))
 
-	return { monthlyLeaderboardPosition, streak, poopAverage, monthlyPoops };
+	return { monthlyLeaderboardPosition, streak, poopAverage, monthlyPoops }
 }
 
 export function poopStats() {
-	const startOfDay = moment.tz({ 
-		year: moment().year(),
-		month: moment().month(),
-		day: moment().date() },
-		timezone)
+	const startOfDay = moment
+		.tz(
+			{
+				year: moment().year(),
+				month: moment().month(),
+				day: moment().date(),
+			},
+			timezone,
+		)
 		.startOf('day')
 		.utc()
 		.toISOString()
 
-	const endOfDay = moment.tz({ 
-		year: moment().year(),
-		month: moment().month(),
-		day: moment().date() },
-		timezone)
+	const endOfDay = moment
+		.tz(
+			{
+				year: moment().year(),
+				month: moment().month(),
+				day: moment().date(),
+			},
+			timezone,
+		)
 		.endOf('day')
 		.utc()
 		.toISOString()
 
-	const startOfWeek = moment.tz({ 
-		year: moment().year(),
-		month: moment().month(),
-		day: moment().date() },
-		timezone)
+	const startOfWeek = moment
+		.tz(
+			{
+				year: moment().year(),
+				month: moment().month(),
+				day: moment().date(),
+			},
+			timezone,
+		)
 		.startOf('week')
 		.add(1, 'day')
 		.startOf('day')
 		.utc()
 		.toISOString()
 
-	const endOfWeek = moment.tz({
-		year: moment().year(),
-		month: moment().month(),
-		day: moment().date() },
-		timezone)
+	const endOfWeek = moment
+		.tz(
+			{
+				year: moment().year(),
+				month: moment().month(),
+				day: moment().date(),
+			},
+			timezone,
+		)
 		.startOf('week')
 		.add(7, 'days')
 		.subtract(1, 'second')
 		.utc()
 		.toISOString()
 
-	const startOfMonth = moment.tz({
-		year: moment().year(),
-		month: moment().month()},
-		timezone)
+	const startOfMonth = moment
+		.tz(
+			{
+				year: moment().year(),
+				month: moment().month(),
+			},
+			timezone,
+		)
 		.startOf('month')
 		.utc()
 		.toISOString()
 
-	const endOfMonth = moment.tz({
-		year: moment().year(),
-		month: moment().month()},
-		timezone)
+	const endOfMonth = moment
+		.tz(
+			{
+				year: moment().year(),
+				month: moment().month(),
+			},
+			timezone,
+		)
 		.endOf('month')
 		.utc()
 		.toISOString()
 
-		console.log(startOfDay)
-		console.log(endOfDay)
-		console.log(startOfWeek)
-		console.log(endOfWeek)
-		console.log(startOfMonth)
-		console.log(endOfMonth)
+	console.log(startOfDay)
+	console.log(endOfDay)
+	console.log(startOfWeek)
+	console.log(endOfWeek)
+	console.log(startOfMonth)
+	console.log(endOfMonth)
 
 	const todayPoops = db
-		.prepare(`SELECT COUNT(*) as today FROM poop WHERE timestamp BETWEEN ? AND ?`)
+		.prepare(
+			`SELECT COUNT(*) as today FROM poop WHERE timestamp BETWEEN ? AND ?`,
+		)
 		.get(startOfDay, endOfDay)
 
 	const weeklyPoops = db
-		.prepare(`SELECT COUNT(*) as week FROM poop WHERE timestamp BETWEEN ? AND ?`)
+		.prepare(
+			`SELECT COUNT(*) as week FROM poop WHERE timestamp BETWEEN ? AND ?`,
+		)
 		.get(startOfWeek, endOfWeek)
 
 	const monthlyPoops = db
-		.prepare(`SELECT COUNT(*) as month FROM poop WHERE timestamp BETWEEN ? AND ?`)
+		.prepare(
+			`SELECT COUNT(*) as month FROM poop WHERE timestamp BETWEEN ? AND ?`,
+		)
 		.get(startOfMonth, endOfMonth)
 
 	const totalPoops = db.prepare(`SELECT COUNT(*) as total FROM poop`).get()

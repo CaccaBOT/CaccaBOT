@@ -1,4 +1,4 @@
-import { Command } from "../types/Command"
+import { Command } from '../types/Command'
 
 import { exec } from 'child_process'
 
@@ -12,4 +12,4 @@ const uptime: Command = {
 	},
 }
 
-export default uptime;
+export default uptime

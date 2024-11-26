@@ -48,7 +48,10 @@ function formatDate(timestamp: string) {
       <h2>Achievements</h2>
     </div>
 
-    <div v-if="!isLoading" class="achievements flex flex-row flex-wrap justify-center">
+    <div
+      v-if="!isLoading"
+      class="achievements flex flex-row flex-wrap justify-center"
+    >
       <div
         class="achievement m-4 mb-5 flex w-80 cursor-pointer flex-row items-center justify-start rounded-xl bg-base-300 p-2"
         v-for="userAchievement of userAchievements"
@@ -64,7 +67,9 @@ function formatDate(timestamp: string) {
         </div>
         <div class="flex h-full w-full flex-col">
           <h4 class="mt-5 p-0 text-lg font-bold">
-            {{ getAchievement(userAchievement.achievement_id)?.name || "Unknown" }}
+            {{
+              getAchievement(userAchievement.achievement_id)?.name || "Unknown"
+            }}
           </h4>
           <p class="ml-auto mt-auto text-sm font-thin text-gray-400">
             {{ formatDate(userAchievement.timestamp) }}

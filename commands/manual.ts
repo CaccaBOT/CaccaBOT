@@ -1,5 +1,5 @@
-import { Message } from "whatsapp-web.js"
-import { Command, Info } from "../types/Command"
+import { Message } from 'whatsapp-web.js'
+import { Command, Info } from '../types/Command'
 import config from '../config.json'
 
 const manual: Command = {
@@ -10,4 +10,4 @@ const manual: Command = {
 	},
 }
 
-export default manual;
+export default manual

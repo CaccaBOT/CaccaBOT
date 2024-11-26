@@ -2,21 +2,21 @@ services:
   reverse-proxy:
     image: traefik:v3.1
     command:
-      - "--providers.docker"
-      - "--providers.docker.exposedbydefault=false"
-      - "--entryPoints.websecure.address=:443"
-      - "--entrypoints.websecure.http3"
-      - "--certificatesresolvers.caccabotresolver.acme.tlschallenge=true"
-      - "--certificatesresolvers.caccabotresolver.acme.email=caccabot@proton.me"
-      - "--certificatesresolvers.caccabotresolver.acme.storage=/letsencrypt/acme.json"
-      - "--entrypoints.web.address=:80"
-      - "--entrypoints.web.http.redirections.entrypoint.to=websecure"
-      - "--entrypoints.web.http.redirections.entrypoint.scheme=https"
-      - "--accesslog=true"
+      - '--providers.docker'
+      - '--providers.docker.exposedbydefault=false'
+      - '--entryPoints.websecure.address=:443'
+      - '--entrypoints.websecure.http3'
+      - '--certificatesresolvers.caccabotresolver.acme.tlschallenge=true'
+      - '--certificatesresolvers.caccabotresolver.acme.email=caccabot@proton.me'
+      - '--certificatesresolvers.caccabotresolver.acme.storage=/letsencrypt/acme.json'
+      - '--entrypoints.web.address=:80'
+      - '--entrypoints.web.http.redirections.entrypoint.to=websecure'
+      - '--entrypoints.web.http.redirections.entrypoint.scheme=https'
+      - '--accesslog=true'
     ports:
-      - "80:80"
-      - "443:443"
-      - "443:443/udp"
+      - '80:80'
+      - '443:443'
+      - '443:443/udp'
     volumes:
       - letsencrypt:/letsencrypt
       - /var/run/docker.sock:/var/run/docker.sock
@@ -36,13 +36,13 @@ services:
   caccabot:
     image: ghcr.io/caccabot/caccabot:latest
     labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.caccabot.rule=Host(`caccabot.duckdns.org`)"
-      - "traefik.http.routers.caccabot.entrypoints=websecure"
-      - "traefik.http.routers.caccabot.tls.certresolver=caccabotresolver"
-      - "traefik.http.services.caccabot.loadbalancer.server.scheme=h2c"
-      - "com.centurylinklabs.watchtower.enable=true"
-      - "traefik.http.middlewares.test-compress.compress.defaultEncoding=zstd"
+      - 'traefik.enable=true'
+      - 'traefik.http.routers.caccabot.rule=Host(`caccabot.duckdns.org`)'
+      - 'traefik.http.routers.caccabot.entrypoints=websecure'
+      - 'traefik.http.routers.caccabot.tls.certresolver=caccabotresolver'
+      - 'traefik.http.services.caccabot.loadbalancer.server.scheme=h2c'
+      - 'com.centurylinklabs.watchtower.enable=true'
+      - 'traefik.http.middlewares.test-compress.compress.defaultEncoding=zstd'
     volumes:
       - /home/ubuntu/caccabot_data/storage:/app/storage/
       - /home/ubuntu/caccabot_data/wwebjs_auth:/app/.wwebjs_auth
@@ -55,9 +55,9 @@ services:
       update_config:
         order: start-first
     ports:
-      - "3000:3000"
+      - '3000:3000'
     expose:
-      - "3000"
+      - '3000'
 
 volumes:
   caccabot_data:

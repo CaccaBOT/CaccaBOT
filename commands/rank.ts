@@ -1,5 +1,5 @@
-import { Message } from "whatsapp-web.js"
-import { Command, Info } from "../types/Command"
+import { Message } from 'whatsapp-web.js'
+import { Command, Info } from '../types/Command'
 import { commands } from '../whatsapp'
 
 const rank: Command = {
@@ -10,4 +10,4 @@ const rank: Command = {
 	},
 }
 
-export default rank;
+export default rank

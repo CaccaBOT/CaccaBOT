@@ -1,5 +1,5 @@
-import { Message } from "whatsapp-web.js"
-import { Command, Info } from "../types/Command"
+import { Message } from 'whatsapp-web.js'
+import { Command, Info } from '../types/Command'
 import { poopLeaderboard } from '../database/index'
 
 const users: Command = {
@@ -15,4 +15,4 @@ const users: Command = {
 	},
 }
 
-export default users;
+export default users

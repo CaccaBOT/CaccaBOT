@@ -1,4 +1,4 @@
-import { MessageInfo } from "../types/MessageInfo"
+import { MessageInfo } from '../types/MessageInfo'
 
 const cases = [
 	'cacca++',

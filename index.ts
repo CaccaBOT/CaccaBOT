@@ -1,4 +1,7 @@
-const server = require('fastify')({ bodyLimit: 8388608, http2: process.env.ENVIRONMENT == 'production' })
+const server = require('fastify')({
+	bodyLimit: 8388608,
+	http2: process.env.ENVIRONMENT == 'production',
+})
 import { FastifyRequest, FastifyReply } from 'fastify'
 import { client } from './whatsapp/index'
 import { initDatabase } from './database/index'

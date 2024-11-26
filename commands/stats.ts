@@ -1,6 +1,6 @@
-import { Command, Info } from "../types/Command"
+import { Command, Info } from '../types/Command'
 import { poopStats } from '../database'
-import { Message } from "whatsapp-web.js"
+import { Message } from 'whatsapp-web.js'
 
 const stats: Command = {
 	name: 'stats',
@@ -15,4 +15,4 @@ const stats: Command = {
 	},
 }
 
-export default stats;
+export default stats

@@ -18,7 +18,7 @@ const leaderboard: Command = {
 			{ year: 'numeric', month: 'long' },
 		)}\n`
 		leaderboardMsg += `*Rank* | *User* | *Count*\n`
-		let chat = await message.getChat() as GroupChat
+		let chat = (await message.getChat()) as GroupChat
 		let mentions = [] as any
 
 		if (chat.isGroup) {
@@ -46,9 +46,8 @@ const leaderboard: Command = {
 }
 
 function sanitizeId(id: string): string | null {
-	const match = id.match(/^\d+/);
-	return match ? match[0] : null;
+	const match = id.match(/^\d+/)
+	return match ? match[0] : null
 }
 
-export default leaderboard;
-  
+export default leaderboard

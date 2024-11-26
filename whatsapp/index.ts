@@ -1,18 +1,26 @@
-import { GroupChat, Message, Client, LocalAuth } from "whatsapp-web.js"
-import { Command } from "../types/Command"
+import { GroupChat, Message, Client, LocalAuth } from 'whatsapp-web.js'
+import { Command } from '../types/Command'
 //@ts-ignore
 import QRCode from 'qrcode-terminal'
 //@ts-ignore
 import schedule from 'node-schedule'
-import { addPoop, getUserProfileByPhone, createUser, getLastPoop, deleteUser, getInactiveUsers, poopStatsFromUserWithFilter } from '../database/index'
+import {
+	addPoop,
+	getUserProfileByPhone,
+	createUser,
+	getLastPoop,
+	deleteUser,
+	getInactiveUsers,
+	poopStatsFromUserWithFilter,
+} from '../database/index'
 import { detectPoop } from '../poop/parser'
 import config from '../config.json'
 import fs from 'fs'
 import path from 'path'
 import moment from 'moment-timezone'
-import { RawUser } from "../types/User"
-import { MessageInfo } from "../types/MessageInfo"
-import achievementChecker from "../achievements/check"
+import { RawUser } from '../types/User'
+import { MessageInfo } from '../types/MessageInfo'
+import achievementChecker from '../achievements/check'
 export let commands: Command[] = []
 
 export const client = new Client({
@@ -20,16 +28,15 @@ export const client = new Client({
 	puppeteer: {
 		handleSIGINT: false,
 		timeout: 60000,
-		args: [
-			'--no-sandbox',
-		]
+		args: ['--no-sandbox'],
 	},
 })
 
 client.on('qr', (qr) => QRCode.generate(qr, { small: true }))
 
 client.on('ready', async () => {
-	const commandsDir = fs.readdirSync(`${path.resolve('./commands')}`)
+	const commandsDir = fs
+		.readdirSync(`${path.resolve('./commands')}`)
 		.filter((file) => file.endsWith('.ts'))
 	for (const cmdFile of commandsDir) {
 		const cmd = await import(`${path.resolve('./commands')}/${cmdFile}`)
@@ -45,18 +52,21 @@ client.on('ready', async () => {
 		)
 		schedule.scheduleJob('0 0 1 * *', async () => {
 			console.info(
-				'[PURGE] Running Monthly Purge for ' + moment().subtract(1, 'month').format('MMMM YYYY'),
+				'[PURGE] Running Monthly Purge for ' +
+					moment().subtract(1, 'month').format('MMMM YYYY'),
 			)
 			let purgeMsg = '*Running Monthly Purge*\n'
 			const chat = await client.getChatById(config.groupId)
 			if (chat.isGroup) {
 				const inactiveUsers = getInactiveUsers(
-					moment().subtract(1, 'month').toDate()
+					moment().subtract(1, 'month').toDate(),
 				)
 				purgeMsg += inactiveUsers.map((u: RawUser) => u.username).join('\n')
 				for (const user of inactiveUsers) {
 					deleteUser(user.id)
-					if (inactiveUsers.map((u: RawUser) => u.phone).includes(user.id.user)) {
+					if (
+						inactiveUsers.map((u: RawUser) => u.phone).includes(user.id.user)
+					) {
 						await (chat as GroupChat).removeParticipants([user.id._serialized])
 					}
 				}
@@ -82,24 +92,36 @@ client.on('message_create', async (message: Message) => {
 			foundUser = getUserProfileByPhone(id)
 		}
 		addPoop(foundUser.id)
-		const stats = poopStatsFromUserWithFilter('8cc1f73372d837b92f90249cd6c7654e', moment().get('year'), moment().get('month') + 1)
+		const stats = poopStatsFromUserWithFilter(
+			'8cc1f73372d837b92f90249cd6c7654e',
+			moment().get('year'),
+			moment().get('month') + 1,
+		)
 		const poop = getLastPoop()
 		message.reply(
 			'✅ Saved' +
-			'\nID: ' + poop.id +
-			'\nTimestamp: ' + poop.timestamp +
-			'\nRank: ' + stats.monthlyLeaderboardPosition +
-			'\nStreak: ' + stats.streak +
-			'\nDaily AVG: ' + stats.poopAverage +
-			'\nMonthly: ' + stats.monthlyPoops
+				'\nID: ' +
+				poop.id +
+				'\nTimestamp: ' +
+				poop.timestamp +
+				'\nRank: ' +
+				stats.monthlyLeaderboardPosition +
+				'\nStreak: ' +
+				stats.streak +
+				'\nDaily AVG: ' +
+				stats.poopAverage +
+				'\nMonthly: ' +
+				stats.monthlyPoops,
 		)
 		achievementChecker.checkPoopBased(foundUser, poop, message)
 	}
 })
 
-async function parseMessage(message: Message): Promise<MessageInfo | undefined> {
+async function parseMessage(
+	message: Message,
+): Promise<MessageInfo | undefined> {
 	if (Object.values(message.body).length == 0 || message.body == null) {
-		return;
+		return
 	}
 
 	let info = {
@@ -157,13 +179,13 @@ async function parseMessage(message: Message): Promise<MessageInfo | undefined> 
 
 	if (info.isCommand) {
 		try {
-			const command = commands.find((cmd) => cmd.name === info.command.name);
+			const command = commands.find((cmd) => cmd.name === info.command.name)
 
 			if (command) {
 				command.execute(message, info.command)
 			}
 		} catch (error) {
-			message.reply(`❌ An error has occurred while loading the commands`);
+			message.reply(`❌ An error has occurred while loading the commands`)
 		}
 	}
 	return info

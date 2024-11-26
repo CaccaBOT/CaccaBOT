@@ -1,7 +1,13 @@
-import { Message } from "whatsapp-web.js"
-import { Command, Info } from "../types/Command"
-import { updateUsername, updateProfilePicture, updateBio, getUserProfileByPhone, getUserProfileByUsername } from '../database/index'
-import achievementChecker from "../achievements/check"
+import { Message } from 'whatsapp-web.js'
+import { Command, Info } from '../types/Command'
+import {
+	updateUsername,
+	updateProfilePicture,
+	updateBio,
+	getUserProfileByPhone,
+	getUserProfileByUsername,
+} from '../database/index'
+import achievementChecker from '../achievements/check'
 
 const profile: Command = {
 	name: 'profile',
@@ -45,4 +51,4 @@ const profile: Command = {
 	},
 }
 
-export default profile;
+export default profile

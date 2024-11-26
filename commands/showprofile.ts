@@ -1,6 +1,6 @@
-import { Command, Info } from "../types/Command"
+import { Command, Info } from '../types/Command'
 import { getUserProfileByUsername } from '../database/index'
-import { Message } from "whatsapp-web.js"
+import { Message } from 'whatsapp-web.js'
 
 const showprofile: Command = {
 	name: 'showprofile',
@@ -13,7 +13,7 @@ const showprofile: Command = {
 
 		const username = info.args[0]
 		const user = getUserProfileByUsername(username)
-		
+
 		if (!user.id) {
 			message.reply('❌ User does not exist')
 			return
@@ -41,4 +41,4 @@ const showprofile: Command = {
 	},
 }
 
-export default showprofile;
+export default showprofile
