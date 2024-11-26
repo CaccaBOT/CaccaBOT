@@ -13,7 +13,7 @@ import {
 	getInactiveUsers,
 	poopStatsFromUserWithFilter,
 } from '../database/index'
-import { detectPoop } from '../poop/parser'
+import poopValidator from '../validators/poop'
 import config from '../config.json'
 import fs from 'fs'
 import path from 'path'
@@ -79,7 +79,11 @@ client.on('ready', async () => {
 
 client.on('message_create', async (message: Message) => {
 	const parsedMessage = await parseMessage(message)
-	const id = detectPoop(parsedMessage)
+	let id = parsedMessage?.sender
+	
+	if (!poopValidator.validate(parsedMessage?.content)) {
+		return
+	}
 
 	if (id != null) {
 		let foundUser = getUserProfileByPhone(id)
@@ -93,9 +97,9 @@ client.on('message_create', async (message: Message) => {
 		}
 		addPoop(foundUser.id)
 		const stats = poopStatsFromUserWithFilter(
-			'8cc1f73372d837b92f90249cd6c7654e',
-			moment().get('year'),
-			moment().get('month') + 1,
+			foundUser.id,
+			moment().year(),
+			moment().month() + 1,
 		)
 		const poop = getLastPoop()
 		message.reply(
@@ -105,7 +109,7 @@ client.on('message_create', async (message: Message) => {
 				'\nTimestamp: ' +
 				poop.timestamp +
 				'\nRank: ' +
-				stats.monthlyLeaderboardPosition +
+				stats.monthlyLeaderboardPosition + '°' +
 				'\nStreak: ' +
 				stats.streak +
 				'\nDaily AVG: ' +
