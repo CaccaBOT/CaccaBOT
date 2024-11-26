@@ -13,7 +13,7 @@ const help: Command = {
             message.reply('❌ You\'re not allowed to compute a message')
             return
         }
-        
+
         let poopMessage = await message.getQuotedMessage()
         let messages = (await (await client.getChatById((await poopMessage.getChat()).id._serialized))
         .fetchMessages({limit: parseInt(info.args[0]) ?? 100}))
@@ -43,7 +43,7 @@ const help: Command = {
                 moment().month() + 1,
             )
             const poop = getLastPoop()
-            message.reply(
+            poopMessage.reply(
                 '✅ Saved' +
                     '\nID: ' +
                     poop.id +
