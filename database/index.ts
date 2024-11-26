@@ -668,12 +668,12 @@ export function poopLeaderboardWithFilter(year: number, month: number) {
         ORDER BY poops DESC
     `
 		)
-		.all(startOfMonth, endOfMonth);
+		.all(startOfMonth, endOfMonth)
 
 	return result.map((row: any) => ({
 		...row,
 		frozen: Boolean(row.frozen),
-	}));
+	}))
 }
 
 export function allPoop() {
@@ -797,13 +797,13 @@ export function poopStatsFromUser(userId: string) {
 
 	const weeklyPoops = db
 		.prepare(
-			`SELECT COUNT(*) as week FROM poop WHERE timestamp >= ? AND poop.user_id = ?`,
+			`SELECT COUNT(*) as week FROM poop WHERE timestamp BETWEEN ? AND ? AND poop.user_id = ?`,
 		)
 		.get(startOfWeek, endOfWeek, userId)
 
 	const monthlyPoops = db
 		.prepare(
-			`SELECT COUNT(*) as month FROM poop WHERE timestamp >= ? AND poop.user_id = ?`,
+			`SELECT COUNT(*) as month FROM poop WHERE timestamp BETWEEN ? AND ? AND poop.user_id = ?`,
 		)
 		.get(startOfMonth, endOfMonth, userId)
 
