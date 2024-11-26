@@ -9,6 +9,11 @@ const help: Command = {
 	name: 'compute',
 	description: 'compute the poop insertion message',
 	execute: async (message: Message, info: Info) => {
+        if (!message.id.fromMe) {
+            message.reply('❌ You\'re not allowed to compute a message')
+            return
+        }
+        
         let poopMessage = await message.getQuotedMessage()
         let messages = (await (await client.getChatById((await poopMessage.getChat()).id._serialized))
         .fetchMessages({limit: parseInt(info.args[0]) ?? 100}))
@@ -20,6 +25,7 @@ const help: Command = {
 
         if (!poopMessage) {
             message.reply('❌ You must quote a message for this command')
+            return
         }
 
         if (!poopMessage.timestamp) {
