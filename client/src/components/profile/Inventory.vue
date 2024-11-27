@@ -5,7 +5,7 @@ import { Achievement } from "../../types/Achievement"
 import { Card } from "../../types/Card"
 import { UserAchievement } from "../../types/UserAchievement"
 import HeroiconsTrophy from "~icons/heroicons/trophy"
-import HeroiconsArrowDownCircle from "~icons/heroicons/arrow-down-circle"
+import HeroiconsChevronDown16Solid from '~icons/heroicons/chevron-down-16-solid';
 
 const props = defineProps<{
   userCollectibles: Card[]
@@ -74,7 +74,7 @@ function getRarityClass(rarityId) {
       class="mb-2 w-full"
       @click="toggleInventory"
     >
-      <HeroiconsArrowDownCircle
+      <HeroiconsChevronDown16Solid
         class="mx-auto cursor-pointer text-4xl"
         :class="{ 'rotate-180': inventoryExpanded }"
       />
