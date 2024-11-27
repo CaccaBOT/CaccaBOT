@@ -34,7 +34,7 @@ const help: Command = {
         }
 
         if (poopValidator.validate(poopMessage.body)) {
-            const number = (await message.getContact()).number
+            const number = (await poopMessage.getContact()).number
             const id = hashId(number)
             addPoopWithTimestamp(id, new Date(poopMessage.timestamp * 1000).toISOString())
             const stats = poopStatsFromUserWithFilter(
