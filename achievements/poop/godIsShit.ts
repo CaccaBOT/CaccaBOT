@@ -4,15 +4,18 @@ import { Poop } from '../../types/Poop'
 import { RawUser } from '../../types/User'
 import { Message } from 'whatsapp-web.js'
 import { Achievement } from '../../types/Achievement'
+import config from '../../config.json'
+
+const timezone = config.timezone || 'UTC'
 
 const godIsShit: Achievement = {
 	id: 'GOD_IS_SHIT',
 	check: function (poop: Poop, user: RawUser, message: Message) {
 		const timestamp = [
-			moment(poop.timestamp).month() + 1,
-			moment(poop.timestamp).day(),
+			moment.tz(poop.timestamp,timezone).month() + 1,
+			moment.tz(poop.timestamp,timezone).date(),
 		]
-		const easter = getEaster(moment(poop.timestamp).year())
+		const easter = getEaster(moment.tz(poop.timestamp,timezone).year())
 		if (timestamp[0] == easter[0] && timestamp[1] == easter[1]) {
 			addAchievementToUser(user.id, this.id)
 			const achievement = getAchievement(this.id)

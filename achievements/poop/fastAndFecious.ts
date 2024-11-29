@@ -16,8 +16,8 @@ const fastAndFecious: Achievement = {
 	id: 'FAST_AND_FECIOUS',
 	check: function (poop: Poop, user: RawUser, message: Message) {
 		const year = moment().tz(timezone).year()
-		const month = moment().tz(timezone).month()
-		const leaderboard = poopLeaderboardWithFilter(year, month + 1)
+		const month = moment().tz(timezone).month() + 1
+		const leaderboard = poopLeaderboardWithFilter(year, month)
 		if (leaderboard.length == 1) {
 			addAchievementToUser(user.id, this.id)
 			const achievement = getAchievement(this.id)
