@@ -77,10 +77,8 @@ router.afterEach(async (to, from) => {
   switch (to.name) {
     case "monthlyLeaderboard":
       await globalStore.fetchLeaderboard(
-        new Date(
-          parseInt(to.params.year as string),
-          parseInt(to.params.month as string),
-        ),
+        parseInt(to.params.year as string),
+        parseInt(to.params.month as string),
       )
       break
     case "monthlyProfile":

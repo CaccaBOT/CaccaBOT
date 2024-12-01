@@ -24,12 +24,12 @@ export const useGlobalStore = defineStore("global", {
       ).toLocaleDateString("default", { year: "numeric", month: "long" }),
   },
   actions: {
-    async fetchLeaderboard(date: Date) {
+    async fetchLeaderboard(year: number, month: number) {
       try {
         this.isFetching = true
         const apiStore = useAPIStore()
         let leaderboardResponse =
-          await apiStore.client.getMonthlyLeaderboard(date)
+          await apiStore.client.getMonthlyLeaderboard(year, month)
         this.isFetching = false
         if (leaderboardResponse.ok) {
           this.$state.leaderboard = await leaderboardResponse.json()

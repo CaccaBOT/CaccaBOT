@@ -97,9 +97,9 @@ export default class API {
     })
   }
 
-  async getMonthlyLeaderboard(date: Date = new Date()) {
+  async getMonthlyLeaderboard(year: number, month: number) {
     return await fetch(
-      `${baseAPIURL}/poop/leaderboard/${date.getFullYear()}/${date.getMonth()}`,
+      `${baseAPIURL}/poop/leaderboard/${year}/${month}`,
     )
   }
 
