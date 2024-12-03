@@ -131,9 +131,9 @@ export default class API {
     return await fetch(`${baseAPIURL}/poop/stats/${id}`)
   }
 
-  async getMonthlyUserStats(id: string, date = new Date()) {
+  async getMonthlyUserStats(id: string, year: number, month: number) {
     return await fetch(
-      `${baseAPIURL}/poop/stats/${id}/${date.getFullYear()}/${date.getMonth()}`,
+      `${baseAPIURL}/poop/stats/${id}/${year}/${month}`,
     )
   }
 
@@ -145,9 +145,9 @@ export default class API {
     return await fetch(`${baseAPIURL}/poop/${id}`)
   }
 
-  async getMonthlyPoopsFromUser(id: string, date = new Date()) {
+  async getMonthlyPoopsFromUser(id: string, year: number, month: number) {
     return await fetch(
-      `${baseAPIURL}/poop/${id}/${date.getFullYear()}/${date.getMonth()}`,
+      `${baseAPIURL}/poop/${id}/${year}/${month}`,
     )
   }
 

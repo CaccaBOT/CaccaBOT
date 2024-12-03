@@ -43,13 +43,11 @@ async function fetchUserAchievements(id: string) {
 
 async function fetchProfileStats(id) {
   if (router.currentRoute.value.name == "monthlyProfile" || isOwnProfile()) {
-    const date = new Date(
-      globalStore.selectedDate.getFullYear(),
-      globalStore.selectedDate.getMonth() + 1,
-    )
-    userStats.value = await (await client.getMonthlyUserStats(id, date)).json()
+    const year = globalStore.selectedDate.getFullYear()
+    const month = globalStore.selectedDate.getMonth() + 1
+    userStats.value = await (await client.getMonthlyUserStats(id, year, month)).json()
     monthlyUserPoops.value = await (
-      await client.getMonthlyPoopsFromUser(id, date)
+      await client.getMonthlyPoopsFromUser(id, year, month)
     ).json()
     await fetchUserCollectibles(id)
     await fetchUserAchievements(id)
