@@ -7,6 +7,7 @@ import { createHead } from "@unhead/vue"
 import Toast, { PluginOptions, POSITION } from "vue-toastification"
 import "vue-toastification/dist/index.css"
 import App from "./App.vue"
+import { setupPWAUpdateListener } from "./services/pwaUpdateHandler"
 
 export const color =
   window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches
@@ -23,3 +24,5 @@ createApp(App)
     position: POSITION.TOP_CENTER,
   } as PluginOptions)
   .mount("#app")
+
+setupPWAUpdateListener()

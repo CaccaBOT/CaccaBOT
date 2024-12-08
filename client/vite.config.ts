@@ -13,7 +13,7 @@ export default defineConfig({
       autoInstall: true,
     }),
     VitePWA({
-      registerType: "autoUpdate",
+      registerType: "prompt",
       manifest: {
         name: "CaccaBOT",
         short_name: "CaccaBOT",
@@ -36,15 +36,27 @@ export default defineConfig({
       },
       workbox: {
         cleanupOutdatedCaches: true,
-        skipWaiting: true,
         clientsClaim: true,
+        runtimeCaching: [
+          {
+            urlPattern: /^\/public\//,
+            handler: "NetworkFirst",
+            options: {
+              cacheName: "public-assets",
+              expiration: {
+                maxEntries: 50,
+                maxAgeSeconds: 60 * 60 * 2 // 2 hours
+              },
+            },
+          },
+        ],
       },
     }),
     viteStaticCopy({
       targets: [
         {
-          src: "robots.txt", // Source path relative to your project root
-          dest: ".", // Destination path in the build directory
+          src: "robots.txt",
+          dest: ".",
         },
       ],
     }),

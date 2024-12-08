@@ -12,6 +12,7 @@ export const useSessionStore = defineStore("session", {
     showChangePfpModal: false,
     showMobileNavbar: false,
     showChangeThemeModal: false,
+    updateRequired: false
   }),
   getters: {},
   actions: {

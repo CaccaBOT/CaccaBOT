@@ -59,6 +59,11 @@ const routes = [
     name: "admin",
   },
   {
+    path: "/update",
+    component: () => import("../views/Updater.vue"),
+    name: "update"
+  },
+  {
     path: "/:pathMatch(.*)*",
     component: () => import("../views/NotFound.vue"),
     name: "notFound",
@@ -106,6 +111,11 @@ router.afterEach(async (to, from) => {
       )
       await globalStore.fetchProfile(sessionStore.session.id as string)
       break
+    case "update":
+      if (!sessionStore.updateRequired) {
+        router.push('/')
+        return
+      }
   }
 })
 
