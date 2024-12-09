@@ -30,7 +30,7 @@ function changePhrase() {
 
 <template>
   <div class="flex flex-col justify-center items-center w-full h-[85vh] overflow-hidden">
-    <h1 class="text-4xl">CaccaBOT is updating (test)</h1>
+    <h1 class="text-4xl">CaccaBOT is updating</h1>
     <h2 class="mt-4 text-2xl">{{ phrase }}...</h2>
     <div class="loading-animation mt-10"></div>
   </div>
