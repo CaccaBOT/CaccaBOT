@@ -32,9 +32,8 @@ const profile: Command = {
 					getUserProfileByUsername(user.username).id == null
 				if (!isUsernameAvailable) {
 					message.reply('❌ Username not available')
-					break
+					return
 				}
-				user.username = username
 				updateUsername(user.id, username)
 				break
 			case 'bio':

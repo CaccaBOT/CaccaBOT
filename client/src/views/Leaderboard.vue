@@ -143,7 +143,7 @@ function updateNewMonth() {
           </div>
         </div>
       </div>
-      <HeroiconsChevronRight @click="nextMonth()" class="btn btn-circle btn-active"/>
+      <HeroiconsChevronRight @click="nextMonth()" class="btn btn-circle btn-active p-3"/>
     </div>
 
     <img
@@ -194,7 +194,7 @@ function updateNewMonth() {
                   </div>
                 </div>
                 <div>
-                  <div class="prose font-bold">
+                  <div class="md:text-2xl text-xl font-bold">
                     <h2>{{ user.username }}</h2>
                   </div>
                 </div>
