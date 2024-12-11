@@ -29,7 +29,7 @@ const profile: Command = {
 			case 'username':
 				let username = info.args[1]
 				const isUsernameAvailable =
-					getUserProfileByUsername(user.username).id == null
+					getUserProfileByUsername(username).id == null
 				if (!isUsernameAvailable) {
 					message.reply('❌ Username not available')
 					return
