@@ -6,12 +6,15 @@ import { FastifyRequest, FastifyReply } from 'fastify'
 import { client } from './whatsapp/index'
 import { initDatabase } from './database/index'
 import dotenv from 'dotenv'
-import config from './config.json'
 import fs from 'fs'
 import path from 'path'
 import fastifyStatic from '@fastify/static'
 import { version } from './package.json'
+//@ts-ignore
+import schedule from 'node-schedule'
+import { config, loadConfig } from './config/loader'
 dotenv.config()
+loadConfig()
 
 console.log(`
 ▄████▄   ▄▄▄       ▄████▄   ▄████▄   ▄▄▄       ▄▄▄▄    ▒█████  ▄▄▄█████▓
@@ -26,7 +29,7 @@ console.log(`
 ░                  ░        ░                        ░                    
 `)
 
-console.log('Loaded the following configuration')
+console.log(`Loaded the following configuration for environment ${process.env.ENVIRONMENT}`)
 console.log(config)
 
 server.register(require('@fastify/swagger'), {
@@ -150,6 +153,17 @@ if (config.whatsappModuleEnabled) {
 	client.initialize()
 }
 
+async function initJobs() {
+	const jobsDir = fs.readdirSync(`${path.resolve('./jobs')}`)
+	.filter((file) => file.endsWith('.ts'))
+
+	for (const jobFile of jobsDir) {
+		const job = await import(`${path.resolve('./jobs')}/${jobFile}`)
+		schedule.scheduleJob(job.default.interval, job.default.execute)
+		console.info(`[JOB] ${job.default.interval} => ${job.default.name}`)
+	}
+}
+
 server.listen(
 	{ host: '0.0.0.0', port: process.env.SERVER_PORT ?? 3000 },
 	async (err: any, address: string) => {
@@ -158,6 +172,13 @@ server.listen(
 			process.exit(1)
 		}
 		initDatabase()
+		await initJobs()
+		if (config.monthlyPurge) {
+			console.warn(
+                '[WARNING] Monthly Purge is enabled, users who have been ' +
+                'inactive for more than a month will be deleted at month reset!',
+            )
+		}
 		console.log('[WEBSERVER] Ready on ' + address)
 	},
 )

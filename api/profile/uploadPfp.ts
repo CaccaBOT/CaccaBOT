@@ -8,9 +8,8 @@ import {
 	RouteOptions,
 } from 'fastify'
 import path from 'path'
-import { RawUser } from '../../types/User'
-import config from '../../config.json'
 import achievementChecker from '../../achievements/check'
+import { config } from '../../config/loader'
 
 interface UploadPfpBody {
 	image: string

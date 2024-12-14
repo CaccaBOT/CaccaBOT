@@ -48,7 +48,7 @@ services:
       - /home/ubuntu/caccabot_data/wwebjs_auth:/app/.wwebjs_auth
       - /home/ubuntu/caccabot_data/wwebjs_cache:/app/.wwebjs_cache
       - /home/ubuntu/caccabot_data/pfp:/app/public/pfp
-      - /home/ubuntu/caccabot_data/config.json:/app/config.json
+      - /home/ubuntu/caccabot_data/config_prod.json:/app/config/config_prod.json
     environment:
       - ENVIRONMENT=production
       - SERVER_PORT=3000

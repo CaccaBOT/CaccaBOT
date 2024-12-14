@@ -2,10 +2,10 @@ const db = require('better-sqlite3')('./storage/db.sqlite3')
 import crypto from 'crypto'
 import argon2 from 'argon2'
 import moment from 'moment-timezone'
-import config from '../config.json'
 import fs from 'fs'
 import path from 'path'
 import { Migration } from '../types/Migration'
+import { config } from '../config/loader'
 
 const timezone = config.timezone || 'UTC'
 

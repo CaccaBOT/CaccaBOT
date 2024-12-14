@@ -7,7 +7,6 @@ import {
 } from '../../database'
 import { authenticate } from '../../middleware/auth'
 import { client } from '../../whatsapp/index'
-import config from '../../config.json'
 import { MessageMedia } from 'whatsapp-web.js'
 import {
 	FastifyInstance,
@@ -16,6 +15,7 @@ import {
 	RouteOptions,
 } from 'fastify'
 import achievementChecker from '../../achievements/check'
+import { config } from '../../config/loader'
 
 const openPackEndpoint = async function (
 	server: FastifyInstance,

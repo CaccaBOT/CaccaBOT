@@ -4,10 +4,10 @@ import { RawUser } from '../../types/User'
 import moment from 'moment'
 import { addAchievementToUser, getAchievement } from '../../database'
 import { Achievement } from '../../types/Achievement'
+import { configuration } from '../..'
 
-import config from '../../config.json'
 
-const timezone = config.timezone || 'UTC'
+const timezone = configuration.timezone || 'UTC'
 
 const shittyFaggot: Achievement = {
 	id: 'SHITTY_FAGGOT',

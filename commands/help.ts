@@ -1,8 +1,8 @@
 import { Message } from 'whatsapp-web.js'
 import { Command, Info } from '../types/Command'
 import { commands } from '../whatsapp'
-import config from '../config.json'
 import { version } from '../package.json'
+import { configuration } from '..'
 
 const help: Command = {
 	name: 'help',
@@ -24,9 +24,9 @@ const help: Command = {
 			}
 		}
 
-		helpString += `\n*Syntax*: ${config.prefix} <command> <arguments> (optional)\n`
+		helpString += `\n*Syntax*: ${configuration.prefix} <command> <arguments> (optional)\n`
 		helpString += `\nYou can add a poop by typing 'cacca++' with all its variants\n`
-		helpString += `${config.serverUrl}`
+		helpString += `${configuration.serverUrl}`
 		helpString += `\nCaccaBOT ${version}-${process.env.ENVIRONMENT ?? 'test'}\n`
 
 		message.reply(helpString)

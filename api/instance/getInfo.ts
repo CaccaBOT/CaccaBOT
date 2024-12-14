@@ -5,8 +5,8 @@ import {
 	RouteOptions,
 } from 'fastify'
 
-import config from '../../config.json'
 import { version } from '../../package.json'
+import { config } from '../../config/loader'
 
 const getInstanceInfoEndpoint = async function (
 	server: FastifyInstance,

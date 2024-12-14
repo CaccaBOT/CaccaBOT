@@ -3,10 +3,10 @@ import { Poop } from '../../types/Poop'
 import { RawUser } from '../../types/User'
 import moment from 'moment'
 import { addAchievementToUser, getAchievement } from '../../database'
+import { configuration } from '../..'
 
-import config from '../../config.json'
 
-const timezone = config.timezone || 'UTC'
+const timezone = configuration.timezone || 'UTC'
 
 const skibidiToilet = {
 	id: 'SKIBIDI_TOILET',

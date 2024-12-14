@@ -7,7 +7,6 @@ import {
 import {
 	updateUsername,
 	getUserProfileByUsername,
-	checkAchievementForUser,
 } from '../../database'
 import { authenticate } from '../../middleware/auth'
 import usernameValidator from '../../validators/username'

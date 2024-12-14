@@ -1,26 +1,21 @@
-import { GroupChat, Message, Client, LocalAuth } from 'whatsapp-web.js'
+import { Message, Client, LocalAuth } from 'whatsapp-web.js'
 import { Command } from '../types/Command'
 //@ts-ignore
 import QRCode from 'qrcode-terminal'
-//@ts-ignore
-import schedule from 'node-schedule'
 import {
 	addPoop,
 	getUserProfileByPhone,
 	createUser,
 	getLastPoop,
-	deleteUser,
-	getInactiveUsers,
 	poopStatsFromUserWithFilter,
 } from '../database/index'
 import poopValidator from '../validators/poop'
-import config from '../config.json'
 import fs from 'fs'
 import path from 'path'
 import moment from 'moment-timezone'
-import { RawUser } from '../types/User'
 import { MessageInfo } from '../types/MessageInfo'
 import achievementChecker from '../achievements/check'
+import { config } from '../config/loader'
 export let commands: Command[] = []
 
 export const client = new Client({
@@ -44,37 +39,6 @@ client.on('ready', async () => {
 		console.info(`[COMMAND] ${cmd.default.name}`)
 	}
 	console.log('[WHATSAPP] Ready on ' + client.info.wid.user)
-
-	if (config.monthlyPurge) {
-		console.warn(
-			'[WARNING] Monthly Purge is enabled, users who have been ' +
-				'inactive for more than a month will be deleted at month reset!',
-		)
-		schedule.scheduleJob('0 0 1 * *', async () => {
-			console.info(
-				'[PURGE] Running Monthly Purge for ' +
-					moment().subtract(1, 'month').format('MMMM YYYY'),
-			)
-			let purgeMsg = '*Running Monthly Purge*\n'
-			const chat = await client.getChatById(config.groupId)
-			if (chat.isGroup) {
-				const inactiveUsers = getInactiveUsers(
-					moment().subtract(1, 'month').toDate(),
-				)
-				purgeMsg += inactiveUsers.map((u: RawUser) => u.username).join('\n')
-				for (const user of inactiveUsers) {
-					deleteUser(user.id)
-					if (
-						inactiveUsers.map((u: RawUser) => u.phone).includes(user.id.user)
-					) {
-						await (chat as GroupChat).removeParticipants([user.id._serialized])
-					}
-				}
-			}
-
-			chat.sendMessage(purgeMsg)
-		})
-	}
 })
 
 client.on('message_create', async (message: Message) => {
@@ -163,7 +127,7 @@ async function parseMessage(
 			'Group ID: ' +
 				chat.id._serialized +
 				'\n' +
-				'Please paste this string in your config.json ' +
+				'Please paste this string in your configuration file ' +
 				'on the field groupId before using CaccaBOT',
 		)
 		return
