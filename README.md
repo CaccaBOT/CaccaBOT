@@ -6,18 +6,88 @@ This project was made to keep track of poops from every participant of a WhatsAp
 
 ### Requirements
 
-- Node 18 or greater
-- npm
+- Docker Compose
 
 ### How to install and run
 
-#### Clone the repository
+#### Create or add services to your Docker Compose configuration file
 
-```bash
-git clone https://github.com/CaccaBOT/CaccaBOT-Server.git
+This configuration includes 3 services:
+- Traefik, a reverse proxy to serve CaccaBOT on port 443
+- Watchtower, to pull the latest updates immediately
+- CaccaBOT, the application itself
+
+This is just an example configuration which you can customize based on your needs
+
+```yml
+services:
+  reverse-proxy:
+    image: traefik:v3.1
+    command:
+      - '--providers.docker'
+      - '--providers.docker.exposedbydefault=false'
+      - '--entryPoints.websecure.address=:443'
+      - '--entrypoints.websecure.http3'
+      - '--certificatesresolvers.caccabotresolver.acme.tlschallenge=true'
+      - '--certificatesresolvers.caccabotresolver.acme.email=caccabot@proton.me'
+      - '--certificatesresolvers.caccabotresolver.acme.storage=/letsencrypt/acme.json'
+      - '--entrypoints.web.address=:80'
+      - '--entrypoints.web.http.redirections.entrypoint.to=websecure'
+      - '--entrypoints.web.http.redirections.entrypoint.scheme=https'
+      - '--accesslog=true'
+    ports:
+      - '80:80'
+      - '443:443'
+      - '443:443/udp'
+    volumes:
+      - letsencrypt:/letsencrypt
+      - /var/run/docker.sock:/var/run/docker.sock
+
+  watchtower:
+    image: containrrr/watchtower
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - WATCHTOWER_CLEANUP=true
+      - WATCHTOWER_POLL_INTERVAL=30
+      - WATCHTOWER_LABEL_ENABLE=true
+    deploy:
+      update_config:
+        order: start-first
+
+  caccabot:
+    image: ghcr.io/caccabot/caccabot:latest
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.routers.caccabot.rule=Host(`your.domain.here`)'
+      - 'traefik.http.routers.caccabot.entrypoints=websecure'
+      - 'traefik.http.routers.caccabot.tls.certresolver=caccabotresolver'
+      - 'traefik.http.services.caccabot.loadbalancer.server.scheme=h2c'
+      - 'com.centurylinklabs.watchtower.enable=true'
+      - 'traefik.http.middlewares.test-compress.compress.defaultEncoding=zstd'
+    volumes:
+      - /your/volume/path/storage:/app/storage/
+      - /your/volume/path/wwebjs_auth:/app/.wwebjs_auth
+      - /your/volume/path/wwebjs_cache:/app/.wwebjs_cache
+      - /your/volume/path/pfp:/app/public/pfp
+      - /your/volume/path/config_prod.json:/app/config/config_prod.json
+    environment:
+      - ENVIRONMENT=production
+      - SERVER_PORT=3000
+    deploy:
+      update_config:
+        order: start-first
+    ports:
+      - '3000:3000'
+    expose:
+      - '3000'
+
+volumes:
+  caccabot_data:
+  letsencrypt:
 ```
 
-#### Edit the `config.json` file to your liking
+#### Create and edit the `config_prod.json` file on the mapped volume to your liking
 
 ```json
 {
@@ -41,7 +111,7 @@ git clone https://github.com/CaccaBOT/CaccaBOT-Server.git
 
 `serverUrl`: where the server is hosted
 
-`groupId`: leave this untouched, when the bot will start and you'll try using a command it will send a message with the group ID, paste that id on this property to mark the group as the active CaccaBOT group
+`groupId`: Leave this unchanged. When the bot starts, and you try using a command, it will send a message with the group ID. Paste that ID into this property to mark the group as the active CaccaBOT group.
 
 `whatsappModuleEnabled`: leave this untouched unless you want to suspend all whatsapp functionality and only leave the web server active
 
@@ -54,35 +124,21 @@ ENVIRONMENT=production
 SERVER_PORT=3000
 ```
 
-`ENVIRONMENT`: leave this untouched, production is the environment you want to run CaccaBOT on your group. Switch to `test` if you're writing features and testing locally
+`ENVIRONMENT`: leave this untouched, production is the environment you want to run CaccaBOT on your group. Switch to `dev` if you're writing features and testing locally
 
-`SERVER_PORT`: the webserver port, ideally leave this on port 3000 or a not well known port and manage routing with a reverse proxy like nginx
+`SERVER_PORT`: the webserver port, ideally leave this on port 3000 or a not well known port and manage routing with a reverse proxy like nginx or traefik
 
 #### Run the server
 
-in order to run the server you have to enter the CaccaBOT directory and run the `index.js` file with `node`
+in order to run the server you have to start the container
 
 ```
-cd CaccaBOT-Server
-ts-node index.ts
+docker compose up -d
 ```
-
-However the process will close as soon as you close the SSH session on your remote machine.
-
-To avoid that use a solution like `PM2`
-
-find the docs at https://pm2.keymetrics.io/
-
-```bash
-npm install pm2 typescript ts-node -g
-pm2 start --interpreter ts-node --interpreter-args "--project tsconfig.json --swc" index.ts --name CaccaBOT
-```
-
-this will leave the process in the background even after the SSH session is closed
 
 #### Expected output
 
-If you did everything correctly you should see something like this in your terminal
+If you did everything correctly you should see something like this in your container logs
 
 ```
 ▄████▄   ▄▄▄       ▄████▄   ▄████▄   ▄▄▄       ▄▄▄▄    ▒█████  ▄▄▄█████▓
