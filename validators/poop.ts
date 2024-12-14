@@ -16,7 +16,7 @@ const PoopValidator = {
 		if (text) {
 			return cases.includes(text.toLowerCase().replaceAll(' ', ''))
 		}
-	}
+	},
 }
 
 export default PoopValidator

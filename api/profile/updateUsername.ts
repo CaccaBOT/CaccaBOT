@@ -4,10 +4,7 @@ import {
 	FastifyRequest,
 	RouteOptions,
 } from 'fastify'
-import {
-	updateUsername,
-	getUserProfileByUsername,
-} from '../../database'
+import { updateUsername, getUserProfileByUsername } from '../../database'
 import { authenticate } from '../../middleware/auth'
 import usernameValidator from '../../validators/username'
 import achievementChecker from '../../achievements/check'

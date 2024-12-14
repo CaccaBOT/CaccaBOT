@@ -3,7 +3,7 @@ import homeImage from "../assets/home.webp"
 import HeroiconsDownload from "~icons/heroicons/arrow-down-tray"
 import { onMounted, ref } from "vue"
 import { useGlobalStore } from "../stores/global"
-import HeroiconsUserGroup from '~icons/heroicons/user-group?width=24px&height=24px';
+import HeroiconsUserGroup from "~icons/heroicons/user-group?width=24px&height=24px"
 const globalStore = useGlobalStore()
 
 let installPrompt = ref(null)
@@ -13,7 +13,7 @@ async function install() {
 }
 
 function joinGroup() {
-  window.open('https://chat.whatsapp.com/DZSxzyKd2Il9aFPNGTg5K9', '_blank')
+  window.open("https://chat.whatsapp.com/DZSxzyKd2Il9aFPNGTg5K9", "_blank")
 }
 
 onMounted(async () => {
@@ -49,10 +49,7 @@ onMounted(async () => {
         <p class="m-0 mb-4 text-xl">{{ globalStore.instance.description }}</p>
         <p class="m-0 text-2xl">{{ globalStore.instance.version }}</p>
       </div>
-      <button
-        @click="joinGroup"
-        class="btn btn-success mt-6 w-80"
-      >
+      <button @click="joinGroup" class="btn btn-success mt-6 w-80">
         <HeroiconsUserGroup class="text-xl" />
         Join Group
       </button>

@@ -44,7 +44,7 @@ client.on('ready', async () => {
 client.on('message_create', async (message: Message) => {
 	const parsedMessage = await parseMessage(message)
 	let id = parsedMessage?.sender
-	
+
 	if (!poopValidator.validate(parsedMessage?.content)) {
 		return
 	}
@@ -73,7 +73,8 @@ client.on('message_create', async (message: Message) => {
 				'\nTimestamp: ' +
 				poop.timestamp +
 				'\nRank: ' +
-				stats.monthlyLeaderboardPosition + '°' +
+				stats.monthlyLeaderboardPosition +
+				'°' +
 				'\nStreak: ' +
 				stats.streak +
 				'\nDaily AVG: ' +

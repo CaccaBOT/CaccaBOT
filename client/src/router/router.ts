@@ -61,7 +61,7 @@ const routes = [
   {
     path: "/update",
     component: () => import("../views/Updater.vue"),
-    name: "update"
+    name: "update",
   },
   {
     path: "/:pathMatch(.*)*",
@@ -113,7 +113,7 @@ router.afterEach(async (to, from) => {
       break
     case "update":
       if (!sessionStore.updateRequired) {
-        router.push('/')
+        router.push("/")
         return
       }
   }

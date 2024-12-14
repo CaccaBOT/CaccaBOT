@@ -6,14 +6,13 @@ import { Message } from 'whatsapp-web.js'
 import { Achievement } from '../../types/Achievement'
 import { configuration } from '../..'
 
-
 const timezone = configuration.timezone || 'UTC'
 
 const patrioticPoop: Achievement = {
 	id: 'PATRIOTIC_POOP',
 	check: function (poop: Poop, user: RawUser, message: Message) {
-		const month = moment.tz(poop.timestamp,timezone).month() + 1
-		const day = moment.tz(poop.timestamp,timezone).date()
+		const month = moment.tz(poop.timestamp, timezone).month() + 1
+		const day = moment.tz(poop.timestamp, timezone).date()
 		if (month == 6 && day == 2) {
 			addAchievementToUser(user.id, this.id)
 			const achievement = getAchievement(this.id)

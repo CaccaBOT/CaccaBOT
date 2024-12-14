@@ -1,35 +1,36 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref } from "vue"
 
 const loadingPhrases = [
-  'Unclogging the toilet',
-  'Refilling the TP dispenser',
-  'Flushing out bugs',
-  'Synchronizing with the septic tank',
-  'Setting up poop sensors',
-  'Scrubbing the porcelain',
-  'Turbo-charging the flush',
-  'Sanitizing the seat',
-  'Counting toilet paper sheets',
-  'Mapping the sewer network',
-  'Calling the poop squad'
+  "Unclogging the toilet",
+  "Refilling the TP dispenser",
+  "Flushing out bugs",
+  "Synchronizing with the septic tank",
+  "Setting up poop sensors",
+  "Scrubbing the porcelain",
+  "Turbo-charging the flush",
+  "Sanitizing the seat",
+  "Counting toilet paper sheets",
+  "Mapping the sewer network",
+  "Calling the poop squad",
 ]
 
-const phrase = ref('')
+const phrase = ref("")
 
-setInterval(() => [
-  changePhrase()
-], 1000)
+setInterval(() => [changePhrase()], 1000)
 
 changePhrase()
 
 function changePhrase() {
-  phrase.value = loadingPhrases[Math.floor(Math.random() * loadingPhrases.length)]
+  phrase.value =
+    loadingPhrases[Math.floor(Math.random() * loadingPhrases.length)]
 }
 </script>
 
 <template>
-  <div class="flex flex-col justify-center items-center w-full h-[85vh] overflow-hidden">
+  <div
+    class="flex h-[85vh] w-full flex-col items-center justify-center overflow-hidden"
+  >
     <h1 class="text-4xl">CaccaBOT is updating</h1>
     <h2 class="mt-4 text-2xl">{{ phrase }}...</h2>
     <div class="loading-animation mt-10"></div>

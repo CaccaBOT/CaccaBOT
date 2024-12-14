@@ -28,8 +28,10 @@ export const useGlobalStore = defineStore("global", {
       try {
         this.isFetching = true
         const apiStore = useAPIStore()
-        let leaderboardResponse =
-          await apiStore.client.getMonthlyLeaderboard(year, month)
+        let leaderboardResponse = await apiStore.client.getMonthlyLeaderboard(
+          year,
+          month,
+        )
         this.isFetching = false
         if (leaderboardResponse.ok) {
           this.$state.leaderboard = await leaderboardResponse.json()

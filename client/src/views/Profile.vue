@@ -45,7 +45,9 @@ async function fetchProfileStats(id) {
   if (router.currentRoute.value.name == "monthlyProfile" || isOwnProfile()) {
     const year = globalStore.selectedDate.getFullYear()
     const month = globalStore.selectedDate.getMonth() + 1
-    userStats.value = await (await client.getMonthlyUserStats(id, year, month)).json()
+    userStats.value = await (
+      await client.getMonthlyUserStats(id, year, month)
+    ).json()
     monthlyUserPoops.value = await (
       await client.getMonthlyPoopsFromUser(id, year, month)
     ).json()

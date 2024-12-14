@@ -12,10 +12,10 @@ const godIsShit: Achievement = {
 	id: 'GOD_IS_SHIT',
 	check: function (poop: Poop, user: RawUser, message: Message) {
 		const timestamp = [
-			moment.tz(poop.timestamp,timezone).month() + 1,
-			moment.tz(poop.timestamp,timezone).date(),
+			moment.tz(poop.timestamp, timezone).month() + 1,
+			moment.tz(poop.timestamp, timezone).date(),
 		]
-		const easter = getEaster(moment.tz(poop.timestamp,timezone).year())
+		const easter = getEaster(moment.tz(poop.timestamp, timezone).year())
 		if (timestamp[0] == easter[0] && timestamp[1] == easter[1]) {
 			addAchievementToUser(user.id, this.id)
 			const achievement = getAchievement(this.id)

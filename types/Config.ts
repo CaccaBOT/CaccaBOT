@@ -1,5 +1,5 @@
 export type Config = {
-    name: string
+	name: string
 	description: string
 	prefix: string
 	serverUrl: string

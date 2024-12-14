@@ -4,7 +4,7 @@ import HeroiconsLogout from "~icons/heroicons/arrow-left-end-on-rectangle"
 import HeroiconsUser from "~icons/heroicons/user"
 import MaterialSymbolsPassword from "~icons/material-symbols/password"
 import { useSessionStore } from "../stores/session"
-import HeroiconsPaintBrush from '~icons/heroicons/paint-brush'
+import HeroiconsPaintBrush from "~icons/heroicons/paint-brush"
 
 const sessionStore = useSessionStore()
 

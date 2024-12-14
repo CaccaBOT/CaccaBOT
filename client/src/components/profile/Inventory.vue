@@ -5,7 +5,7 @@ import { Achievement } from "../../types/Achievement"
 import { Card } from "../../types/Card"
 import { UserAchievement } from "../../types/UserAchievement"
 import HeroiconsTrophy from "~icons/heroicons/trophy"
-import HeroiconsChevronDown16Solid from '~icons/heroicons/chevron-down-16-solid';
+import HeroiconsChevronDown16Solid from "~icons/heroicons/chevron-down-16-solid"
 
 const props = defineProps<{
   userCollectibles: Card[]

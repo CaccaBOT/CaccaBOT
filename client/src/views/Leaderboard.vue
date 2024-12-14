@@ -4,8 +4,8 @@ import router from "../router/router"
 import noPfp from "../assets/no_pfp.webp"
 import { useGlobalStore } from "../stores/global"
 import { ref } from "vue"
-import HeroiconsChevronLeft from '~icons/heroicons/chevron-left?width=24px&height=24px';
-import HeroiconsChevronRight from '~icons/heroicons/chevron-right?width=24px&height=24px';
+import HeroiconsChevronLeft from "~icons/heroicons/chevron-left?width=24px&height=24px"
+import HeroiconsChevronRight from "~icons/heroicons/chevron-right?width=24px&height=24px"
 const globalStore = useGlobalStore()
 import type { Ref } from "vue"
 
@@ -109,7 +109,10 @@ function updateNewMonth() {
     <div
       class="header mx-auto flex w-11/12 flex-row items-center justify-between"
     >
-      <HeroiconsChevronLeft @click="prevMonth()" class="btn btn-circle btn-active p-3"/>
+      <HeroiconsChevronLeft
+        @click="prevMonth()"
+        class="btn btn-circle btn-active p-3"
+      />
       <div class="mb-2 rounded-2xl bg-base-200 px-5 py-2">
         <h1 class="text-center">{{ globalStore.displayDate }}</h1>
         <div
@@ -143,7 +146,10 @@ function updateNewMonth() {
           </div>
         </div>
       </div>
-      <HeroiconsChevronRight @click="nextMonth()" class="btn btn-circle btn-active p-3"/>
+      <HeroiconsChevronRight
+        @click="nextMonth()"
+        class="btn btn-circle btn-active p-3"
+      />
     </div>
 
     <img
@@ -194,7 +200,7 @@ function updateNewMonth() {
                   </div>
                 </div>
                 <div>
-                  <div class="md:text-2xl text-xl font-bold">
+                  <div class="text-xl font-bold md:text-2xl">
                     <h2>{{ user.username }}</h2>
                   </div>
                 </div>

@@ -29,7 +29,9 @@ console.log(`
 ░                  ░        ░                        ░                    
 `)
 
-console.log(`Loaded the following configuration for environment ${process.env.ENVIRONMENT}`)
+console.log(
+	`Loaded the following configuration for environment ${process.env.ENVIRONMENT}`,
+)
 console.log(config)
 
 server.register(require('@fastify/swagger'), {
@@ -154,8 +156,9 @@ if (config.whatsappModuleEnabled) {
 }
 
 async function initJobs() {
-	const jobsDir = fs.readdirSync(`${path.resolve('./jobs')}`)
-	.filter((file) => file.endsWith('.ts'))
+	const jobsDir = fs
+		.readdirSync(`${path.resolve('./jobs')}`)
+		.filter((file) => file.endsWith('.ts'))
 
 	for (const jobFile of jobsDir) {
 		const job = await import(`${path.resolve('./jobs')}/${jobFile}`)
@@ -175,9 +178,9 @@ server.listen(
 		await initJobs()
 		if (config.monthlyPurge) {
 			console.warn(
-                '[WARNING] Monthly Purge is enabled, users who have been ' +
-                'inactive for more than a month will be deleted at month reset!',
-            )
+				'[WARNING] Monthly Purge is enabled, users who have been ' +
+					'inactive for more than a month will be deleted at month reset!',
+			)
 		}
 		console.log('[WEBSERVER] Ready on ' + address)
 	},

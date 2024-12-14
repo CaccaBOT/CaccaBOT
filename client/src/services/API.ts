@@ -98,9 +98,7 @@ export default class API {
   }
 
   async getMonthlyLeaderboard(year: number, month: number) {
-    return await fetch(
-      `${baseAPIURL}/poop/leaderboard/${year}/${month}`,
-    )
+    return await fetch(`${baseAPIURL}/poop/leaderboard/${year}/${month}`)
   }
 
   async getLeaderboard() {
@@ -132,9 +130,7 @@ export default class API {
   }
 
   async getMonthlyUserStats(id: string, year: number, month: number) {
-    return await fetch(
-      `${baseAPIURL}/poop/stats/${id}/${year}/${month}`,
-    )
+    return await fetch(`${baseAPIURL}/poop/stats/${id}/${year}/${month}`)
   }
 
   async searchProfile(username: string) {
@@ -146,9 +142,7 @@ export default class API {
   }
 
   async getMonthlyPoopsFromUser(id: string, year: number, month: number) {
-    return await fetch(
-      `${baseAPIURL}/poop/${id}/${year}/${month}`,
-    )
+    return await fetch(`${baseAPIURL}/poop/${id}/${year}/${month}`)
   }
 
   async getMonthlyPoops(date = new Date()) {
