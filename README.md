@@ -66,11 +66,13 @@ services:
       - 'com.centurylinklabs.watchtower.enable=true'
       - 'traefik.http.middlewares.test-compress.compress.defaultEncoding=zstd'
     volumes:
-      - /your/volume/path/storage:/app/storage/
-      - /your/volume/path/wwebjs_auth:/app/.wwebjs_auth
-      - /your/volume/path/wwebjs_cache:/app/.wwebjs_cache
-      - /your/volume/path/pfp:/app/public/pfp
-      - /your/volume/path/config_prod.json:/app/config/config_prod.json
+      - /your/volume/path/here/storage:/app/storage/
+      - /your/volume/path/here/wwebjs_auth:/app/.wwebjs_auth
+      - /your/volume/path/here/wwebjs_cache:/app/.wwebjs_cache
+      - /your/volume/path/here/pfp:/app/public/pfp
+      - type: bind
+        source: /your/volume/path/here/config.json
+        target: /app/config/config_prod.json
     environment:
       - ENVIRONMENT=production
       - SERVER_PORT=3000
