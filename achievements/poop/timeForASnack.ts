@@ -4,9 +4,9 @@ import { RawUser } from '../../types/User'
 import moment from 'moment'
 import { addAchievementToUser, getAchievement } from '../../database'
 import { Achievement } from '../../types/Achievement'
-import { configuration } from '../..'
+import { config } from '../../config/loader'
 
-const timezone = configuration.timezone || 'UTC'
+const timezone = config.timezone || 'UTC'
 
 const timeForASnack: Achievement = {
 	id: 'TIME_FOR_A_SNACK',

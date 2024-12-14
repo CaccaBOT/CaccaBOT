@@ -4,9 +4,9 @@ import { Poop } from '../../types/Poop'
 import { RawUser } from '../../types/User'
 import { Message } from 'whatsapp-web.js'
 import { Achievement } from '../../types/Achievement'
-import { configuration } from '../..'
+import { config } from '../../config/loader'
 
-const timezone = configuration.timezone || 'UTC'
+const timezone = config.timezone || 'UTC'
 
 const poopOnWheelchair: Achievement = {
 	id: 'POOP_ON_WHEELCHAIR',
