@@ -6,7 +6,6 @@ const cases = [
 	'cacca=cacca+=1',
 	'cacca=1+cacca',
 	'cacca-=(-1)',
-	'cacca|=1',
 	'int*ptr=&cacca;(*ptr)++',
 	'cacca=~((~cacca)-1)',
 ]
