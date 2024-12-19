@@ -1,12 +1,12 @@
 import { Message } from 'whatsapp-web.js'
 import { Command, Info } from '../types/Command'
-import { configuration } from '..'
+import { config } from '../config/loader'
 
 const manual: Command = {
 	name: 'manual',
 	description: 'view the poop manual',
 	execute: async (message: Message, info: Info) => {
-		message.reply(`${configuration.serverUrl}/manual`)
+		message.reply(`${config.serverUrl}/manual`)
 	},
 }
 

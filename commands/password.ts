@@ -3,7 +3,7 @@ import { Command, Info } from '../types/Command'
 import { updatePassword, getUserProfileByPhone } from '../database/index'
 import crypto from 'crypto'
 import { client } from '../whatsapp/index'
-import { configuration } from '..'
+import { config } from '../config/loader'
 
 const password: Command = {
 	name: 'password',
@@ -21,7 +21,7 @@ const password: Command = {
 		updatePassword(user.id, password)
 		client.sendMessage(
 			message.author!,
-			`Your CaccaBOT password is: ${password}\nRemember to change it as soon as possible\n${configuration.serverUrl}`,
+			`Your CaccaBOT password is: ${password}\nRemember to change it as soon as possible\n${config.serverUrl}`,
 		)
 	},
 }

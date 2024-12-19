@@ -2,7 +2,7 @@ import { client } from '../whatsapp/index'
 import { poopLeaderboardWithFilter } from '../database/index'
 import { GroupChat, Message } from 'whatsapp-web.js'
 import { Command, Info } from '../types/Command'
-import { configuration } from '..'
+import { config } from '../config/loader'
 
 const leaderboard: Command = {
 	name: 'leaderboard',
@@ -35,7 +35,7 @@ const leaderboard: Command = {
 				}\n`
 			}
 
-			leaderboardMsg += `\nThe leaderboard can be viewed here\n${configuration.serverUrl}/leaderboard`
+			leaderboardMsg += `\nThe leaderboard can be viewed here\n${config.serverUrl}/leaderboard`
 		} else {
 			message.reply('This command is only available in groups')
 			return
