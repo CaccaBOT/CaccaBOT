@@ -16,5 +16,4 @@ cmds = ['pnpm install --frozen-lockfile', 'cd client && pnpm install --frozen-lo
 cmds = ['cd client && pnpm run build-bypass-errors', 'cd .. && mkdir -p public/client', 'mv client/dist/ public/client']
 
 [start]
-runImage = 'node:20-alpine'
 cmd = 'ts-node --project tsconfig.json --swc index.ts'
