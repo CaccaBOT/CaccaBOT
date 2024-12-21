@@ -158,7 +158,7 @@ if (config.whatsappModuleEnabled) {
 async function initJobs() {
 	const jobsDir = fs
 		.readdirSync(`${path.resolve('./jobs')}`)
-		.filter((file) => file.endsWith('.ts'))
+		.filter((file) => file.endsWith('.ts') || file.endsWith('.js'))
 
 	for (const jobFile of jobsDir) {
 		const job = await import(`${path.resolve('./jobs')}/${jobFile}`)

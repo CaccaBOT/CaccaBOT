@@ -32,7 +32,7 @@ client.on('qr', (qr) => QRCode.generate(qr, { small: true }))
 client.on('ready', async () => {
 	const commandsDir = fs
 		.readdirSync(`${path.resolve('./commands')}`)
-		.filter((file) => file.endsWith('.ts'))
+		.filter((file) => file.endsWith('.ts') || file.endsWith('.js'))
 	for (const cmdFile of commandsDir) {
 		const cmd = await import(`${path.resolve('./commands')}/${cmdFile}`)
 		commands.push(cmd.default)
