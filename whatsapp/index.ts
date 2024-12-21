@@ -24,6 +24,7 @@ export const client = new Client({
 		handleSIGINT: false,
 		timeout: 60000,
 		args: ['--no-sandbox', '--disable-gpu', '--disable-setuid-sandbox'],
+		userDataDir: '/tmp'
 	},
 })
 

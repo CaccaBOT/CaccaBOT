@@ -15,16 +15,9 @@ RUN npm run build
 
 FROM node:20-alpine
 
-RUN apk add --no-cache bash chromium ttf-freefont udev
+RUN apk add --no-cache bash chromium
 
-ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser
-
-RUN addgroup -S runner && adduser -S -G runner runner \
-    && mkdir -p /home/runner/Downloads /app \
-    && chown -R runner:runner /home/runner \
-    && chown -R runner:runner /app
-
-USER runner
+ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium
 
 WORKDIR /app
 
