@@ -23,7 +23,7 @@ export const client = new Client({
 	puppeteer: {
 		handleSIGINT: false,
 		timeout: 60000,
-		args: ['--no-sandbox'],
+		args: ['--no-sandbox', '--disable-gpu', '--disable-setuid-sandbox'],
 	},
 })
 
