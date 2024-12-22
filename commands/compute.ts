@@ -20,6 +20,12 @@ const help: Command = {
 		}
 
 		let poopMessage = await message.getQuotedMessage()
+
+		if (poopMessage == null) {
+			message.reply('❌ You must quote a message for this command')
+			return
+		}
+
 		let messages = await (
 			await client.getChatById((await poopMessage.getChat()).id._serialized)
 		).fetchMessages({ limit: parseInt(info.args[0]) ?? 100 })
@@ -29,11 +35,6 @@ const help: Command = {
 
 		if (match) {
 			poopMessage = match
-		}
-
-		if (!poopMessage) {
-			message.reply('❌ You must quote a message for this command')
-			return
 		}
 
 		if (!poopMessage.timestamp) {
