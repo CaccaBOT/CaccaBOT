@@ -167,10 +167,7 @@ loadConfig()
 			'/app', '.wwebjs_auth', 'session', 'SingletonLock'
 		)
 
-		if (fs.existsSync(sessionLockFile))
-		{
-			fs.rmSync(sessionLockFile)
-		}
+		try { fs.unlinkSync(sessionLockFile) } catch (_) {}
 
 		client.initialize()
 	}

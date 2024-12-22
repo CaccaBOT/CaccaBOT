@@ -38,51 +38,64 @@ client.on('ready', async () => {
 		commands.push(cmd.default)
 		console.info(`[COMMAND] ${cmd.default.name}`)
 	}
+
 	console.log('[WHATSAPP] Ready on ' + client.info.wid.user)
+
+	/*
+	 fetch the last 100 messages to avoid errors
+	 on messages where the application was not active
+	*/
+	await (
+		await client.getChatById(config.groupId)
+	).fetchMessages({ limit: 100 })
 })
 
 client.on('message_create', async (message: Message) => {
-	const parsedMessage = await parseMessage(message)
-	let id = parsedMessage?.sender
-
-	if (!poopValidator.validate(parsedMessage?.content)) {
-		return
-	}
-
-	if (id != null) {
-		let foundUser = getUserProfileByPhone(id)
-
-		if (!foundUser.id) {
-			const contact = await message.getContact()
-			const username = contact.pushname
-			const bio = await contact.getAbout()
-			createUser(id, username, bio)
-			foundUser = getUserProfileByPhone(id)
+	try {
+		const parsedMessage = await parseMessage(message)
+		let id = parsedMessage?.sender
+	
+		if (!poopValidator.validate(parsedMessage?.content)) {
+			return
 		}
-		addPoop(foundUser.id)
-		const stats = poopStatsFromUserWithFilter(
-			foundUser.id,
-			moment().year(),
-			moment().month() + 1,
-		)
-		const poop = getLastPoop()
-		message.reply(
-			'✅ Saved' +
-				'\nID: ' +
-				poop.id +
-				'\nTimestamp: ' +
-				poop.timestamp +
-				'\nRank: ' +
-				stats.monthlyLeaderboardPosition +
-				'°' +
-				'\nStreak: ' +
-				stats.streak +
-				'\nDaily AVG: ' +
-				stats.poopAverage +
-				'\nMonthly: ' +
-				stats.monthlyPoops,
-		)
-		achievementChecker.checkPoopBased(foundUser, poop, message)
+	
+		if (id != null) {
+			let foundUser = getUserProfileByPhone(id)
+	
+			if (!foundUser.id) {
+				const contact = await message.getContact()
+				const username = contact.pushname
+				const bio = await contact.getAbout()
+				createUser(id, username, bio)
+				foundUser = getUserProfileByPhone(id)
+			}
+			addPoop(foundUser.id)
+			const stats = poopStatsFromUserWithFilter(
+				foundUser.id,
+				moment().year(),
+				moment().month() + 1,
+			)
+			const poop = getLastPoop()
+			message.reply(
+				'✅ Saved' +
+					'\nID: ' +
+					poop.id +
+					'\nTimestamp: ' +
+					poop.timestamp +
+					'\nRank: ' +
+					stats.monthlyLeaderboardPosition +
+					'°' +
+					'\nStreak: ' +
+					stats.streak +
+					'\nDaily AVG: ' +
+					stats.poopAverage +
+					'\nMonthly: ' +
+					stats.monthlyPoops,
+			)
+			achievementChecker.checkPoopBased(foundUser, poop, message)
+		}
+	} catch (e) {
+		console.error(e)
 	}
 })
 
