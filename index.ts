@@ -45,7 +45,6 @@ if (isLoaded)
 		░                  ░        ░                        ░                    
 		`)
 
-
 	console.log(
 		`Loaded the following configuration for environment ${process.env.ENVIRONMENT}`,
 	)
@@ -191,7 +190,7 @@ if (isLoaded)
 	{
 		const jobsDir = fs
 			.readdirSync(`${path.resolve('./jobs')}`)
-			.filter((file) => file.endsWith('.ts'))
+			.filter((file) => file.endsWith('.ts') || file.endsWith('.js'))
 
 		for (const jobFile of jobsDir)
 		{
