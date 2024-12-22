@@ -22,13 +22,11 @@ export function loadConfig() {
 				config = JSON.parse(
 					fs.readFileSync(path.join('./config', 'config_dev.json'), 'utf-8'),
 				)
-				isLoaded = true
 				break
 			case 'production':
 				config = JSON.parse(
 					fs.readFileSync(path.join('./config', 'config_prod.json'), 'utf-8'),
 				)
-				isLoaded = true
 				break
 			default:
 				printErrorBanner()
@@ -42,6 +40,7 @@ export function loadConfig() {
 		console.error(
 			'[CONFIG] The application cannot start because the configuration file was not found',
 		)
+		process.exit(1)
 	}
 }
 

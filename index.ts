@@ -12,26 +12,12 @@ import fastifyStatic from '@fastify/static'
 import { version } from './package.json'
 //@ts-ignore
 import schedule from 'node-schedule'
-import { isLoaded, config, loadConfig } from './config/loader'
+import { config, loadConfig } from './config/loader'
 dotenv.config()
 
 loadConfig()
 
-if (!isLoaded)
-{
-	server.get('/', (request: FastifyRequest, reply: FastifyReply) =>
-	{
-		reply.send("The application cannot start because the configuration file was not found")
-	})
 
-	server.listen(
-		{ host: '0.0.0.0', port: process.env.SERVER_PORT ?? 3000 }
-	)
-
-}
-
-if (isLoaded)
-{
 	console.log(`
 		▄████▄   ▄▄▄       ▄████▄   ▄████▄   ▄▄▄       ▄▄▄▄    ▒█████  ▄▄▄█████▓
 		▒██▀ ▀█  ▒████▄    ▒██▀ ▀█  ▒██▀ ▀█  ▒████▄    ▓█████▄ ▒██▒  ██▒▓  ██▒ ▓▒
@@ -180,7 +166,7 @@ if (isLoaded)
 		const sessionLockFile = path.join(
 			'/app', '.wwebjs_auth', 'session', 'SingletonLock'
 		)
-		
+
 		if (fs.existsSync(sessionLockFile))
 		{
 			fs.rmSync(sessionLockFile)
@@ -224,5 +210,3 @@ if (isLoaded)
 			console.log('[WEBSERVER] Ready on ' + address)
 		},
 	)
-
-}
