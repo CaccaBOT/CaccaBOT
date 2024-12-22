@@ -1,6 +1,7 @@
 services:
   reverse-proxy:
     image: traefik:v3.1
+    restart: always
     command:
       - '--providers.docker'
       - '--providers.docker.exposedbydefault=false'
@@ -23,6 +24,7 @@ services:
 
   watchtower:
     image: containrrr/watchtower
+    restart: always
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     environment:
@@ -34,6 +36,7 @@ services:
         order: start-first
 
   caccabot:
+    restart: always
     image: ghcr.io/caccabot/caccabot:latest
     labels:
       - 'traefik.enable=true'

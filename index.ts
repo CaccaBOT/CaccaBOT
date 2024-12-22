@@ -177,7 +177,10 @@ if (isLoaded)
 
 	if (config.whatsappModuleEnabled)
 	{
-		const sessionLockFile = path.join('./.wwebjs_auth', 'session', 'SingletonLock')
+		const sessionLockFile = path.join(
+			'/app', '.wwebjs_auth', 'session', 'SingletonLock'
+		)
+		
 		if (fs.existsSync(sessionLockFile))
 		{
 			fs.rmSync(sessionLockFile)
