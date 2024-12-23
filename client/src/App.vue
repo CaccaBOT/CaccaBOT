@@ -13,6 +13,7 @@ import { useAPIStore } from "./stores/api.ts"
 import { useGlobalStore } from "./stores/global.ts"
 import { useToast } from "vue-toastification"
 import ChangeThemeModal from "./components/modals/ChangeThemeModal.vue"
+
 const toast = useToast()
 const globalStore = useGlobalStore()
 const { client } = useAPIStore()
