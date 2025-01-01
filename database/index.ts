@@ -44,12 +44,10 @@ export function getAchievement(achievementId: string) {
 
 export function getInactiveUsers(date: Date) {
 	const startOfMonth = moment(date)
-		.tz(timezone)
 		.startOf('month')
 		.utc()
 		.toISOString()
 	const endOfMonth = moment(date)
-		.tz(timezone)
 		.endOf('month')
 		.utc()
 		.toISOString()
@@ -126,12 +124,10 @@ export function getUserCount() {
 
 export function getMonthlyUserCount(date: string) {
 	const startOfMonth = moment(date)
-		.tz(timezone)
 		.startOf('month')
 		.utc()
 		.toISOString()
 	const endOfMonth = moment(date)
-		.tz(timezone)
 		.endOf('month')
 		.utc()
 		.toISOString()
@@ -170,13 +166,11 @@ export function getCirculatingMoneyWithAssets() {
 }
 
 export function getDailyPoopCount(date: string) {
-	const startOfDayUTC = moment
-		.tz(date, timezone)
+	const startOfDay = moment(date)
 		.startOf('day')
 		.clone()
 		.toISOString()
-	const endOfDayUTC = moment
-		.tz(date, timezone)
+	const endOfDay = moment(date)
 		.endOf('day')
 		.clone()
 		.toISOString()
@@ -189,12 +183,12 @@ export function getDailyPoopCount(date: string) {
             WHERE timestamp >= ? AND timestamp < ?
         `,
 		)
-		.get(startOfDayUTC, endOfDayUTC).dailyPoops
+		.get(startOfDay, endOfDay).dailyPoops
 
-	const previousStartOfDayUTC = moment(startOfDayUTC)
+	const previousStartOfDayUTC = moment(startOfDay)
 		.subtract(1, 'day')
 		.toISOString()
-	const previousEndOfDayUTC = moment(endOfDayUTC)
+	const previousEndOfDayUTC = moment(endOfDay)
 		.subtract(1, 'day')
 		.toISOString()
 
@@ -219,24 +213,21 @@ export function getDailyPoopCount(date: string) {
 }
 
 export function getWeeklyPoopCount(date: string) {
-	const startOfCurrentWeekUTC = moment
-		.tz(date, timezone)
+	const startOfCurrentWeekUTC = moment(date)
 		.isoWeekday(1)
 		.startOf('day')
 		.clone()
 		.utc()
 		.toISOString()
 
-	const endOfCurrentWeekUTC = moment
-		.tz(date, timezone)
+	const endOfCurrentWeekUTC = moment(date)
 		.isoWeekday(7)
 		.endOf('day')
 		.clone()
 		.utc()
 		.toISOString()
 
-	const startOfPreviousWeekUTC = moment
-		.tz(date, timezone)
+	const startOfPreviousWeekUTC = moment(date)
 		.subtract(1, 'week')
 		.isoWeekday(1)
 		.startOf('day')
@@ -244,8 +235,7 @@ export function getWeeklyPoopCount(date: string) {
 		.utc()
 		.toISOString()
 
-	const endOfPreviousWeekUTC = moment
-		.tz(date, timezone)
+	const endOfPreviousWeekUTC = moment(date)
 		.subtract(1, 'week')
 		.isoWeekday(7)
 		.endOf('day')
@@ -284,27 +274,23 @@ export function getWeeklyPoopCount(date: string) {
 }
 
 export function getMonthlyPoopCount(date: string) {
-	const startOfCurrentMonthUTC = moment
-		.tz(date, timezone)
+	const startOfCurrentMonth = moment(date)
 		.startOf('month')
 		.clone()
 		.utc()
 		.toISOString()
-	const endOfCurrentMonthUTC = moment
-		.tz(date, timezone)
+	const endOfCurrentMonth = moment(date)
 		.endOf('month')
 		.clone()
 		.utc()
 		.toISOString()
-	const startOfPreviousMonthUTC = moment
-		.tz(date, timezone)
+	const startOfPreviousMonth = moment(date)
 		.subtract(1, 'month')
 		.startOf('month')
 		.clone()
 		.utc()
 		.toISOString()
-	const endOfPreviousMonthUTC = moment
-		.tz(date, timezone)
+	const endOfPreviousMonth = moment(date)
 		.subtract(1, 'month')
 		.endOf('month')
 		.clone()
@@ -319,7 +305,7 @@ export function getMonthlyPoopCount(date: string) {
             WHERE timestamp >= ? AND timestamp < ?
         `,
 		)
-		.get(startOfCurrentMonthUTC, endOfCurrentMonthUTC).monthlyPoops
+		.get(startOfCurrentMonth, endOfCurrentMonth).monthlyPoops
 
 	const previousCount = db
 		.prepare(
@@ -329,7 +315,7 @@ export function getMonthlyPoopCount(date: string) {
             WHERE timestamp >= ? AND timestamp < ?
         `,
 		)
-		.get(startOfPreviousMonthUTC, endOfPreviousMonthUTC).previousMonthlyPoops
+		.get(startOfPreviousMonth, endOfPreviousMonth).previousMonthlyPoops
 
 	const trend =
 		previousCount > 0
@@ -354,11 +340,13 @@ export function getTotalPoopCount() {
 
 export function getDailyTopPooper(date: string) {
 	const startOfDay = moment(date)
-		.tz(timezone)
 		.startOf('day')
 		.utc()
 		.toISOString()
-	const endOfDay = moment(date).tz(timezone).endOf('day').utc().toISOString()
+	const endOfDay = moment(date)
+		.endOf('day')
+		.utc()
+		.toISOString()
 
 	return db
 		.prepare(
@@ -377,13 +365,11 @@ export function getDailyTopPooper(date: string) {
 
 export function getWeeklyTopPooper(date: string) {
 	const startOfWeek = moment(date)
-		.tz(timezone)
 		.isoWeekday(1)
 		.startOf('day')
 		.utc()
 		.toISOString()
 	const endOfWeek = moment(date)
-		.tz(timezone)
 		.isoWeekday(7)
 		.endOf('day')
 		.utc()
@@ -406,12 +392,10 @@ export function getWeeklyTopPooper(date: string) {
 
 export function getMonthlyTopPooper(date: string) {
 	const startOfMonth = moment(date)
-		.tz(timezone)
 		.startOf('month')
 		.utc()
 		.toISOString()
 	const endOfMonth = moment(date)
-		.tz(timezone)
 		.endOf('month')
 		.utc()
 		.toISOString()
@@ -448,12 +432,10 @@ export function getTopPooper() {
 
 export function getMonthlyPoopDistribution(date: string) {
 	const startOfMonth = moment(date)
-		.tz(timezone)
 		.startOf('month')
 		.utc()
 		.toISOString()
 	const endOfMonth = moment(date)
-		.tz(timezone)
 		.endOf('month')
 		.utc()
 		.toISOString()
@@ -1006,13 +988,6 @@ export function poopStats() {
 		.endOf('month')
 		.utc()
 		.toISOString()
-
-	console.log(startOfDay)
-	console.log(endOfDay)
-	console.log(startOfWeek)
-	console.log(endOfWeek)
-	console.log(startOfMonth)
-	console.log(endOfMonth)
 
 	const todayPoops = db
 		.prepare(

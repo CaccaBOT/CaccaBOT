@@ -1,18 +1,17 @@
 <script setup lang="ts">
 import ApexCharts from "vue3-apexcharts"
 import { onBeforeMount, ref, watch } from "vue"
-import { color } from "../../main.ts" // Assuming 'color' determines the theme mode (light/dark)
+import { color } from "../../main.ts"
+import { User } from "../../types/User.ts";
 
-// Define the props with TypeScript (or JavaScript if not using TypeScript)
 const props = defineProps<{
-  users: Array
+  users
 }>()
 
-// Define the chart options using a ref
 const options = ref({
   series: [
     {
-      data: [], // Empty initially, will be populated with user data
+      data: [],
     },
   ],
   chart: {
@@ -40,7 +39,7 @@ const options = ref({
   dataLabels: {
     enabled: true,
     formatter: function (val, opts) {
-      return `${val} (${Math.round(opts.value)}%)` // Display label and percentage
+      return `${val} (${Math.round(opts.value)}%)`
     },
     style: {
       colors: ["#000"],
@@ -57,29 +56,31 @@ const options = ref({
     },
   },
   theme: {
-    mode: color, // Applies the mode based on 'color' from the main file
+    mode: color,
   },
   plotOptions: {
     treemap: {
-      distributed: true, // Each cell can have its own color
-      enableShades: false, // Shades between nodes for better differentiation
+      distributed: true,
+      enableShades: false,
     },
   },
 })
 
-// Watch for changes in the `users` prop
 watch(
-  () => props.users, // Watching the `users` prop
+  () => props.users,
   (newUsers) => {
     if (newUsers) {
-      // Update the chart data when new user data is available
+      console.log(newUsers.map((user) => ({
+        x: user.username,
+        y: user.percentage,
+      })))
       options.value.series[0].data = newUsers.map((user) => ({
         x: user.username,
         y: user.percentage,
       }))
     }
   },
-  { immediate: true }, // Trigger the watcher immediately on component mount
+  { immediate: true },
 )
 </script>
 

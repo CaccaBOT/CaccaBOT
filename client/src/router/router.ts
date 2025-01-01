@@ -59,6 +59,16 @@ const routes = [
     name: "admin",
   },
   {
+    path: "/admin/console",
+    component: () => import("../views/admin/Console.vue"),
+    name: "console",
+  },
+  {
+    path: "/admin/poop-table",
+    component: () => import("../views/admin/PoopTable.vue"),
+    name: "poopTable",
+  },
+  {
     path: "/update",
     component: () => import("../views/Updater.vue"),
     name: "update",

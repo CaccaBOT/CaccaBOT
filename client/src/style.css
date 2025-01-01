@@ -12,11 +12,11 @@ body {
   font-family: "Nunito Sans", sans-serif;
 }
 
-body::-webkit-scrollbar {
+*::-webkit-scrollbar {
   width: 0.5rem;
 }
 
-body::-webkit-scrollbar-thumb {
+*::-webkit-scrollbar-thumb {
   background: linear-gradient(
     oklch(0.6569 0.196 275.75),
     oklch(0.748 0.26 342.55)
