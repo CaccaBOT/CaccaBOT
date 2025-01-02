@@ -11,12 +11,12 @@ const { client } = useAPIStore()
 const newUsername = ref("")
 const usernameError = ref("")
 
-const validation = /^[a-zA-Z0-9_]{2,}[a-zA-Z]+[0-9]*$/
+const validation = /^[a-zA-Z0-9_.]{3,12}$/
 
 async function change() {
   usernameError.value = ""
 
-  if (!validation.test(newUsername.value)) {
+  if (!validate()) {
     newUsername.value = ""
     document
       .querySelectorAll("input")
@@ -45,6 +45,11 @@ function dismissModal(event) {
   newUsername.value = ""
   usernameError.value = ""
 }
+
+function validate() {
+  return validation.test(newUsername.value)
+}
+
 </script>
 
 <template>
@@ -74,7 +79,7 @@ function dismissModal(event) {
         </label>
       </div>
       <button
-        :disabled="newUsername.length < 3"
+        :disabled="!validate()"
         class="btn btn-primary mb-4 mt-auto w-2/3 text-lg"
         @click="change"
       >
