@@ -6,6 +6,9 @@ import fs from 'fs'
 import path from 'path'
 import { Migration } from '../types/Migration'
 import { config } from '../config/loader'
+import UsernameValidator from '../validators/username'
+//@ts-ignore
+import usernameGenerator from "username-gen"
 
 const timezone = config.timezone || 'UTC'
 
@@ -511,9 +514,17 @@ export function createUser(
 	const phone = sanitizePhone(rawPhone)
 	const id = hashId(phone)
 
+	while (!UsernameValidator.validate(username) || !isUsernameAvailable(username)) {
+		username = usernameGenerator.generateUsername(8, false)
+	}
+
 	db.prepare(
 		`INSERT INTO user (id, phone, username, bio) VALUES (?, ?, ?, ?)`,
 	).run(id, phone, username, bio)
+}
+
+export function isUsernameAvailable(username: string): boolean {
+	return getUserProfileByUsername(username).id == null
 }
 
 export function getUserCollectibles(userId: string) {
@@ -574,7 +585,7 @@ export function getUserProfileById(userId: string) {
 export function getUserProfileByUsername(username: string) {
 	return db
 		.prepare(
-			'SELECT u.*, COUNT(p.id) as poops FROM user u JOIN poop p ON u.id = p.user_id WHERE u.username = ?',
+			'SELECT u.*, COUNT(p.id) as poops FROM user u LEFT JOIN poop p ON u.id = p.user_id WHERE u.username = ?',
 		)
 		.get(username)
 }

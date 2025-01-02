@@ -6,8 +6,10 @@ import {
 	updateBio,
 	getUserProfileByPhone,
 	getUserProfileByUsername,
+	isUsernameAvailable,
 } from '../database/index'
 import achievementChecker from '../achievements/check'
+import UsernameValidator from '../validators/username'
 
 const profile: Command = {
 	name: 'profile',
@@ -28,10 +30,12 @@ const profile: Command = {
 				break
 			case 'username':
 				let username = info.args[1]
-				const isUsernameAvailable =
-					getUserProfileByUsername(username).id == null
-				if (!isUsernameAvailable) {
+				if (!isUsernameAvailable(username)) {
 					message.reply('❌ Username not available')
+					return
+				}
+				if (!UsernameValidator.validate(username)) {
+					message.reply('❌ Username not valid')
 					return
 				}
 				updateUsername(user.id, username)

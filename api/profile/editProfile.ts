@@ -4,10 +4,10 @@ import {
 	FastifyRequest,
 	RouteOptions,
 } from 'fastify'
-import { getUserProfileByUsername } from '../../database'
 import { authenticate } from '../../middleware/auth'
 import usernameValidator from '../../validators/username'
 import achievementChecker from '../../achievements/check'
+import { isUsernameAvailable } from '../../database'
 
 interface EditProfileBody {
 	username: string
@@ -32,12 +32,8 @@ const editProfileEndpoint = async function (
 				res.code(403).send({ error: 'Invalid username' })
 			}
 
-			if (user.username && user.username.length >= 3) {
-				const isUsernameAvailable =
-					getUserProfileByUsername(user.username).id == null
-				if (isUsernameAvailable) {
-					user.username = username
-				}
+			if (user.username && isUsernameAvailable(user.username)) {
+				user.username = username
 			}
 
 			if (user.bio) {

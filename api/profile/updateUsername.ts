@@ -4,10 +4,11 @@ import {
 	FastifyRequest,
 	RouteOptions,
 } from 'fastify'
-import { updateUsername, getUserProfileByUsername } from '../../database'
+import { updateUsername } from '../../database'
 import { authenticate } from '../../middleware/auth'
 import usernameValidator from '../../validators/username'
 import achievementChecker from '../../achievements/check'
+import { isUsernameAvailable } from '../../database'
 
 interface UpdateUsernameBody {
 	username: string
@@ -30,13 +31,12 @@ const updateUsernameEndpoint = async function (
 				return
 			}
 
-			if (usernameValidator.validate(username)) {
+			if (!usernameValidator.validate(username)) {
 				res.code(403).send({ error: 'Invalid username' })
 				return
 			}
 
-			const isUsernameAvailable = getUserProfileByUsername(username).id == null
-			if (isUsernameAvailable) {
+			if (isUsernameAvailable(username)) {
 				updateUsername(user.id, username)
 				achievementChecker.checkActionBased(user)
 				res.code(200).send()
