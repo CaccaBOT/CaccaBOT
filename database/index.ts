@@ -13,7 +13,10 @@ import usernameGenerator from "username-gen"
 const timezone = config.timezone || 'UTC'
 
 export function initDatabase() {
-	const migrationFiles = fs.readdirSync(path.join(__dirname, './migrations'))
+	const migrationFiles = fs
+		.readdirSync(path.join(__dirname, './migrations'))
+		.sort((a, b) => parseInt(a.split('-')[0], 10) - parseInt(b.split('-')[0], 10))
+
 	let executedMigrations: Migration[] = []
 
 	try {
