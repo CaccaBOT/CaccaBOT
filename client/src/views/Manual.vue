@@ -7,7 +7,7 @@ const manual = ref("")
 onMounted(async () => {
   const manualRaw = await (
     await fetch(
-      "https://raw.githubusercontent.com/CaccaBOT/CaccaBOT-Manual/main/README.md",
+      "https://raw.githubusercontent.com/CaccaBOT/CaccaBOT-Manual/refs/heads/main/static/output.md",
     )
   ).text()
   marked.use(
