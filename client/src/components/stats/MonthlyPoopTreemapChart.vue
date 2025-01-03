@@ -70,10 +70,6 @@ watch(
   () => props.users,
   (newUsers) => {
     if (newUsers) {
-      console.log(newUsers.map((user) => ({
-        x: user.username,
-        y: user.percentage,
-      })))
       options.value.series[0].data = newUsers.map((user) => ({
         x: user.username,
         y: user.percentage,
