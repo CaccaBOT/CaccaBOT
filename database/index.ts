@@ -44,6 +44,19 @@ export function initDatabase() {
 	}
 }
 
+export function getPoops(limit: number, offset: number) {
+	return db
+		.prepare(
+		`
+		SELECT *
+		FROM poop
+		ORDER BY timestamp DESC
+		LIMIT ? OFFSET ?
+		`,
+		)
+		.all(limit, offset)
+}
+
 export function getAchievement(achievementId: string) {
 	return db.prepare(`SELECT * FROM achievement WHERE id = ?`).get(achievementId)
 }

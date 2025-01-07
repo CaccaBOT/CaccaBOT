@@ -106,12 +106,12 @@ onMounted(async () => {
             </div>
           </div>
         </div>
-        <div v-show="globalStore.profile.username" class="username">
+        <div v-show="isOwnProfile() ? sessionStore.session.username : globalStore.profile.username" class="username">
           <h1
             class="mx-auto w-max outline-none"
             :contenteditable="isEditingUsername"
           >
-            {{ globalStore.profile.username }}
+            {{ isOwnProfile() ? sessionStore.session.username : globalStore.profile.username }}
             <HeroiconsPencil
               v-show="isOwnProfile() && !isEditingUsername"
               class="ml-1 inline cursor-pointer text-[1.25rem]"

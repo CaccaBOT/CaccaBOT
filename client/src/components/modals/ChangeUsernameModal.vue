@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import router from "../../router/router"
-import noPfp from "../../assets/no_pfp.webp"
 import { ref } from "vue"
 import { useSessionStore } from "../../stores/session"
 import { useAPIStore } from "../../stores/api"
@@ -24,6 +22,8 @@ async function change() {
     return
   }
 
+  const username = newUsername.value
+
   const response = await client.changeUsername(newUsername.value)
 
   if (!response.ok) {
@@ -34,7 +34,7 @@ async function change() {
   } else {
     sessionStore.showChangeUsernameModal = false
     sessionStore.showLoginModal = false
-    sessionStore.session.username = newUsername.value
+    sessionStore.session.username = username
   }
 }
 

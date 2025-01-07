@@ -25,7 +25,7 @@ onMounted(async () => {
       stats.value = await response.json()
     }
   } catch (e) {
-    toast.error("Failed to fetch stats")
+    toast.error("Failed to retrieve stats")
   }
 })
 

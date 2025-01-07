@@ -22,7 +22,7 @@ onMounted(async () => {
     const usersResponse = await (await client.getLeaderboard()).json()
     users.value = usersResponse.sort((a: User, b: User) => b.poops - a.poops)
   } catch (e) {
-    toast.error("Failed to fetch users")
+    toast.error("Failed to retrieve users")
   }
 })
 </script>

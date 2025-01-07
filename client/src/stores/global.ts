@@ -38,7 +38,7 @@ export const useGlobalStore = defineStore("global", {
         }
       } catch (e) {
         const toast = useToast()
-        toast.error("Failed to fetch leaderboard")
+        toast.error("Failed to retrieve leaderboard")
       }
     },
     async fetchProfile(id: string) {
@@ -53,7 +53,7 @@ export const useGlobalStore = defineStore("global", {
         }
       } catch (e) {
         const toast = useToast()
-        toast.error("Failed to fetch user profile")
+        toast.error("Failed to retrieve user profile")
       }
     },
     nextMonth() {

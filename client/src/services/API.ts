@@ -6,6 +6,14 @@ export const baseAPIURL = `${baseURL}/api`
 export default class API {
   sessionStore = useSessionStore()
 
+  async getPoops(offset: Number) {
+    return await fetch(`${baseAPIURL}/admin/poops?offset=${offset}`, {
+      headers: {
+        "X-Auth-Token": this.sessionStore.session.token,
+      },
+    })
+  }
+
   async getAllAchievements() {
     return await fetch(`${baseAPIURL}/achievement`)
   }
