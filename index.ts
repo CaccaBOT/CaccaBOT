@@ -10,7 +10,6 @@ import fs from 'fs'
 import path from 'path'
 import fastifyStatic from '@fastify/static'
 import { version } from './package.json'
-//@ts-ignore
 import schedule from 'node-schedule'
 import { config, loadConfig } from './config/loader'
 dotenv.config()
@@ -181,7 +180,7 @@ loadConfig()
 		for (const jobFile of jobsDir)
 		{
 			const job = await import(`${path.resolve('./jobs')}/${jobFile}`)
-			schedule.scheduleJob(job.default.interval, job.default.execute)
+			schedule.scheduleJob({rule: job.default.interval, tz: config.timezone || "UTC"}, job.default.execute)
 			console.info(`[JOB] ${job.default.interval} => ${job.default.name}`)
 		}
 	}
