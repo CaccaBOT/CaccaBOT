@@ -5,6 +5,7 @@ import { UserAchievement } from "../../types/UserAchievement"
 import HeroiconsTrophy from "~icons/heroicons/trophy"
 import { computed, ref } from "vue"
 import HeroiconsChevronDown16Solid from "~icons/heroicons/chevron-down-16-solid"
+import { formatDate } from "../../utils/dateFormatter"
 
 const achievementStore = useAchievementStore()
 const props = defineProps<{
@@ -26,16 +27,6 @@ function getDifficultyClass(achievement?: Achievement) {
   }
 
   return difficultyMap[achievement?.difficulty_id] || ""
-}
-
-function formatDate(timestamp: string) {
-  const date = new Date(timestamp)
-  const day = date.getDate().toString().padStart(2, "0")
-  const month = (date.getMonth() + 1).toString().padStart(2, "0")
-  const year = date.getFullYear()
-  const hour = date.getHours().toString().padStart(2, "0")
-  const minute = date.getMinutes().toString().padStart(2, "0")
-  return `${day}/${month}/${year} at ${hour}:${minute}`
 }
 
 const achievementsExpanded = ref(false)

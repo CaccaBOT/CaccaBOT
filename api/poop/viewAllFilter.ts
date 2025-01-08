@@ -12,7 +12,7 @@ interface Params {
 	month: number
 }
 
-const viewAllWithFilterEndpoint = async function (
+const viewAllFilterEndpoint = async function (
 	server: FastifyInstance,
 	options: RouteOptions,
 ) {
@@ -25,4 +25,4 @@ const viewAllWithFilterEndpoint = async function (
 	)
 }
 
-export default viewAllWithFilterEndpoint
+export default viewAllFilterEndpoint

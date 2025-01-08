@@ -44,6 +44,10 @@ export function initDatabase() {
 	}
 }
 
+export function getAllUsers() {
+	return db.prepare(`SELECT id, username, pfp, openedPacks, money, frozen FROM user`).all()
+}
+
 export function getPoops(limit: number, offset: number) {
 	return db
 		.prepare(

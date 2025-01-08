@@ -6,6 +6,14 @@ export const baseAPIURL = `${baseURL}/api`
 export default class API {
   sessionStore = useSessionStore()
 
+  async getAllUsers() {
+    return await fetch(`${baseAPIURL}/instance/users`, {
+      headers: {
+        "X-Auth-Token": this.sessionStore.session.token,
+      },
+    })
+  }
+
   async getPoops(offset: Number) {
     return await fetch(`${baseAPIURL}/admin/poops?offset=${offset}`, {
       headers: {
