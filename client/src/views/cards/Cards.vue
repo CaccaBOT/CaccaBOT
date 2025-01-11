@@ -1,11 +1,10 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue"
-import JSConfetti from "js-confetti"
-import { useAPIStore } from "../stores/api"
-import { useSessionStore } from "../stores/session"
-import { Card } from "../types/Card"
-import Pack from "../components/Pack.vue"
-import merdollar from "../assets/merdollar.webp"
+import { useAPIStore } from "../../stores/api"
+import { useSessionStore } from "../../stores/session"
+import { Card } from "../../types/Card"
+import Pack from "../../components/Pack.vue"
+import merdollar from "../../assets/merdollar.webp"
 const { client } = useAPIStore()
 const sessionStore = useSessionStore()
 const foundCard = ref({} as Card)

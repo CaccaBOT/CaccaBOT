@@ -44,6 +44,14 @@ export function initDatabase() {
 	}
 }
 
+export function isUserAdmin(userId: string) {
+	return db.prepare(`SELECT admin FROM user WHERE id = ?`).get(userId).admin
+}
+
+export function setUserAdmin(userId: string, admin: boolean) {
+	db.prepare(`UPDATE user SET admin = ? WHERE id = ?`).run(admin, userId)
+}
+
 export function getAllUsers() {
 	return db.prepare(`SELECT id, username, pfp, openedPacks, money, frozen FROM user`).all()
 }
@@ -509,6 +517,7 @@ export function getUserByToken(token: string) {
 	const user = db.prepare(`SELECT * FROM user WHERE token = ?`).get(token)
 	if (user) {
 		user.frozen = Boolean(user.frozen)
+		user.admin = Boolean(user.admin)
 	}
 
 	return user
@@ -650,7 +659,7 @@ export function poopLeaderboard() {
 	const result = db
 		.prepare(
 			`
-            SELECT u.id, u.phone, u.username, u.pfp, u.bio, u.frozen, u.money,
+            SELECT u.id, u.phone, u.username, u.pfp, u.bio, u.frozen, u.money, u.admin,
                    poops,
                    ROW_NUMBER() OVER (ORDER BY poops DESC) AS rank
             FROM (

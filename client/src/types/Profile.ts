@@ -6,6 +6,7 @@ export type Profile = {
   poops: number
   frozen: boolean
   money: number
+  admin: boolean
 }
 
 export type Poop = {

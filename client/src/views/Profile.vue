@@ -24,6 +24,14 @@ const isEditingBio = ref(false)
 const userAchievements = ref([])
 const monthlyUserPoops = ref([] as Poop[])
 
+function isAdmin() {
+    if (isOwnProfile()) {
+        return sessionStore.session.admin
+    } else {
+        return globalStore.profile.admin
+    }
+}
+
 function editBio() {
   //TODO: implement API call
   isEditingBio.value = false
@@ -82,7 +90,6 @@ onMounted(async () => {
       <div class="profile-header mx-auto mt-8 text-center">
         <div class="avatar">
           <div
-            v-show="globalStore.profile.username"
             class="custom-shadow w-24 rounded-full ring ring-primary ring-offset-2 ring-offset-base-100"
           >
             <img
@@ -109,6 +116,7 @@ onMounted(async () => {
         <div v-show="isOwnProfile() ? sessionStore.session.username : globalStore.profile.username" class="username">
           <h1
             class="mx-auto w-max outline-none"
+            :class="{ 'text-warning': isAdmin() }"
             :contenteditable="isEditingUsername"
           >
             {{ isOwnProfile() ? sessionStore.session.username : globalStore.profile.username }}

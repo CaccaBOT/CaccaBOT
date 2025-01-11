@@ -52,7 +52,7 @@ onMounted(async () => {
             </div>
           </div>
           <div class="h-100 flex flex-col items-center">
-            <h2 class="card-title">{{ user.username }}</h2>
+            <h2 class="card-title" :class="{'text-warning': user.admin}">{{ user.username }}</h2>
             <UserStatsBadge :poops="user.poops" :money="user.money" />
           </div>
         </div>

@@ -7,4 +7,5 @@ export type Session = {
   token: string
   frozen: boolean
   money: number
+  admin: boolean
 }

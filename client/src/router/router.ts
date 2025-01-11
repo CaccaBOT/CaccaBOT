@@ -49,14 +49,19 @@ const routes = [
     name: "manual",
   },
   {
-    path: "/cards",
-    component: () => import("../views/Cards.vue"),
+    path: "/cards/pack",
+    component: () => import("../views/cards/Cards.vue"),
     name: "cards",
   },
   {
-    path: "/admin",
+    path: "/cards/market",
+    component: () => import("../views/cards/Market.vue"),
+    name: "market",
+  },
+  {
+    path: "/admin/configuration",
     component: () => import("../views/admin/Dashboard.vue"),
-    name: "admin",
+    name: "configuration",
   },
   {
     path: "/admin/console",

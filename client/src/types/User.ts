@@ -6,4 +6,5 @@ export type User = {
   poops: number
   rank: number
   money: number
+  admin: number
 }

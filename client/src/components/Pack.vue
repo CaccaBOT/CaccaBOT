@@ -89,7 +89,7 @@ function loadModel(scene: Scene) {
   dracoLoader.setDecoderPath("draco/")
   loader.setDRACOLoader(dracoLoader)
 
-  loader.load("card-pack.glb", (gltf) => {
+  loader.load("../card-pack.glb", (gltf) => {
     model = gltf.scene
     model.scale.set(1, 1, 1)
 

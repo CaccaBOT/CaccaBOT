@@ -59,8 +59,3 @@ body {
 .loading {
   transform: scale(1.5);
 }
-
-.dropdown:is(:not(details)) .dropdown-content {
-  visibility: visible;
-  opacity: 1;
-}

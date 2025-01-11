@@ -28,10 +28,15 @@
     "vue3-apexcharts": "^1.8.0"
   },
   "devDependencies": {
+    "@iconify-json/akar-icons": "^1.2.2",
+    "@iconify-json/fluent": "^1.2.11",
     "@iconify-json/heroicons": "^1.1.21",
     "@iconify-json/hugeicons": "^1.1.0",
+    "@iconify-json/iconoir": "^1.2.7",
     "@iconify-json/material-symbols": "^1.1.80",
+    "@iconify-json/si": "^1.2.3",
     "@iconify-json/streamline": "^1.1.8",
+    "@iconify-json/weui": "^1.2.2",
     "@types/showdown": "^2.0.6",
     "@vitejs/plugin-vue": "^5.0.4",
     "@vue/compiler-sfc": "^3.4.27",

@@ -9,6 +9,7 @@ export type RawUser = {
 	bio: string | null
 	money: number
 	openedPacks: number
+	admin: boolean
 }
 
 export type User = {
@@ -19,4 +20,5 @@ export type User = {
 	bio: string | null
 	money: number
 	openedPacks: number
+	admin: boolean
 }
