@@ -27,8 +27,6 @@ jobs:
         uses: docker/build-push-action@v6.10.0
         with:
           push: true
-          cache: true
-          cache_tag: ${{ env.IMAGE_NAME }}:latest
           tags: |
             ${{ env.IMAGE_NAME }}:${{ github.sha }}
             ${{ env.IMAGE_NAME }}:latest
