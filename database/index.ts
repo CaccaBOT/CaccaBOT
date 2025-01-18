@@ -9,6 +9,8 @@ import { config } from '../config/loader'
 import UsernameValidator from '../validators/username'
 //@ts-ignore
 import usernameGenerator from "username-gen"
+import { UserCollectible } from '../types/UserCollectible'
+import { Collectible } from '../types/Collectible'
 
 const timezone = config.timezone || 'UTC'
 
@@ -42,6 +44,16 @@ export function initDatabase() {
 			).run(file, new Date().toISOString())
 		}
 	}
+}
+
+export function getCollectibleOwnershipById(userCollectibleId: number): UserCollectible {
+	return db.prepare(`SELECT * FROM user_collectible WHERE id = ?`).get(userCollectibleId)
+}
+
+export function deleteUserCollectible(userCollectibleId: number) {
+	db.prepare(
+		`DELETE FROM user_collectible WHERE id = ?`,
+	).run(userCollectibleId)
 }
 
 export function isUserAdmin(userId: string) {
@@ -599,7 +611,7 @@ export function getCollectibles(rarityId: number) {
 		.all(rarityId)
 }
 
-export function getAllCollectibles() {
+export function getAllCollectibles(): Collectible[] {
 	return db.prepare(`SELECT * FROM collectible`).all()
 }
 

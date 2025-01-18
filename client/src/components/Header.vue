@@ -16,6 +16,7 @@ import FluentAppsList24Regular from '~icons/fluent/apps-list-24-regular'
 import IconoirBoxIso from '~icons/iconoir/box-iso'
 import WeuiShopOutlined from '~icons/weui/shop-outlined'
 import HugeiconsMenu02 from '~icons/hugeicons/menu-02'
+import HeroiconsOutlineRefresh from '~icons/heroicons-outline/refresh';
 
 const sessionStore = useSessionStore()
 
@@ -91,6 +92,11 @@ const menuItems = ref<MenuItem[]>([
         icon: WeuiShopOutlined,
         route: "/cards/market",
       },
+      {
+        label: "Convert",
+        icon: HeroiconsOutlineRefresh,
+        route: "/cards/convert",
+      }
     ],
   },
   {

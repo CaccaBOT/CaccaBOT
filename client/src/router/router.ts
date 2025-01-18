@@ -59,6 +59,11 @@ const routes = [
     name: "market",
   },
   {
+    path: "/cards/convert",
+    component: () => import("../views/cards/Convert.vue"),
+    name: "convert",
+  },
+  {
     path: "/admin/configuration",
     component: () => import("../views/admin/Dashboard.vue"),
     name: "configuration",

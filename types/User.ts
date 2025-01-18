@@ -1,10 +1,10 @@
 export type RawUser = {
 	id: string
-	phone: string
+	phone?: string
 	username: string
-	password: string
+	password?: string
 	frozen: boolean
-	token: string | null
+	token?: string | null
 	pfp: string | null
 	bio: string | null
 	money: number
