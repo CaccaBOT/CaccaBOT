@@ -10,6 +10,7 @@ export const useSessionStore = defineStore("session", {
     showChangePasswordModal: false,
     showChangeUsernameModal: false,
     showChangePfpModal: false,
+    showChangeBioModal: false,
     showMobileNavbar: false,
     showChangeThemeModal: false,
     updateRequired: false,

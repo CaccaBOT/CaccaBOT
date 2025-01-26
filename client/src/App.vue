@@ -13,6 +13,7 @@ import { useAPIStore } from "./stores/api.ts"
 import { useGlobalStore } from "./stores/global.ts"
 import { useToast } from "vue-toastification"
 import ChangeThemeModal from "./components/modals/ChangeThemeModal.vue"
+import ChangeBioModal from "./components/modals/ChangeBioModal.vue"
 
 const toast = useToast()
 const globalStore = useGlobalStore()
@@ -65,6 +66,9 @@ onMounted(async () => {
   />
   <ChangePfpModal
     v-show="sessionStore.session.id && sessionStore.showChangePfpModal"
+  />
+  <ChangeBioModal
+    v-show="sessionStore.session.id && sessionStore.showChangeBioModal"
   />
   <ChangeThemeModal
     v-show="sessionStore.session.id && sessionStore.showChangeThemeModal"

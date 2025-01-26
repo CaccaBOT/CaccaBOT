@@ -139,7 +139,6 @@ onMounted(async () => {
       >
         <div
           class="prose card-body mx-auto text-center"
-          v-show="globalStore.profile.bio"
         >
           <h1 class="quote-top">“</h1>
           <p>
