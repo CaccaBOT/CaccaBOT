@@ -64,7 +64,7 @@ theme.value = localStorage.getItem("theme")
 
 <template>
   <div
-    class="change-theme-panel-wrapper fixed left-0 top-0 z-10 flex h-[100vh] w-full items-center justify-center"
+    class="change-theme-panel-wrapper fixed left-0 top-0 z-50 flex h-[100vh] w-full items-center justify-center"
     @click="dismissModal($event)"
   >
     <div

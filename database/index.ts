@@ -46,6 +46,10 @@ export function initDatabase() {
 	}
 }
 
+export function getCollectibleOwnerships(userId: string): UserCollectible[] {
+	return db.prepare(`SELECT * FROM user_collectible WHERE user_id = ?`).all(userId)
+}
+
 export function getCollectibleOwnershipById(userCollectibleId: number): UserCollectible {
 	return db.prepare(`SELECT * FROM user_collectible WHERE id = ?`).get(userCollectibleId)
 }
@@ -571,16 +575,15 @@ export function isUsernameAvailable(username: string): boolean {
 export function getUserCollectibles(userId: string) {
 	return db
 		.prepare(
-			`
-        SELECT c.name, c.description, c.asset_url, r.name as rarity, COUNT(uc.collectible_id) AS quantity
-        FROM collectible c
-        JOIN user_collectible uc ON uc.collectible_id = c.id
-        JOIN user u ON uc.user_id = u.id
-        JOIN rarity r ON c.rarity_id = r.id
-        WHERE u.id = ?
-        GROUP BY c.id, r.name
-        ORDER BY r.id DESC
-    `,
+		`
+			SELECT c.id, c.name, c.description, c.asset_url, c.rarity_id, COUNT(uc.collectible_id) AS quantity
+			FROM collectible c
+			JOIN user_collectible uc ON uc.collectible_id = c.id
+			JOIN user u ON uc.user_id = u.id
+			WHERE u.id = ?
+			GROUP BY c.id, c.rarity_id
+			ORDER BY c.rarity_id DESC
+    	`,
 		)
 		.all(userId)
 }
@@ -605,7 +608,7 @@ export function getRarities() {
 	return db.prepare(`SELECT * FROM rarity`).all()
 }
 
-export function getCollectibles(rarityId: number) {
+export function getCollectiblesOfRarity(rarityId: number) {
 	return db
 		.prepare(`SELECT * FROM collectible WHERE rarity_id = ?`)
 		.all(rarityId)

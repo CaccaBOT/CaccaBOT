@@ -41,7 +41,7 @@ function dismissModal(event) {
 
 <template>
   <div
-    class="change-password-panel-wrapper fixed left-0 top-0 z-10 flex h-[100vh] w-full items-center justify-center"
+    class="change-password-panel-wrapper fixed left-0 top-0 z-50 flex h-[100vh] w-full items-center justify-center"
     @click="dismissModal($event)"
   >
     <div

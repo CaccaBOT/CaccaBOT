@@ -6,6 +6,19 @@ export const baseAPIURL = `${baseURL}/api`
 export default class API {
   sessionStore = useSessionStore()
 
+  async convertCollectibles(collectibles: number[]) {
+    return await fetch(`${baseAPIURL}/collectible/convert`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-Auth-Token": this.sessionStore.session.token,
+      },
+      body: JSON.stringify({
+        collectibles,
+      }),
+    })
+  }
+
   async getAllUsers() {
     return await fetch(`${baseAPIURL}/instance/users`, {
       headers: {

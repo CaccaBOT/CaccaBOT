@@ -8,6 +8,8 @@ import Toast, { PluginOptions, POSITION } from "vue-toastification"
 import "vue-toastification/dist/index.css"
 import App from "./App.vue"
 import { setupPWAUpdateListener } from "./services/pwaUpdateHandler"
+import Tooltip from "@programic/vue3-tooltip"
+import '@programic/vue3-tooltip/dist/index.css'
 
 export const color =
   window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches
@@ -17,6 +19,7 @@ export const color =
 createApp(App)
   .use(router)
   .use(VueApexCharts)
+  .use(Tooltip)
   .use(createPinia())
   .use(createHead())
   .use(Toast, {

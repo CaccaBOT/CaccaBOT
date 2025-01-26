@@ -5,13 +5,14 @@ import { useSessionStore } from "../../stores/session"
 import { Card } from "../../types/Card"
 import Pack from "../../components/Pack.vue"
 import merdollar from "../../assets/merdollar.webp"
+import { CollectibleRarity } from "../../enums/CollectibleRarity"
+import { getTextRarityClass } from "../../services/collectibleService"
 const { client } = useAPIStore()
 const sessionStore = useSessionStore()
 const foundCard = ref({} as Card)
 const isOpening = ref(false)
 const packRef = ref(null)
-const rerender = ref(0)
-const showCredits = ref(false)
+const updater = ref(0)
 
 async function openPack() {
   isOpening.value = true
@@ -26,29 +27,18 @@ async function openPack() {
   document.querySelector("#notEnoughMoney")?.classList.add("fade-out")
   document
     .querySelector(".card")
-    .classList.add(getRarityClass(foundCard.value.rarity))
+    .classList.add(getRarityClass(foundCard.value.rarity_id))
   document
     .querySelector(".card-info > h2")
-    .classList.add(getTextRarityClass(foundCard.value.rarity))
+    .classList.add(getTextRarityClass(foundCard.value.rarity_id))
 }
 
-function getRarityClass(rarityId) {
+function getRarityClass(rarityId: CollectibleRarity) {
   let rarityMap = {
-    Merdume: "rarity-common",
-    Escrementale: "rarity-rare",
-    Sensazianale: "rarity-epic",
-    Caccasmagorico: "rarity-legendary",
-  }
-
-  return rarityMap[rarityId]
-}
-
-function getTextRarityClass(rarityId: string) {
-  let rarityMap = {
-    Merdume: "text-rarity-common",
-    Escrementale: "text-rarity-rare",
-    Sensazianale: "text-rarity-epic",
-    Caccasmagorico: "text-rarity-legendary",
+    1: "rarity-common",
+    2: "rarity-rare",
+    3: "rarity-epic",
+    4: "rarity-legendary",
   }
 
   return rarityMap[rarityId]
@@ -57,20 +47,15 @@ function getTextRarityClass(rarityId: string) {
 async function reset() {
   isOpening.value = false
   await packRef.value.reset()
-  rerender.value++
+  updater.value++
   document
     .querySelector(".card")
-    .classList.remove(getRarityClass(foundCard.value.rarity))
+    .classList.remove(getRarityClass(foundCard.value.rarity_id))
   document
     .querySelector(".card-info > h2")
-    .classList.remove(getTextRarityClass(foundCard.value.rarity))
+    .classList.remove(getTextRarityClass(foundCard.value.rarity_id))
 }
 
-onMounted(() => {
-  setTimeout(() => {
-    showCredits.value = true
-  }, 350)
-})
 </script>
 
 <template>
@@ -80,7 +65,7 @@ onMounted(() => {
     <div
       class="card-pack flex cursor-pointer flex-row items-center justify-center"
     >
-      <Pack :key="rerender" ref="packRef" />
+      <Pack :key="updater" ref="packRef" />
     </div>
     <div
       class="card-wrapper mt-24 flex hidden w-full items-center justify-center"
@@ -96,7 +81,7 @@ onMounted(() => {
     </div>
     <div class="card-info w-100 prose mx-auto my-2 hidden text-center">
       <h1 class="mb-1 mt-5">{{ foundCard.name }}</h1>
-      <h2 class="rarity mt-3">{{ foundCard.rarity }}</h2>
+      <h2 class="rarity mt-3">{{ CollectibleRarity[foundCard.rarity_id] }}</h2>
     </div>
     <button
       v-if="!sessionStore.session.id"
@@ -125,11 +110,6 @@ onMounted(() => {
         :src="merdollar"
       />)
     </button>
-    <span
-      v-if="showCredits"
-      class="absolute bottom-3 w-full text-center font-bold"
-      >Cards made by BaDo (BaDoDab)</span
-    >
   </div>
 </template>
 

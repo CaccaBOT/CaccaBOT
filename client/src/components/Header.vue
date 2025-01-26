@@ -16,7 +16,7 @@ import FluentAppsList24Regular from '~icons/fluent/apps-list-24-regular'
 import IconoirBoxIso from '~icons/iconoir/box-iso'
 import WeuiShopOutlined from '~icons/weui/shop-outlined'
 import HugeiconsMenu02 from '~icons/hugeicons/menu-02'
-import HeroiconsOutlineRefresh from '~icons/heroicons-outline/refresh';
+import HeroiconsOutlineRefresh from '~icons/heroicons-outline/refresh'
 
 const sessionStore = useSessionStore()
 
@@ -35,22 +35,25 @@ function toggleNavMenu() {
 }
 
 function isAdmin() {
+  if (sessionStore.session.id == null) {
+    return false
+  }
+
   return sessionStore.session.admin
 }
 
-interface SubsectionItem {
-  label: string;
-  icon: any;
-  route: string;
+function canAccess(menuItem: MenuItem): boolean {
+  return (!menuItem.requiresAdmin || isAdmin()) && (!menuItem.requiresAuth || sessionStore.session.id != null)
 }
 
 interface MenuItem {
   label: string;
   icon: any;
   route: string;
-  class: string;
+  class?: string;
   requiresAdmin: boolean;
-  subsections?: SubsectionItem[];
+  requiresAuth?: boolean;
+  subsections?: MenuItem[];
 }
 
 const menuItems = ref<MenuItem[]>([
@@ -60,6 +63,7 @@ const menuItems = ref<MenuItem[]>([
     route: "/leaderboard",
     class: "text-primary",
     requiresAdmin: false,
+    requiresAuth: false
   },
   {
     label: "Manual",
@@ -67,6 +71,7 @@ const menuItems = ref<MenuItem[]>([
     route: "/manual",
     class: "text-secondary",
     requiresAdmin: false,
+    requiresAuth: false
   },
   {
     label: "Stats",
@@ -74,6 +79,7 @@ const menuItems = ref<MenuItem[]>([
     route: "/stats",
     class: "text-accent",
     requiresAdmin: false,
+    requiresAuth: false
   },
   {
     label: "Cards",
@@ -81,21 +87,28 @@ const menuItems = ref<MenuItem[]>([
     route: "/cards",
     class: "text-success",
     requiresAdmin: false,
+    requiresAuth: false,
     subsections: [
       {
         label: "Packs",
         icon: IconoirBoxIso,
         route: "/cards/pack",
+        requiresAdmin: false,
+        requiresAuth: false
       },
       {
         label: "Market",
         icon: WeuiShopOutlined,
         route: "/cards/market",
+        requiresAdmin: false,
+        requiresAuth: false
       },
       {
         label: "Convert",
         icon: HeroiconsOutlineRefresh,
         route: "/cards/convert",
+        requiresAdmin: false,
+        requiresAuth: true
       }
     ],
   },
@@ -105,6 +118,7 @@ const menuItems = ref<MenuItem[]>([
     route: "/users",
     class: "text-info",
     requiresAdmin: false,
+    requiresAuth: false
   },
   {
     label: "Admin",
@@ -112,21 +126,28 @@ const menuItems = ref<MenuItem[]>([
     route: "/admin",
     class: "text-error",
     requiresAdmin: true,
+    requiresAuth: true,
     subsections: [
       {
         label: "Configuration",
         icon: AkarIconsGear,
         route: "/admin/configuration",
+        requiresAdmin: true,
+        requiresAuth: true
       },
       {
         label: "Console",
         icon: SiTerminalDuotone,
         route: "/admin/console",
+        requiresAdmin: true,
+        requiresAuth: true
       },
       {
         label: "Poop Table",
         icon: FluentAppsList24Regular,
         route: "/admin/poop-table",
+        requiresAdmin: true,
+        requiresAuth: true
       },
     ]
   }
@@ -142,9 +163,10 @@ const menuItems = ref<MenuItem[]>([
           <div tabindex="0" class="btn btn-ghost lg:hidden">
             <HugeiconsMenu02 class="text-xl" />
           </div>
-          <ul class="menu dropdown-content z-[1] mt-3 w-52 rounded-box bg-base-300 p-2 shadow">
+          <ul class="menu dropdown-content z-20 mt-3 w-52 rounded-box bg-base-300 p-2 shadow">
             <li v-for="item in menuItems" :key="item.route" class="mx-2"
-              :class="{ [item.class]: isActive(item.route), 'hidden': item.requiresAdmin && !isAdmin() }">
+              :class="{ [item.class]: isActive(item.route),
+                'hidden': !canAccess(item) }">
               <details v-if="item.subsections">
                 <summary>
                   <component :is="item.icon" class="text-xl" />
@@ -152,7 +174,7 @@ const menuItems = ref<MenuItem[]>([
                 </summary>
                 <ul class="p-2">
                   <li v-for="sub in item.subsections" :key="sub.route">
-                    <RouterLink :to="sub.route">
+                    <RouterLink :to="sub.route" :class="{'hidden': canAccess(sub)}">
                       <component :is="sub.icon" class="text-xl" />
                       {{ sub.label }}
                     </RouterLink>
@@ -171,9 +193,9 @@ const menuItems = ref<MenuItem[]>([
         </RouterLink>
       </div>
       <div class="hidden lg:flex w-full">
-        <ul class="menu menu-horizontal z-[1] w-full flex-nowrap justify-center items-center">
+        <ul class="menu menu-horizontal z-20 w-full flex-nowrap justify-center items-center">
           <li v-for="item in menuItems" :key="item.route" class="mx-2"
-            :class="{ [item.class]: isActive(item.route), 'hidden': item.requiresAdmin && !isAdmin() }">
+            :class="{ [item.class]: isActive(item.route), 'hidden': !canAccess(item) }">
             <details v-if="item.subsections">
               <summary>
                 <component :is="item.icon" class="text-xl" />
@@ -181,7 +203,7 @@ const menuItems = ref<MenuItem[]>([
               </summary>
               <ul class="p-2">
                 <li v-for="sub in item.subsections" :key="sub.route">
-                  <RouterLink :to="sub.route">
+                  <RouterLink :to="sub.route" :class="{'hidden': !canAccess(sub)}">
                     <component :is="sub.icon" class="text-xl" />
                     {{ sub.label }}
                   </RouterLink>

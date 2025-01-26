@@ -59,3 +59,48 @@ body {
 .loading {
   transform: scale(1.5);
 }
+
+.collectible img {
+  border-width: 4px;
+}
+
+.black-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 20;
+  animation: black-overlay 0.5s forwards;
+}
+
+@keyframes black-overlay {
+  0% {
+    background-color: rgba(0, 0, 0, 0);
+  }
+  100% {
+    background-color: rgba(0, 0, 0, 0.8);
+  }
+}
+
+@keyframes spin-up {
+  0% {
+    right: 50%;
+    transform: translateX(50%) translateY(120%) rotateY(10turn);
+  }
+  100% {
+    right: 50%;
+    transform: translateX(50%) translateY(-100%) rotateY(0turn);
+  }
+}
+
+@keyframes bring-down {
+  0% {
+    right: 50%;
+    transform: translateX(50%) translateY(-100%)
+  }
+  100% {
+    right: 50%;
+    transform: translateX(50%) translateY(120%)
+  }
+}

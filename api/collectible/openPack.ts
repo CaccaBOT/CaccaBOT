@@ -1,7 +1,7 @@
 import {
 	setMoney,
 	getRarities,
-	getCollectibles,
+	getCollectiblesOfRarity,
 	addCollectibleToUser,
 	addOpenedPack,
 } from '../../database'
@@ -32,13 +32,11 @@ const openPackEndpoint = async function (
 		setMoney(user.id, user.money - 5)
 		const rarities = getRarities()
 		const rarity = pickRarity(rarities)
-		const collectiblesOfRarity = getCollectibles(rarity.id)
+		const collectiblesOfRarity = getCollectiblesOfRarity(rarity.id)
 		const collectible =
 			collectiblesOfRarity[
 				Math.floor(Math.random() * collectiblesOfRarity.length)
 			]
-		delete collectible.rarity_id
-		collectible.rarity = rarity.name
 		addCollectibleToUser(user.id, collectible.id)
 		addOpenedPack(user.id)
 		if (config.whatsappModuleEnabled) {
