@@ -425,3 +425,37 @@ VALUES
 		),
 		'https://caccabot.duckdns.org/public/collectibles/caccahacker.webp'
 	);
+
+INSERT
+	OR IGNORE INTO collectible (name, description, rarity_id, asset_url)
+VALUES
+	(
+		'Cagamella',
+		NULL,
+		(
+			SELECT
+				id
+			FROM
+				rarity
+			WHERE
+				name = 'Escrementale'
+		),
+		'https://caccabot.duckdns.org/public/collectibles/cagamella.webp'
+	);
+
+INSERT
+	OR IGNORE INTO collectible (name, description, rarity_id, asset_url)
+VALUES
+	(
+		'Caccompleanno',
+		NULL,
+		(
+			SELECT
+				id
+			FROM
+				rarity
+			WHERE
+				name = 'Sensazianale'
+		),
+		'https://caccabot.duckdns.org/public/collectibles/caccompleanno.webp'
+	);

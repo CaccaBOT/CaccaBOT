@@ -2,6 +2,6 @@ export type Collectible = {
 	id: number
 	name: string
 	description: string | undefined
-	rarityId: number
-	assetUrl: string | undefined
+	rarity_id: number
+	asset_url: string | undefined
 }

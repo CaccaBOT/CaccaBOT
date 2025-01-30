@@ -1,13 +1,10 @@
+import { CollectibleRarity } from "../enums/CollectibleRarity"
+
 export type Card = {
+  id: number
   name: string
   description: string
   asset_url: string
   quantity: number
-  rarity: Rarity
+  rarity_id: CollectibleRarity
 }
-
-export type Rarity =
-  | "Caccasmagorico"
-  | "Sensazianale"
-  | "Escrementale"
-  | "Merdume"

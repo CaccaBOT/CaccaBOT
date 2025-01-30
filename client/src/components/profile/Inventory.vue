@@ -1,10 +1,7 @@
 <script setup lang="ts">
 import { ref } from "vue"
-import { useAchievementStore } from "../../stores/achievement"
-import { Achievement } from "../../types/Achievement"
 import { Card } from "../../types/Card"
-import { UserAchievement } from "../../types/UserAchievement"
-import HeroiconsTrophy from "~icons/heroicons/trophy"
+import { getCardRarityClass } from "../../services/collectibleService"
 import HeroiconsChevronDown16Solid from "~icons/heroicons/chevron-down-16-solid"
 
 const props = defineProps<{
@@ -22,17 +19,6 @@ function shouldShowToggleArrow() {
   }
 
   return true
-}
-
-function getRarityClass(rarityId) {
-  let rarityMap = {
-    Merdume: "rarity-common",
-    Escrementale: "rarity-rare",
-    Sensazianale: "rarity-epic",
-    Caccasmagorico: "rarity-legendary",
-  }
-
-  return rarityMap[rarityId]
 }
 </script>
 
@@ -62,7 +48,7 @@ function getRarityClass(rarityId) {
         >
         <img
           alt="Collectible image"
-          :class="getRarityClass(collectible.rarity)"
+          :class="getCardRarityClass(collectible.rarity_id)"
           class="collectible m-0 rounded-2xl"
           :src="collectible.asset_url"
         />
@@ -86,9 +72,5 @@ function getRarityClass(rarityId) {
 .rotate-180 {
   transform: rotate(180deg);
   transition: transform 0.3s ease;
-}
-
-.collectible img {
-  border-width: 4px;
 }
 </style>

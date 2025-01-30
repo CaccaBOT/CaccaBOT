@@ -70,7 +70,8 @@ function toggleAchievements() {
             />
           </div>
           <div class="flex h-full w-full flex-col">
-            <h4 class="mt-5 p-0 text-lg font-bold">
+            <h4 class="mt-5 p-0 text-lg font-bold"
+            v-tooltip="getAchievement(userAchievement.achievement_id)?.description">
               {{
                 getAchievement(userAchievement.achievement_id)?.name ||
                 "Unknown"
