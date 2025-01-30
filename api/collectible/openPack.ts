@@ -42,7 +42,7 @@ const openPackEndpoint = async function (
 		if (config.whatsappModuleEnabled) {
 			const media = await MessageMedia.fromUrl(collectible.asset_url)
 			client.sendMessage(config.groupId, media, {
-				caption: `*[PACK] ${user.username}* found *${collectible.name}* (${collectible.rarity})`,
+				caption: `*[PACK] ${user.username}* found *${collectible.name}* (${rarities[collectible.rarity_id].name})`,
 			})
 		}
 		achievementChecker.checkCollectibleBased(user, collectible)

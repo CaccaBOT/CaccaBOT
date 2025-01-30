@@ -174,7 +174,7 @@ const menuItems = ref<MenuItem[]>([
                 </summary>
                 <ul class="p-2">
                   <li v-for="sub in item.subsections" :key="sub.route">
-                    <RouterLink :to="sub.route" :class="{'hidden': canAccess(sub)}">
+                    <RouterLink :to="sub.route" :class="{'hidden': !canAccess(sub)}">
                       <component :is="sub.icon" class="text-xl" />
                       {{ sub.label }}
                     </RouterLink>
