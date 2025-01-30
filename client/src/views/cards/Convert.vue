@@ -6,10 +6,10 @@ import { Card } from '../../types/Card'
 import { getCardRarityClass, getRarityName, getTextRarityClass } from '../../services/collectibleService'
 import { CollectibleRarity } from '../../enums/CollectibleRarity'
 import HeroiconsOutlineRefresh from '~icons/heroicons-outline/refresh'
-import UilCancel from '~icons/uil/cancel';
+import UilCancel from '~icons/uil/cancel'
 import CardWithCount from '../../components/convert/CardWithCount.vue'
 import JSConfetti from "js-confetti"
-import cardBack from '../../assets/card_back.png'
+import cardBack from '../../assets/card_back.webp'
 
 const { client } = useAPIStore()
 const sessionStore = useSessionStore()
@@ -19,6 +19,20 @@ const selectedRarity = ref<CollectibleRarity | null>(null)
 const selections = ref<Card[]>([])
 const foundCollectible = ref({} as Card)
 const animationDone = ref(true)
+let confettiSize = 50
+let confettiNumber = 50
+
+function updateConfettiConfig() {
+  const screenWidth = window.innerWidth
+
+  if (screenWidth >= 1200) {
+  } else if (screenWidth >= 768) {
+    confettiSize = 100
+  } else {
+    confettiSize = 100
+    confettiNumber = 20
+  }
+}
 
 function select(collectible: Card) {
   document.querySelectorAll('.collectible > img').forEach((element) => {
@@ -52,8 +66,6 @@ async function convert() {
   const collectibleIds = selections.value.map((x) => x.id)
   foundCollectible.value = await (await client.convertCollectibles(collectibleIds)).json()
   animateConversion()
-  reset()
-  await fetchCollectibles()
 }
 
 function animateConversion() {
@@ -68,29 +80,48 @@ function animateConversion() {
   window.scrollTo(0, 0)
   foundCollectibleWrapper.style.animation = 'spin-up 3s cubic-bezier(.17,.67,.35,1.03) forwards'
   setTimeout(() => {
+      foundCollectibleWrapper.style.animation = 'final-turn 0.5s ease-in-out forwards'
+    }, 3000)
+  setTimeout(() => {
     animationDone.value = true
     foundCollectibleImage.src = foundCollectible.value.asset_url
-  }, 3000)
+    const confetti = new JSConfetti()
+    confetti.addConfetti({
+    emojis: ["💩", "🚽", "🧻"],
+    emojiSize: confettiSize,
+    confettiNumber,
+    })
+  }, 3300)
   foundCollectibleWrapper.onclick = () => {
+    if (!animationDone) {
+      return
+    }
     animationDone.value = false
     foundCollectibleWrapper.style.animation = 'bring-down 0.75s ease-in-out forwards'
-    setTimeout(() => {
+    setTimeout(async () => {
       animationDone.value = true
       foundCollectibleWrapper.classList.add('hidden')
       document.querySelector('body').style.overflowY = 'auto'
       overlay.remove()
       foundCollectibleImage.src = cardBack
+      reset()
+      await fetchCollectibles()
     }, 750)
   }
 }
 
 async function fetchCollectibles() {
   let userCollectibles = await ((await client.getUserCollectibles(sessionStore.session.id)).json())
-  collectibles.value = userCollectibles.filter((c) => c.rarity_id !== CollectibleRarity.Caccasmagorico)
+  collectibles.value = userCollectibles
+  .filter((c: Card) => c.rarity_id !== CollectibleRarity.Caccasmagorico)
+  .map((c: Card) => ({ ...c, quantity: c.quantity - 1 }))
+  .filter((c: Card) => c.quantity > 0);
+
 }
 
 onMounted(async () => {
   fetchCollectibles()
+  updateConfettiConfig()
 })
 </script>
 
@@ -120,13 +151,13 @@ onMounted(async () => {
       </button>
     </div>
 
-    <div class="found-collectible z-30 w-64 cursor-pointer absolute bottom-[-25%] hidden">
+    <div class="found-collectible z-30 w-2/3 md:w-1/3 lg:w-1/5 cursor-pointer absolute bottom-[-45%] hidden">
       <img id="foundCollectibleImage" alt="Collectible image" :class="getCardRarityClass(foundCollectible.rarity_id)"
         class="collectible mb-5 rounded-2xl"
         :src="cardBack" />
-      <h3 class="text-3xl w-full text-center font-bold" :class="{ 'no-opacity': !animationDone }">{{
+      <h3 class="text-4xl w-full text-center font-bold" :class="{ 'no-opacity': !animationDone }">{{
         foundCollectible.name }}</h3>
-      <h3 class="text-xl w-full text-center font-bold"
+      <h3 class="text-2xl w-full text-center font-bold"
         :class="{ [getTextRarityClass(foundCollectible.rarity_id)]: true, 'no-opacity': !animationDone }">
         {{ getRarityName(foundCollectible.rarity_id) }}
       </h3>

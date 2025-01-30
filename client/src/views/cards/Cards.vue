@@ -6,7 +6,7 @@ import { Card } from "../../types/Card"
 import Pack from "../../components/Pack.vue"
 import merdollar from "../../assets/merdollar.webp"
 import { CollectibleRarity } from "../../enums/CollectibleRarity"
-import { getTextRarityClass } from "../../services/collectibleService"
+import { getTextRarityClass, getCardRarityClass } from "../../services/collectibleService"
 const { client } = useAPIStore()
 const sessionStore = useSessionStore()
 const foundCard = ref({} as Card)
@@ -27,21 +27,10 @@ async function openPack() {
   document.querySelector("#notEnoughMoney")?.classList.add("fade-out")
   document
     .querySelector(".card")
-    .classList.add(getRarityClass(foundCard.value.rarity_id))
+    .classList.add(getCardRarityClass(foundCard.value.rarity_id))
   document
     .querySelector(".card-info > h2")
     .classList.add(getTextRarityClass(foundCard.value.rarity_id))
-}
-
-function getRarityClass(rarityId: CollectibleRarity) {
-  let rarityMap = {
-    1: "rarity-common",
-    2: "rarity-rare",
-    3: "rarity-epic",
-    4: "rarity-legendary",
-  }
-
-  return rarityMap[rarityId]
 }
 
 async function reset() {
@@ -50,7 +39,7 @@ async function reset() {
   updater.value++
   document
     .querySelector(".card")
-    .classList.remove(getRarityClass(foundCard.value.rarity_id))
+    .classList.remove(getCardRarityClass(foundCard.value.rarity_id))
   document
     .querySelector(".card-info > h2")
     .classList.remove(getTextRarityClass(foundCard.value.rarity_id))

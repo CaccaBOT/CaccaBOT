@@ -90,7 +90,7 @@ body {
   }
   100% {
     right: 50%;
-    transform: translateX(50%) translateY(-100%) rotateY(0turn);
+    transform: translateX(50%) translateY(-100%) rotateY(.5turn);
   }
 }
 
@@ -102,5 +102,16 @@ body {
   100% {
     right: 50%;
     transform: translateX(50%) translateY(120%)
+  }
+}
+
+@keyframes final-turn {
+  0% {
+    right: 50%;
+    transform: translateX(50%) translateY(-100%) rotateY(.5turn);
+  }
+  100% {
+    right: 50%;
+    transform: translateX(50%) translateY(-100%) rotateY(1turn);
   }
 }
