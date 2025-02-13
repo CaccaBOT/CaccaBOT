@@ -132,6 +132,9 @@ onMounted(async () => {
         <CardWithCount @click="select(collectible)" class="collectible prose relative m-5 mb-5 w-32 cursor-pointer"
           v-for="collectible of collectibles" :collectible="collectible" :count="getSelectedCount(collectible)" />
       </div>
+      <div v-if="collectibles.length == 0" class="no-collectibles-wrapper w-full h-[60vh] flex flex-col items-center justify-center">
+        <h1 class="text-4xl text-center font-bold text-error mb-10">You don't have any collectibles to convert</h1>
+      </div>
     </div>
 
     <div class="convert-button-wrapper w-full flex items-center justify-center">
