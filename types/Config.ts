@@ -7,4 +7,5 @@ export type Config = {
 	whatsappModuleEnabled: boolean
 	monthlyPurge: boolean
 	timezone: string
+	loglevel: string
 }

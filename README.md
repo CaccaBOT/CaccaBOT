@@ -99,7 +99,8 @@ volumes:
 	"serverUrl": "https://caccabot.duckdns.org",
 	"groupId": null,
 	"whatsappModuleEnabled": true,
-	"monthlyPurge": true
+	"monthlyPurge": true,
+  "loglevel": "info"
 }
 ```
 
@@ -118,6 +119,8 @@ volumes:
 `whatsappModuleEnabled`: leave this untouched unless you want to suspend all whatsapp functionality and only leave the web server active
 
 `monthlyPurge`: if set to true it will kick and delete all users who have not been active for more than a month at every start of the month
+
+`loglevel`: set this to "info" for standard logging
 
 #### Edit the `.env` file to your liking
 

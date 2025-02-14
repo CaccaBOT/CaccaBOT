@@ -5,19 +5,17 @@ const server = require('fastify')({
 import { FastifyRequest, FastifyReply } from 'fastify'
 import { client } from './whatsapp/index'
 import { initDatabase } from './database/index'
-import dotenv from 'dotenv'
 import fs from 'fs'
 import path from 'path'
 import fastifyStatic from '@fastify/static'
 import { version } from './package.json'
 import schedule from 'node-schedule'
 import { config, loadConfig } from './config/loader'
-dotenv.config()
+import log from 'loglevel'
 
 loadConfig()
 
-
-	console.log(`
+	log.info(`
 		▄████▄   ▄▄▄       ▄████▄   ▄████▄   ▄▄▄       ▄▄▄▄    ▒█████  ▄▄▄█████▓
 		▒██▀ ▀█  ▒████▄    ▒██▀ ▀█  ▒██▀ ▀█  ▒████▄    ▓█████▄ ▒██▒  ██▒▓  ██▒ ▓▒
 		▒▓█    ▄ ▒██  ▀█▄  ▒▓█    ▄ ▒▓█    ▄ ▒██  ▀█▄  ▒██▒ ▄██▒██░  ██▒▒ ▓██░ ▒░
@@ -30,10 +28,10 @@ loadConfig()
 		░                  ░        ░                        ░                    
 		`)
 
-	console.log(
+	log.info(
 		`Loaded the following configuration for environment ${process.env.ENVIRONMENT}`,
 	)
-	console.log(config)
+	log.info(config)
 
 	server.register(require('@fastify/swagger'), {
 		swagger: {
@@ -88,7 +86,7 @@ loadConfig()
 	{
 		if (routeOptions.url.startsWith('/api') && routeOptions.method != 'HEAD')
 		{
-			console.log(`[ENDPOINT] ${routeOptions.method} ${routeOptions.url}`)
+			log.info(`[ENDPOINT] ${routeOptions.method} ${routeOptions.url}`)
 		}
 	})
 
@@ -133,16 +131,7 @@ loadConfig()
 		'onRequest',
 		(req: { method: any; url: any }, res: any, done: () => void) =>
 		{
-			const log = `${new Date().toISOString()} | ${req.method} | ${req.url}`
-			if (!fs.existsSync(`${__dirname}/logs`))
-			{
-				fs.mkdirSync(`${__dirname}/logs`)
-			}
-			fs.appendFileSync(
-				`${__dirname}/logs/${new Date().toISOString().slice(0, 10)}.log`,
-				`${log}\n`,
-			)
-			console.info(log)
+			log.info(`${new Date().toISOString()} | ${req.method} | ${req.url}`)
 			done()
 		},
 	)
@@ -181,7 +170,7 @@ loadConfig()
 		{
 			const job = await import(`${path.resolve('./jobs')}/${jobFile}`)
 			schedule.scheduleJob({rule: job.default.interval, tz: config.timezone || "UTC"}, job.default.execute)
-			console.info(`[JOB] ${job.default.interval} => ${job.default.name}`)
+			log.info(`[JOB] ${job.default.interval} => ${job.default.name}`)
 		}
 	}
 
@@ -191,18 +180,18 @@ loadConfig()
 		{
 			if (err)
 			{
-				console.error(err)
+				log.error(err)
 				process.exit(1)
 			}
 			initDatabase()
 			await initJobs()
 			if (config.monthlyPurge)
 			{
-				console.warn(
+				log.warn(
 					'[WARNING] Monthly Purge is enabled, users who have been ' +
 					'inactive for more than a month will be deleted at month reset!',
 				)
 			}
-			console.log('[WEBSERVER] Ready on ' + address)
+			log.info('[WEBSERVER] Ready on ' + address)
 		},
 	)

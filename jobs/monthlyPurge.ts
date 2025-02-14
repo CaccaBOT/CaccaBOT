@@ -5,13 +5,14 @@ import moment from 'moment'
 import { RawUser } from '../types/User'
 import { GroupChat } from 'whatsapp-web.js'
 import { config } from '../config/loader'
+import log from 'loglevel'
 
 const monthlyPurge: Job = {
 	name: 'Monthly Purge',
 	interval: '0 0 1 * *',
 	execute: async () => {
 		if (config.monthlyPurge && config.whatsappModuleEnabled) {
-			console.info(
+			log.info(
 				'[PURGE] Running Monthly Purge for ' +
 					moment().subtract(1, 'month').format('MMMM YYYY'),
 			)

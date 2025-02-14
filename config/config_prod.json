@@ -6,5 +6,6 @@
 	"groupId": "120363283575526755@g.us",
 	"whatsappModuleEnabled": true,
 	"monthlyPurge": true,
-	"timezone": "Europe/Rome"
+	"timezone": "Europe/Rome",
+	"loglevel": "info"
 }

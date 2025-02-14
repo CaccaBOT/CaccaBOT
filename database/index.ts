@@ -11,6 +11,7 @@ import UsernameValidator from '../validators/username'
 import usernameGenerator from "username-gen"
 import { UserCollectible } from '../types/UserCollectible'
 import { Collectible } from '../types/Collectible'
+import log from 'loglevel'
 
 const timezone = config.timezone || 'UTC'
 
@@ -26,14 +27,14 @@ export function initDatabase() {
 	} catch (e) {}
 
 	if (executedMigrations.length === 0) {
-		console.info(
+		log.info(
 			`[DATABASE] Database is uninitialized, all migrations will be run`,
 		)
 	}
 
 	for (const file of migrationFiles) {
 		if (!executedMigrations.find((m) => m.filename === file)) {
-			console.log(`[DATABASE] Running migration ${file}`)
+			log.info(`[DATABASE] Running migration ${file}`)
 			const migration = fs.readFileSync(
 				path.join(__dirname, `./migrations/${file}`),
 				'utf-8',

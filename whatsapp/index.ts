@@ -16,6 +16,7 @@ import moment from 'moment-timezone'
 import { MessageInfo } from '../types/MessageInfo'
 import achievementChecker from '../achievements/check'
 import { config } from '../config/loader'
+import log from 'loglevel'
 export let commands: Command[] = []
 
 export const client = new Client({
@@ -36,10 +37,10 @@ client.on('ready', async () => {
 	for (const cmdFile of commandsDir) {
 		const cmd = await import(`${path.resolve('./commands')}/${cmdFile}`)
 		commands.push(cmd.default)
-		console.info(`[COMMAND] ${cmd.default.name}`)
+		log.info(`[COMMAND] ${cmd.default.name}`)
 	}
 
-	console.log('[WHATSAPP] Ready on ' + client.info.wid.user)
+	log.info('[WHATSAPP] Ready on ' + client.info.wid.user)
 
 	/*
 	 fetch the last 100 messages to avoid errors
@@ -95,7 +96,7 @@ client.on('message_create', async (message: Message) => {
 			achievementChecker.checkPoopBased(foundUser, poop, message)
 		}
 	} catch (e) {
-		console.error(e)
+		log.error(e)
 	}
 })
 
@@ -157,7 +158,7 @@ async function parseMessage(
 		info.sender = message.author
 	}
 
-	console.log(info)
+	log.info(info)
 
 	if (info.isCommand) {
 		try {
@@ -174,7 +175,7 @@ async function parseMessage(
 }
 
 process.on('SIGINT', async () => {
-	console.log('\n[SIGINT] Terminating process')
+	log.error('\n[SYSTEM] Terminating process due to SIGINT signal')
 	await client.destroy()
 	process.exit(0)
 })

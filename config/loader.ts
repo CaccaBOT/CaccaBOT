@@ -1,6 +1,8 @@
 import fs from 'fs'
 import path from 'path'
 import { Config } from '../types/Config'
+import dotenv from 'dotenv'
+import log from 'loglevel'
 
 export let isLoaded = false
 
@@ -13,9 +15,11 @@ export let config: Config = {
 	whatsappModuleEnabled: false,
 	monthlyPurge: false,
 	timezone: '',
+	loglevel: '',
 }
 
 export function loadConfig() {
+	dotenv.config()
 	try {
 		switch (process.env.ENVIRONMENT) {
 			case 'dev':
@@ -30,14 +34,15 @@ export function loadConfig() {
 				break
 			default:
 				printErrorBanner()
-				console.error(
+				log.error(
 					'[ENVIRONMENT] The application cannot start because no valid environment has been specified',
 				)
 				process.exit(1)
 		}
+		log.setLevel(config.loglevel as log.LogLevelDesc)
 	} catch (e) {
 		printErrorBanner()
-		console.error(
+		log.error(
 			'[CONFIG] The application cannot start because the configuration file was not found',
 		)
 		process.exit(1)
@@ -45,11 +50,11 @@ export function loadConfig() {
 }
 
 function printErrorBanner() {
-	console.error()
-	console.error('███████ ██████  ██████   ██████  ██████  ')
-	console.error('██      ██   ██ ██   ██ ██    ██ ██   ██ ')
-	console.error('█████   ██████  ██████  ██    ██ ██████  ')
-	console.error('██      ██   ██ ██   ██ ██    ██ ██   ██ ')
-	console.error('███████ ██   ██ ██   ██  ██████  ██   ██ ')
-	console.error()
+	log.error()
+	log.error('███████ ██████  ██████   ██████  ██████  ')
+	log.error('██      ██   ██ ██   ██ ██    ██ ██   ██ ')
+	log.error('█████   ██████  ██████  ██    ██ ██████  ')
+	log.error('██      ██   ██ ██   ██ ██    ██ ██   ██ ')
+	log.error('███████ ██   ██ ██   ██  ██████  ██   ██ ')
+	log.error()
 }
