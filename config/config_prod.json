@@ -7,5 +7,6 @@
 	"whatsappModuleEnabled": true,
 	"monthlyPurge": true,
 	"timezone": "Europe/Rome",
-	"loglevel": "info"
+	"loglevel": "info",
+	"logMessages": true
 }

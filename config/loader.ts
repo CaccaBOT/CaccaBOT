@@ -2,7 +2,8 @@ import fs from 'fs'
 import path from 'path'
 import { Config } from '../types/Config'
 import dotenv from 'dotenv'
-import log from 'loglevel'
+import log, { RootLogger } from 'loglevel'
+import moment from 'moment'
 
 export let isLoaded = false
 
@@ -16,6 +17,7 @@ export let config: Config = {
 	monthlyPurge: false,
 	timezone: '',
 	loglevel: '',
+	logMessages: false
 }
 
 export function loadConfig() {
@@ -39,7 +41,7 @@ export function loadConfig() {
 				)
 				process.exit(1)
 		}
-		log.setLevel(config.loglevel as log.LogLevelDesc)
+		configureLogger(log)
 	} catch (e) {
 		printErrorBanner()
 		log.error(
@@ -57,4 +59,32 @@ function printErrorBanner() {
 	log.error('██      ██   ██ ██   ██ ██    ██ ██   ██ ')
 	log.error('███████ ██   ██ ██   ██  ██████  ██   ██ ')
 	log.error()
+}
+
+function configureLogger(log: RootLogger) {
+	const logDir = path.join(__dirname, '..', 'logs')
+	if (!fs.existsSync(logDir)) {
+		fs.mkdirSync(logDir)
+	}
+	const logFile = path.join(logDir, `${moment().tz(config.timezone).format('YYYY-MM-DD')}.log`)
+
+	log.setLevel(config.loglevel as log.LogLevelDesc)
+	let originalFactory = log.methodFactory
+	log.methodFactory = (methodName, logLevel, loggerName) => {
+		let rawMethod = originalFactory(methodName, logLevel, loggerName)
+	
+		return (message) => {
+			let logMessage: any = null
+			if (typeof message == 'object' && message != null) {
+				logMessage = JSON.stringify(message, null, 2)
+				rawMethod(logMessage)
+				fs.appendFileSync(logFile, logMessage + '\n')
+			} else {
+				logMessage = `${moment().tz(config.timezone).format('YYYY-MM-DDTHH:mm:ss')} | ${methodName.toUpperCase()} | ${message}`
+				rawMethod(logMessage)
+				fs.appendFileSync(logFile, logMessage + '\n')
+			}
+		}
+	}
+	log.rebuild()
 }

@@ -49,6 +49,8 @@ onMounted(async () => {
   }
 
   await achievementStore.loadAchievements()
+  // @ts-expect-error - window.umami is defined by the Umami script
+  window.umami.identify({ email: sessionStore.session.username })
 })
 </script>
 

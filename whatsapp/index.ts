@@ -158,7 +158,9 @@ async function parseMessage(
 		info.sender = message.author
 	}
 
-	log.info(info)
+	if (config.logMessages) {
+		log.info(info)
+	}
 
 	if (info.isCommand) {
 		try {

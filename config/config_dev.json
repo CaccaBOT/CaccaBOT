@@ -4,8 +4,9 @@
 	"prefix": "cacca",
 	"serverUrl": "http://localhost:3000",
 	"groupId": "120363272256807045@g.us",
-	"whatsappModuleEnabled": false,
+	"whatsappModuleEnabled": true,
 	"monthlyPurge": false,
 	"timezone": "Europe/Rome",
-	"loglevel": "debug"
+	"loglevel": "debug",
+	"logMessages": true
 }

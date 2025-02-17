@@ -8,4 +8,5 @@ export type Config = {
 	monthlyPurge: boolean
 	timezone: string
 	loglevel: string
+	logMessages: any
 }

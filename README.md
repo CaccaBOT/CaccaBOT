@@ -100,7 +100,8 @@ volumes:
 	"groupId": null,
 	"whatsappModuleEnabled": true,
 	"monthlyPurge": true,
-  "loglevel": "info"
+  "loglevel": "info",
+  "logMessages": true
 }
 ```
 
@@ -109,8 +110,6 @@ volumes:
 `description`: the description of your instance (will appear on the home page)
 
 `prefix`: the magic word for the bot to interpret commands inside the group
-
-`version`: leave this untouched
 
 `serverUrl`: where the server is hosted
 
@@ -121,6 +120,8 @@ volumes:
 `monthlyPurge`: if set to true it will kick and delete all users who have not been active for more than a month at every start of the month
 
 `loglevel`: set this to "info" for standard logging
+
+`logMessages`: set this to true to log all messages sent and received in the group
 
 #### Edit the `.env` file to your liking
 
