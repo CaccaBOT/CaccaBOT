@@ -2,6 +2,9 @@
 import homeImage from "../assets/home.webp"
 import HeroiconsDownload from "~icons/heroicons/arrow-down-tray"
 import { onMounted, ref } from "vue"
+import MdiGithub from '~icons/mdi/github';
+import AntDesignTikTokOutlined from '~icons/ant-design/tik-tok-outlined';
+import SimpleIconsInstagram from '~icons/simple-icons/instagram';
 import { useGlobalStore } from "../stores/global"
 import HeroiconsUserGroup from "~icons/heroicons/user-group?width=24px&height=24px"
 const globalStore = useGlobalStore()
@@ -26,24 +29,12 @@ onMounted(async () => {
 
 <template>
   <div>
-    <div
-      v-if="!globalStore.instance.name"
-      class="loader-wrapper flex h-[85vh] w-full items-center justify-center"
-    >
+    <div v-if="!globalStore.instance.name" class="loader-wrapper flex h-[85vh] w-full items-center justify-center">
       <span class="loading loading-spinner loading-lg"></span>
     </div>
-    <div
-      v-if="globalStore.instance.name"
-      class="home-wrapper flex h-[85vh] w-full flex-col items-center justify-center"
-    >
-      <img
-        alt="CaccaBOT Logo"
-        width="20rem"
-        height="20rem"
-        fetchpriority="high"
-        class="mb-5 w-80"
-        :src="homeImage"
-      />
+    <div v-if="globalStore.instance.name"
+      class="home-wrapper flex h-[85vh] w-full flex-col items-center justify-center">
+      <img alt="CaccaBOT Logo" width="20rem" height="20rem" fetchpriority="high" class="mb-5 w-80" :src="homeImage" />
       <div class="prose text-center">
         <h1 class="mb-2">{{ globalStore.instance.name }}</h1>
         <p class="m-0 mb-4 text-xl">{{ globalStore.instance.description }}</p>
@@ -53,21 +44,20 @@ onMounted(async () => {
         <HeroiconsUserGroup class="text-xl" />
         Join Group
       </button>
-      <button
-        v-show="installPrompt != null"
-        @click="install"
-        class="btn btn-success mt-6 w-80"
-      >
+      <button v-show="installPrompt != null" @click="install" class="btn btn-success mt-6 w-80">
         <HeroiconsDownload class="text-xl" />
         Install
       </button>
-      <a
-        href="https://docs.google.com/forms/d/e/1FAIpQLSdLfTEASEb96vbTRplcNU0Y1PM8QYmdUT7oginiyAdj1skdoQ/viewform"
-        target="_blank"
-        class="link link-info mt-8 underline-offset-2"
-        >Send suggestions here!</a
-      >
+      <a href="https://docs.google.com/forms/d/e/1FAIpQLSdLfTEASEb96vbTRplcNU0Y1PM8QYmdUT7oginiyAdj1skdoQ/viewform"
+        target="_blank" class="link link-info mt-8 underline-offset-2">Send suggestions here!</a>
+        <!-- NICCOLÒ BARDI  NON COLLABORERÀ A LIVELLO CODICALE AL PROGETTO CACCABOT -->
+      <div class="flex text-3xl w-full justify-center mt-5">
+       <a href="https://www.instagram.com/caccabot/" target="_blank"><SimpleIconsInstagram class="mx-2" /></a> 
+        <a href="https://www.tiktok.com/@caccabot" target="_blank"><AntDesignTikTokOutlined class="mx-2" /></a> 
+        <a href="https://github.com/CaccaBOT" target="_blank"><MdiGithub class="mx-2" /></a>
+      </div>
     </div>
+
   </div>
 </template>
 
