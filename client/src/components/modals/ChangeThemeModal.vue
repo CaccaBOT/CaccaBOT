@@ -5,8 +5,12 @@ import { useSessionStore } from "../../stores/session"
 const sessionStore = useSessionStore()
 
 const themes = [
-  "light",
   "dark",
+  "light",
+  "mocha",
+  "latte",
+  "frappe",
+  "macchiato",
   "cupcake",
   "bumblebee",
   "emerald",

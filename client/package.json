@@ -11,6 +11,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@catppuccin/daisyui": "^1.2.1",
     "@programic/vue3-tooltip": "^1.0.0",
     "@tailwindcss/typography": "^0.5.13",
     "@types/three": "^0.166.0",

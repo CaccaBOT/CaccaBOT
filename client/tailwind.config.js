@@ -1,4 +1,6 @@
 /** @type {import('tailwindcss').Config} */
+import catppuccin from '@catppuccin/daisyui'
+
 export default {
   content: ["./src/**/*.{vue,js,ts}"],
   plugins: [require("@tailwindcss/typography"), require("daisyui")],
@@ -36,6 +38,10 @@ export default {
       "dim",
       "nord",
       "sunset",
+      catppuccin('latte'),
+      catppuccin('frappe'),
+      catppuccin('macchiato'),
+      catppuccin('mocha'),
     ],
   },
 }
