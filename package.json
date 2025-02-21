@@ -1,6 +1,6 @@
 {
 	"name": "caccabot",
-	"version": "7.1.2",
+	"version": "7.1.3",
 	"description": "The official CaccaBOT project",
 	"main": "index.ts",
 	"scripts": {

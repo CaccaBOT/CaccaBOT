@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import router from "../router/router"
 import HeroiconsTrophy from "~icons/heroicons/trophy"
 import HeroiconsBookOpen from "~icons/heroicons/book-open"
@@ -153,6 +153,11 @@ const menuItems = ref<MenuItem[]>([
   }
 ])
 
+onMounted(() => {
+  document.querySelector('body').addEventListener('click', (event) => {
+    document.querySelectorAll('details').forEach(x => x.removeAttribute('open'))
+  })
+})
 </script>
 
 <template>

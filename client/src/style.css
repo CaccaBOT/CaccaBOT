@@ -3,6 +3,13 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --rarity-legendary: #ffd600;
+  --rarity-epic: #9500ff;
+  --rarity-rare: #0068ff;
+  --rarity-common: #808080;
+}
+
 * {
   scrollbar-color: initial !important;
 }
@@ -25,35 +32,35 @@ body {
 }
 
 .rarity-legendary {
-  border: 8px solid #ffd600;
+  border: 8px solid var(--rarity-legendary);
 }
 
 .rarity-epic {
-  border: 8px solid #9500ff;
+  border: 8px solid var(--rarity-epic);
 }
 
 .rarity-rare {
-  border: 8px solid #0068ff;
+  border: 8px solid var(--rarity-rare);
 }
 
 .rarity-common {
-  border: 8px solid #808080;
+  border: 8px solid var(--rarity-common);
 }
 
 .text-rarity-legendary {
-  color: #ffd600;
+  color: var(--rarity-legendary);
 }
 
 .text-rarity-epic {
-  color: #9500ff;
+  color: var(--rarity-epic);
 }
 
 .text-rarity-rare {
-  color: #0068ff;
+  color: var(--rarity-rare);
 }
 
 .text-rarity-common {
-  color: #808080;
+  color: var(--rarity-common);
 }
 
 .loading {
@@ -97,11 +104,11 @@ body {
 @keyframes bring-down {
   0% {
     right: 50%;
-    transform: translateX(50%) translateY(-100%)
+    transform: translateX(50%) translateY(-100%);
   }
   100% {
     right: 50%;
-    transform: translateX(50%) translateY(120%)
+    transform: translateX(50%) translateY(120%);
   }
 }
 
@@ -114,4 +121,8 @@ body {
     right: 50%;
     transform: translateX(50%) translateY(-100%) rotateY(1turn);
   }
+}
+
+.apexcharts-tooltip-candlestick {
+  display: none;
 }

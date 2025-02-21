@@ -7,7 +7,9 @@ import AntDesignTikTokOutlined from '~icons/ant-design/tik-tok-outlined';
 import SimpleIconsInstagram from '~icons/simple-icons/instagram';
 import { useGlobalStore } from "../stores/global"
 import HeroiconsUserGroup from "~icons/heroicons/user-group?width=24px&height=24px"
+import { useSessionStore } from "../stores/session";
 const globalStore = useGlobalStore()
+const sessionStore = useSessionStore()
 
 let installPrompt = ref(null)
 
@@ -40,7 +42,7 @@ onMounted(async () => {
         <p class="m-0 mb-4 text-xl">{{ globalStore.instance.description }}</p>
         <p class="m-0 text-2xl">{{ globalStore.instance.version }}</p>
       </div>
-      <button @click="joinGroup" class="btn btn-success mt-6 w-80">
+      <button v-if="!sessionStore.session.id" @click="joinGroup" class="btn btn-success mt-6 w-80">
         <HeroiconsUserGroup class="text-xl" />
         Join Group
       </button>
@@ -50,11 +52,16 @@ onMounted(async () => {
       </button>
       <a href="https://docs.google.com/forms/d/e/1FAIpQLSdLfTEASEb96vbTRplcNU0Y1PM8QYmdUT7oginiyAdj1skdoQ/viewform"
         target="_blank" class="link link-info mt-8 underline-offset-2">Send suggestions here!</a>
-        <!-- NICCOLÒ BARDI  NON COLLABORERÀ A LIVELLO CODICALE AL PROGETTO CACCABOT -->
       <div class="flex text-3xl w-full justify-center mt-5">
-       <a href="https://www.instagram.com/caccabot/" target="_blank"><SimpleIconsInstagram class="mx-2" /></a> 
-        <a href="https://www.tiktok.com/@caccabot" target="_blank"><AntDesignTikTokOutlined class="mx-2" /></a> 
-        <a href="https://github.com/CaccaBOT" target="_blank"><MdiGithub class="mx-2" /></a>
+        <a href="https://www.instagram.com/caccabot/" target="_blank">
+          <SimpleIconsInstagram class="mx-2" />
+        </a>
+        <a href="https://www.tiktok.com/@caccabot" target="_blank">
+          <AntDesignTikTokOutlined class="mx-2" />
+        </a>
+        <a href="https://github.com/CaccaBOT" target="_blank">
+          <MdiGithub class="mx-2" />
+        </a>
       </div>
     </div>
 
