@@ -45,7 +45,7 @@ export default defineConfig({
               cacheName: "public-assets",
               expiration: {
                 maxEntries: 50,
-                maxAgeSeconds: 60 * 60 * 2, // 2 hours
+                maxAgeSeconds: 60 * 60 * 12, // 12 hours
               },
             },
           },

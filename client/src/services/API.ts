@@ -6,6 +6,14 @@ export const baseAPIURL = `${baseURL}/api`
 export default class API {
   sessionStore = useSessionStore()
 
+  async getCollectible(id: number) {
+    return await fetch(`${baseAPIURL}/collectible/${id}`)
+  }
+
+  async getAllCollectibles() {
+    return await fetch(`${baseAPIURL}/collectible/list`)
+  }
+
   async convertCollectibles(collectibles: number[]) {
     return await fetch(`${baseAPIURL}/collectible/convert`, {
       method: "POST",

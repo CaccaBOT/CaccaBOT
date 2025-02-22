@@ -59,6 +59,11 @@ const routes = [
     name: "market",
   },
   {
+    path: "/cards/market/order/:id",
+    component: () => import("../views/cards/Order.vue"),
+    name: "order",
+  },
+  {
     path: "/cards/convert",
     component: () => import("../views/cards/Convert.vue"),
     name: "convert",

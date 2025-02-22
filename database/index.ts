@@ -47,6 +47,10 @@ export function initDatabase() {
 	}
 }
 
+export function getCollectible(collectibleId: number) {
+	return db.prepare(`SELECT * FROM collectible WHERE id = ?`).get(collectibleId)
+}
+
 export function getCollectibleOwnerships(userId: string): UserCollectible[] {
 	return db.prepare(`SELECT * FROM user_collectible WHERE user_id = ?`).all(userId)
 }
