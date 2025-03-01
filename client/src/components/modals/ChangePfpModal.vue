@@ -69,7 +69,7 @@ function onFileChange(event: Event) {
         <h1>Change Profile Picture</h1>
       </div>
       <div
-        class="custom-shadow h-24 w-24 overflow-hidden rounded-full ring ring-primary ring-offset-2 ring-offset-base-100"
+        class="custom-shadow h-24 w-24 overflow-hidden rounded-full ring-3 ring-primary ring-offset-2 ring-offset-base-100"
       >
         <img
           alt="Profile Picture"

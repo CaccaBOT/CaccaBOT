@@ -34,7 +34,7 @@ function shouldShowToggleArrow() {
     <div
       class="inventory m-5 flex flex-row flex-wrap justify-center md:justify-start"
       :style="{
-        height: inventoryExpanded ? 'auto' : '240px',
+        height: inventoryExpanded ? 'auto' : '245px',
         overflow: inventoryExpanded ? 'visible' : 'hidden',
       }"
     >
@@ -43,13 +43,13 @@ function shouldShowToggleArrow() {
         v-for="collectible of userCollectibles"
       >
         <span
-          class="absolute left-[-5%] top-[-5%] h-8 w-8 rounded-full bg-info text-center font-bold text-black"
+          class="absolute left-[-5%] top-[10%] h-8 w-8 rounded-full bg-info text-center font-bold text-black"
           >{{ collectible.quantity }}</span
         >
         <img
           alt="Collectible image"
           :class="getCardRarityClass(collectible.rarity_id)"
-          class="collectible m-0 rounded-2xl"
+          class="collectible mb-0 rounded-2xl"
           :src="collectible.asset_url"
         />
         <h4 class="mt-0 p-0 text-center">{{ collectible.name }}</h4>
@@ -69,8 +69,4 @@ function shouldShowToggleArrow() {
 </template>
 
 <style scoped>
-.rotate-180 {
-  transform: rotate(180deg);
-  transition: transform 0.3s ease;
-}
 </style>

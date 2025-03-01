@@ -18,7 +18,7 @@ async function change() {
     newUsername.value = ""
     document
       .querySelectorAll("input")
-      .forEach((x) => x.classList.add("input-bordered", "input-error"))
+      .forEach((x) => x.classList.add("input-error"))
     return
   }
 
@@ -30,7 +30,7 @@ async function change() {
     newUsername.value = ""
     document
       .querySelectorAll("input")
-      .forEach((x) => x.classList.add("input-bordered", "input-error"))
+      .forEach((x) => x.classList.add("input-error"))
   } else {
     sessionStore.showChangeUsernameModal = false
     sessionStore.showLoginModal = false
@@ -58,25 +58,23 @@ function validate() {
     @click="dismissModal($event)"
   >
     <div
-      class="mx-auto flex w-[85vw] flex-col items-center gap-4 rounded-2xl bg-base-300 p-4 text-center shadow-xl sm:w-2/3 md:h-[50vh] md:w-[50vw] lg:h-[35vh] lg:w-[40vw] xl:w-[30vw]"
+      class="mx-auto flex w-[85vw] flex-col items-center gap-4 rounded-2xl bg-base-300 p-4 shadow-xl sm:w-2/3 md:h-[50vh] md:w-[50vw] lg:h-[35vh] lg:w-[40vw] xl:w-[30vw]"
     >
       <div class="prose mx-auto my-4">
         <h1>Change Username</h1>
       </div>
       <div
-        class="inputs my-5 flex h-[100px] w-3/4 flex-grow flex-col items-center justify-center gap-4"
+        class="inputs my-5 flex h-[100px] w-3/4 grow flex-col items-center justify-center gap-4"
       >
-        <label class="form-control w-full">
-          <div class="label">
-            <span class="label-text">New Username</span>
-          </div>
+        <fieldset class="fieldset w-full">
+          <legend class="fieldset-legend">New Username</legend>
           <input
             v-model="newUsername"
             type="text"
             placeholder="MasterPooper420"
-            class="input input-bordered w-full"
+            class="input w-full"
           />
-        </label>
+        </fieldset>
       </div>
       <button
         :disabled="!validate()"

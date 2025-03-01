@@ -92,3 +92,6 @@ function toggleAchievements() {
     </div>
   </div>
 </template>
+
+<style scoped>
+</style>

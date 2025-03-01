@@ -8,38 +8,16 @@ const themes = [
   "dark",
   "light",
   "mocha",
-  "latte",
-  "frappe",
-  "macchiato",
-  "cupcake",
-  "bumblebee",
-  "emerald",
-  "corporate",
   "synthwave",
-  "retro",
   "cyberpunk",
   "valentine",
   "halloween",
-  "garden",
   "forest",
   "aqua",
-  "lofi",
-  "pastel",
-  "fantasy",
-  "wireframe",
-  "black",
   "luxury",
   "dracula",
-  "cmyk",
-  "autumn",
-  "business",
-  "acid",
-  "lemonade",
   "night",
-  "coffee",
-  "winter",
   "dim",
-  "nord",
   "sunset",
 ]
 
@@ -72,21 +50,19 @@ theme.value = localStorage.getItem("theme")
     @click="dismissModal($event)"
   >
     <div
-      class="mx-auto flex h-[30vh] w-[85vw] flex-col items-center gap-4 rounded-2xl bg-base-300 p-4 text-center shadow-xl sm:w-2/3 md:w-[50vw] lg:w-[40vw] xl:w-[30vw]"
+      class="mx-auto flex h-[30vh] w-[85vw] flex-col items-center gap-4 rounded-2xl bg-base-300 p-4 shadow-xl sm:w-2/3 md:w-[50vw] lg:w-[40vw] xl:w-[30vw]"
     >
       <div class="prose mx-auto my-4">
         <h1>Change Theme</h1>
       </div>
-      <label class="form-control w-full max-w-xs">
-        <div class="label">
-          <span class="label-text">Theme</span>
-        </div>
-        <select v-model="theme" class="select select-bordered">
+      <fieldset class="fieldset w-full max-w-xs">
+        <legend class="fieldset-legend">Theme</legend>
+        <select v-model="theme" class="select">
           <option v-for="theme in themes">
             {{ capitalizeFirstLetter(theme) }}
           </option>
         </select>
-      </label>
+      </fieldset>
     </div>
   </div>
 </template>

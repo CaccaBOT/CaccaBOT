@@ -54,11 +54,12 @@ onMounted(() => {
 
 <template>
   <div class="admin-console-wrapper h-[85vh] w-[100vw]">
-    <div class="flex flex-col w-11/12 mx-auto h-[85vh] items-center justify-between text-lg crt">
+    <div class="flex flex-col w-11/12 mx-auto h-[85vh] items-center justify-between text-lg">
       <textarea id="output" v-model="context"
-        class="resize-none outline-none w-full h-full rounded-tl-lg rounded-tr-lg p-2 text-green-500" readonly></textarea>
+        class="resize-none bg-neutral-950 outline-hidden w-full h-full rounded-tl-lg rounded-tr-lg p-2 text-green-500" readonly></textarea>
+        <hr>
         <form class="w-full" @submit.prevent="execute">
-          <input id="prompt" @keydown="callMemory" v-model="prompt" class="w-full outline-none rounded-br-lg rounded-bl-lg p-2 text-green-500" type="text">
+          <input id="prompt" @keydown="callMemory" v-model="prompt" class="w-full bg-neutral-950 outline-hidden rounded-br-lg rounded-bl-lg p-2 text-green-500" type="text">
         </form>
     </div>
   </div>

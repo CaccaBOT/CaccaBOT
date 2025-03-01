@@ -8,9 +8,8 @@ const props = defineProps<{
 
 <template>
   <div class="text-md badge badge-info mt-6 p-4">
-    <strong>{{ props.poops }}</strong
-    >&nbsp; 💩 | &nbsp;<strong>{{ props.money }}</strong
-    >&nbsp; <img class="merdollar h-[20px] w-[20px]" :src="merdollar" />
+    <strong>{{ props.poops }}</strong> 💩 | <strong>{{ props.money }}</strong>
+    <img class="merdollar h-[20px] w-[20px]" :src="merdollar" />
   </div>
 </template>
 

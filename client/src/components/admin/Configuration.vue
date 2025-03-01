@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { ref } from "vue"
+import { ref } from "vue";
 
 //@ts-ignore
-const timezones = Intl.supportedValuesOf("timeZone")
+const timezones = Intl.supportedValuesOf("timeZone");
 const config = ref({
   prefix: null,
   serverUrl: null,
@@ -10,11 +10,11 @@ const config = ref({
   whatsappModuleEnabled: false,
   monthlyPurge: false,
   timezone: null,
-})
+});
 
 function autoDetect() {
-  config.value.serverUrl = `${window.location.protocol}//${window.location.href.split("/").slice(1, 3).join("")}`
-  config.value.timezone = Intl.DateTimeFormat().resolvedOptions().timeZone
+  config.value.serverUrl = `${window.location.protocol}//${window.location.href.split("/").slice(1, 3).join("")}`;
+  config.value.timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 }
 
 function save() {
@@ -27,79 +27,43 @@ function save() {
     <div class="section prose m-2 rounded-2xl bg-base-200 p-5 text-center">
       <h1 class="mb-2">Configuration</h1>
       <div class="not-prose p-6">
-        <form class="form-control" @submit.prevent="() => {}">
-          <label class="form-control">
-            <div class="label">
-              <span class="label-text">BOT Prefix</span>
-            </div>
-            <input
-              v-model="config.prefix"
-              type="text"
-              placeholder="cacca"
-              class="input input-bordered"
-              required
-            />
-          </label>
-          <label class="form-control">
-            <div class="label">
-              <span class="label-text">Server URL</span>
-            </div>
-            <input
-              v-model="config.serverUrl"
-              type="text"
-              placeholder="https://yourinstance.dev"
-              class="input input-bordered"
-              required
-            />
-          </label>
-          <label class="form-control">
-            <div class="label">
-              <span class="label-text">Group ID</span>
-            </div>
-            <input
-              v-model="config.groupId"
-              type="text"
-              placeholder="123456789012345678@g.us"
-              class="input input-bordered"
-              required
-            />
-          </label>
-          <label class="form-control">
-            <div class="label">
-              <span class="label-text">Server Timezone</span>
-            </div>
-            <select
-              v-model="config.timezone"
-              required
-              class="select select-bordered"
-            >
+        <form class="form-control" @submit.prevent="() => { }">
+          <fieldset class="fieldset">
+            <label class="label" for="prefix">Prefix</label>
+            <input id="prefix" v-model="config.prefix" type="text" placeholder="cacca" class="input" required />
+          </fieldset>
+          <fieldset class="fieldset">
+            <label class="label" for="serverUrl">Server URL</label>
+            <input id="serverUrl" v-model="config.serverUrl" type="text" placeholder="https://yourinstance.dev"
+              class="input" required />
+          </fieldset>
+          <fieldset class="fieldset">
+            <label class="label" for="groupId">Group ID</label>
+            <input id="groupId" v-model="config.groupId" type="text" placeholder="123456789012345678@g.us" class="input"
+              required />
+          </fieldset>
+          <fieldset class="fieldset">
+            <label class="label" for="timezone">Server Timezone</label>
+            <select id="timezone" v-model="config.timezone" required class="select">
               <option disabled selected>Select a timezone</option>
-              <option v-for="timezone in timezones">{{ timezone }}</option>
+              <option v-for="timezone in timezones" :key="timezone">{{ timezone }}</option>
             </select>
-          </label>
+          </fieldset>
           <div class="divider"></div>
-          <label class="label cursor-pointer">
-            <span class="label-text text-lg">Whatsapp Module</span>
-            <input
-              v-model="config.whatsappModuleEnabled"
-              type="checkbox"
-              class="toggle toggle-success"
-            />
-          </label>
-          <label class="label cursor-pointer">
-            <span class="label-text text-lg">Monthly Purge</span>
-            <input
-              v-model="config.monthlyPurge"
-              type="checkbox"
-              class="toggle toggle-success"
-            />
-          </label>
-          <button @click="autoDetect()" class="btn btn-primary mt-8 w-96">
-            Auto-Detect
-          </button>
-          <button @click="save()" class="btn btn-success mt-2 w-96">
-            Save
-          </button>
+          <div class="flex flex-col">
+            <label class="label cursor-pointer">
+              <span class="label-text text-lg">Whatsapp Module</span>
+              <input v-model="config.whatsappModuleEnabled" type="checkbox" class="toggle toggle-success" />
+            </label>
+            <label class="label cursor-pointer">
+              <span class="label-text text-lg">Monthly Purge</span>
+              <input v-model="config.monthlyPurge" type="checkbox" class="toggle toggle-success" />
+            </label>
+          </div>
+          <div class="join mt-8 w-96">
+            <button @click="autoDetect()" class="btn join-item btn-primary">Auto-Detect</button>
+            <button @click="save()" class="btn join-item btn-success">Save</button>
+          </div>
         </form>
       </div>
     </div>

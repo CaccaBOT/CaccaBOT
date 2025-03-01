@@ -15,7 +15,7 @@ const globalStore = useGlobalStore()
 <template>
   <div
     v-show="stats.monthlyLeaderboardPosition != null"
-    class="card stats mx-auto my-5 flex w-5/6 bg-base-200 text-center shadow sm:flex-col md:flex-row"
+    class="card stats mx-auto my-5 flex w-5/6 bg-base-200 text-center shadow-sm sm:flex-col md:flex-row"
   >
     <div class="stat">
       <div class="stat-figure text-sky-500">

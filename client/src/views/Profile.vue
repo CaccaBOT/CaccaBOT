@@ -19,7 +19,6 @@ const { client } = useAPIStore()
 const sessionStore = useSessionStore()
 const userStats = ref({} as UserStats)
 const userCollectibles = ref([])
-const isEditingUsername = ref(false)
 const isEditingBio = ref(false)
 const userAchievements = ref([])
 const monthlyUserPoops = ref([] as Poop[])
@@ -90,7 +89,7 @@ onMounted(async () => {
       <div class="profile-header mx-auto mt-8 text-center">
         <div class="avatar">
           <div
-            class="custom-shadow w-24 rounded-full ring ring-primary ring-offset-2 ring-offset-base-100"
+            class="custom-shadow w-24 rounded-full ring-3 ring-primary ring-offset-2 ring-offset-base-100"
           >
             <img
               alt="Profile picture"
@@ -115,13 +114,12 @@ onMounted(async () => {
         </div>
         <div v-show="isOwnProfile() ? sessionStore.session.username : globalStore.profile.username" class="username">
           <h1
-            class="mx-auto w-max outline-none"
+            class="mx-auto mt-2 w-max outline-hidden"
             :class="{ 'text-warning': isAdmin() }"
-            :contenteditable="isEditingUsername"
           >
             {{ isOwnProfile() ? sessionStore.session.username : globalStore.profile.username }}
             <HeroiconsPencil
-              v-show="isOwnProfile() && !isEditingUsername"
+              v-show="isOwnProfile()"
               class="ml-1 inline cursor-pointer text-[1.25rem]"
               @click="sessionStore.showChangeUsernameModal = true"
             />

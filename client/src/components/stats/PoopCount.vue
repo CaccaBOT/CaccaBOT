@@ -22,7 +22,7 @@ function capitalizeFirstLetter(string: string) {
 
 <template>
   <div class="poop-count-wrapper w-max">
-    <div class="stats bg-base-300 shadow">
+    <div class="stats bg-base-300 shadow-sm">
       <div class="stat text-center">
         <div class="stat-title">
           {{ capitalizeFirstLetter(props.frequency) }} Poops

@@ -24,7 +24,7 @@ const loadUsers = async () => {
 }
 
 function getUser(id: string): User {
-  return users.value.find((u) => u.id === id)
+    return users.value.find((u) => u.id === id)
 }
 
 onMounted(() => {
@@ -67,19 +67,18 @@ onMounted(() => {
                             <div class="flex flex-row items-center gap-3">
                                 <div class="avatar">
                                     <div class="rounded-full h-12 w-12">
-                                        <img :src="getUser(poop.user_id)?.pfp ?? noPfp"
-                                            alt="Profile Picture" />
+                                        <img :src="getUser(poop.user_id)?.pfp ?? noPfp" alt="Profile Picture" />
                                     </div>
                                 </div>
                                 <div>
-                                    <div class="font-bold">{{getUser(poop.user_id)?.username}}</div>
+                                    <div class="font-bold">{{ getUser(poop.user_id)?.username }}</div>
                                 </div>
                             </div>
                         </td>
-                        <td>{{formatDate(poop.timestamp)}}</td>
+                        <td>{{ formatDate(poop.timestamp) }}</td>
                         <th>
-                            <button onclick="alert('ti piacerebbe vero?')" class="btn btn-square btn-error">
-                                <HeroiconsTrash/>
+                            <button class="btn btn-square btn-error">
+                                <HeroiconsTrash />
                             </button>
                         </th>
                     </tr>

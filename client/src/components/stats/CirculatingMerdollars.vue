@@ -8,7 +8,7 @@ const props = defineProps<{
 
 <template>
   <div class="circulating-merdollars-wrapper w-max">
-    <div class="stats bg-base-300 text-center shadow">
+    <div class="stats bg-base-300 text-center shadow-sm">
       <div class="stat">
         <div class="stat-title">Circulating Merdollars</div>
         <div class="stat-value flex items-center justify-center text-success">

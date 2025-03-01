@@ -7,7 +7,7 @@ const props = defineProps<{
 
 <template>
   <div class="user-count-wrapper w-max">
-    <div class="stats bg-base-300 text-center shadow">
+    <div class="stats bg-base-300 text-center shadow-sm">
       <div class="stat">
         <div class="stat-title">
           {{ props.isMonthly ? "Monthly" : "" }} Users

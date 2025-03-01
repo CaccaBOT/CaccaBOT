@@ -46,12 +46,12 @@ onMounted(async () => {
         <div class="card-body mx-auto flex flex-col">
           <div class="avatar mx-auto">
             <div
-              class="mb-2 w-20 rounded-full ring ring-primary ring-offset-2 ring-offset-base-100"
+              class="mb-2 w-20 rounded-full ring-3 ring-primary ring-offset-2 ring-offset-base-100"
             >
               <img alt="Profile picture" :src="user.pfp ?? noPfp" />
             </div>
           </div>
-          <div class="h-100 flex flex-col items-center">
+          <div class="flex flex-col items-center">
             <h2 class="card-title" :class="{'text-warning': user.admin}">{{ user.username }}</h2>
             <UserStatsBadge :poops="user.poops" :money="user.money" />
           </div>

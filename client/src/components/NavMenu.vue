@@ -28,12 +28,12 @@ function logout() {
 <template>
   <div
     v-show="sessionStore.session.id && sessionStore.showNavMenu"
-    class="nav-menu-wrapper absolute right-[5vw] top-[8.5vh] z-[100]"
+    class="nav-menu-wrapper absolute right-[5vw] top-[8.5vh] z-100"
   >
     <ul
       @click="sessionStore.showNavMenu = false"
       tabindex="0"
-      class="menu dropdown-content z-[1] mt-3 w-52 rounded-box bg-base-300 p-2 shadow"
+      class="menu dropdown-content z-1 mt-3 w-52 rounded-box bg-base-300 p-2 shadow-sm"
     >
       <li>
         <button @click="router.push('/profile/own')">

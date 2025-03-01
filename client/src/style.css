@@ -1,7 +1,19 @@
-@import "https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&display=swap";
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&display=swap'
+  layer(base);
+@import 'tailwindcss';
+@plugin "@tailwindcss/typography";
+@plugin "daisyui" {
+  themes: dark --default, light, synthwave, cyberpunk, valentine, halloween, forest, aqua, luxury, dracula, night, dim, sunset;
+}
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentColor);
+  }
+}
 
 :root {
   --rarity-legendary: #ffd600;
@@ -121,6 +133,11 @@ body {
     right: 50%;
     transform: translateX(50%) translateY(-100%) rotateY(1turn);
   }
+}
+
+.rotate-180 {
+  transform: rotate(360deg);
+  transition: transform 0.3s ease;
 }
 
 .apexcharts-tooltip-candlestick {

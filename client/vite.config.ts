@@ -3,11 +3,13 @@ import vue from "@vitejs/plugin-vue"
 import Icons from "unplugin-icons/vite"
 import { VitePWA } from "vite-plugin-pwa"
 import { viteStaticCopy } from "vite-plugin-static-copy"
+import tailwindcss from '@tailwindcss/vite'
 
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
     vue(),
+    tailwindcss(),
     Icons({
       compiler: "vue3",
       autoInstall: true,

@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { Card } from "../../types/Card"
-import { getCardRarityClass } from "../../services/collectibleService"
 import merdollar from '../../assets/merdollar.webp'
 import router from "../../router/router";
 
@@ -32,7 +31,7 @@ const props = defineProps<{
                 </div>
             </div>
             <div class="card-actions justify-center mt-5">
-                <RouterLink class="w-full" :to="`${router.currentRoute.value.fullPath}/order/${collectible.id}`">
+                <RouterLink class="w-full" :to="`${router.currentRoute.value.fullPath}cards/market/order/${collectible.id}`">
                     <button class="btn btn-primary w-10/12 mb-5 text-lg">Trade</button>
                 </RouterLink>
             </div>
@@ -41,15 +40,4 @@ const props = defineProps<{
 </template>
 
 <style scoped>
-.collectible {
-    user-select: none;
-}
-
-.selected-count {
-    background: rgba(255, 255, 255, 0.25);
-    box-shadow: 0 8px 32px 1 rgba(31, 38, 135, 0.37);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.18);
-}
 </style>

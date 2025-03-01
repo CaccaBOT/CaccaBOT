@@ -161,14 +161,14 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="header-wrapper w-full">
+  <div class="header-wrapper w-full flex">
     <div class="navbar navbar-start mx-auto mb-5 mt-4 w-11/12 rounded-2xl bg-base-300 shadow-2xl">
-      <div class="xl:navbar-start">
+      <div class="xl:navbar-start flex flex-nowrap">
         <div class="dropdown">
           <div tabindex="0" class="btn btn-ghost lg:hidden">
             <HugeiconsMenu02 class="text-xl" />
           </div>
-          <ul class="menu dropdown-content z-20 mt-3 w-52 rounded-box bg-base-300 p-2 shadow">
+          <ul class="menu dropdown-content z-20 mt-3 w-52 rounded-box bg-base-300 p-2 shadow-sm">
             <li v-for="item in menuItems" :key="item.route" class="mx-2"
               :class="{ [item.class]: isActive(item.route),
                 'hidden': !canAccess(item) }">
@@ -226,7 +226,7 @@ onMounted(() => {
         <div @click="
           sessionStore.session.id != null ? toggleNavMenu() : showLoginModal()
           " class="avatar absolute right-[4vw]">
-          <div class="w-16 rounded-full bg-base-300 ring ring-primary ring-offset-2 ring-offset-base-100">
+          <div class="w-16 rounded-full bg-base-300 ring-3 ring-primary ring-offset-2 ring-offset-base-100">
             <img alt="CaccaBOT Logo" fetchpriority="high" :src="sessionStore.session.pfp ?? noPfp" />
           </div>
         </div>
