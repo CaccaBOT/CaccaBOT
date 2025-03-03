@@ -4,9 +4,12 @@ import { useAPIStore } from '../../stores/api'
 import noPfp from '../../assets/no_pfp.webp'
 import { formatDate } from '../../utils/dateFormatter'
 import { User } from '../../types/User'
-import HeroiconsTrash from '~icons/heroicons/trash?width=24px&height=24px';
+import HeroiconsTrash from '~icons/heroicons/trash'
+import { Poop } from '../../types/Profile'
+import { useToast } from "vue-toastification"
 
 const { client } = useAPIStore()
+const toast = useToast()
 
 let poops = ref([])
 let users = ref([])
@@ -25,6 +28,15 @@ const loadUsers = async () => {
 
 function getUser(id: string): User {
     return users.value.find((u) => u.id === id)
+}
+
+async function deletePoop(poop: Poop) {
+    const response = await client.deletePoop(poop.id)
+    if (!response.ok) {
+        toast.error("Failed to delete poop")
+        return
+    }
+    poops.value = poops.value.filter((p) => p.id !== poop.id)
 }
 
 onMounted(() => {
@@ -51,7 +63,7 @@ onMounted(() => {
 <template>
     <div class="poop-table-wrapper">
         <div class="overflow-x-auto">
-            <table class="table-xl table w-full text-center">
+            <table class="table w-full text-center">
                 <thead class="text-lg">
                     <tr>
                         <th>ID</th>
@@ -77,7 +89,7 @@ onMounted(() => {
                         </td>
                         <td>{{ formatDate(poop.timestamp) }}</td>
                         <th>
-                            <button class="btn btn-square btn-error">
+                            <button @click="deletePoop(poop)" class="btn btn-square btn-error">
                                 <HeroiconsTrash />
                             </button>
                         </th>

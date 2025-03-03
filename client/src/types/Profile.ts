@@ -10,7 +10,7 @@ export type Profile = {
 }
 
 export type Poop = {
-  id: string
+  id: number
   timestamp: string
   user_id: string
 }

@@ -6,6 +6,15 @@ export const baseAPIURL = `${baseURL}/api`
 export default class API {
   sessionStore = useSessionStore()
 
+  async deletePoop(id: number) {
+    return await fetch(`${baseAPIURL}/admin/poop/${id}`, {
+      method: "DELETE",
+      headers: {
+        "X-Auth-Token": this.sessionStore.session.token,
+      },
+    })
+  }
+
   async getCollectible(id: number) {
     return await fetch(`${baseAPIURL}/collectible/${id}`)
   }

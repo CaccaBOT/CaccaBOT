@@ -47,6 +47,10 @@ export function initDatabase() {
 	}
 }
 
+export function deletePoop(poopId: number) {
+	db.prepare(`DELETE FROM poop WHERE id = ?`).run(poopId)
+}
+
 export function getCollectible(collectibleId: number) {
 	return db.prepare(`SELECT * FROM collectible WHERE id = ?`).get(collectibleId)
 }

@@ -1,10 +1,9 @@
 <script setup lang="ts">
-import router from "../../router/router";
-import noPfp from "../../assets/no_pfp.webp";
+import router from "../../router/router"
 import { ref } from "vue";
-import { useSessionStore } from "../../stores/session";
-import { useAPIStore } from "../../stores/api";
-import { useToast } from "vue-toastification";
+import { useSessionStore } from "../../stores/session"
+import { useAPIStore } from "../../stores/api"
+import { useToast } from "vue-toastification"
 const sessionStore = useSessionStore();
 const { client } = useAPIStore();
 const toast = useToast();
