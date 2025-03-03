@@ -36,7 +36,7 @@ onMounted(async () => {
     </div>
     <div v-if="globalStore.instance.name"
       class="home-wrapper flex h-[85vh] w-full flex-col items-center justify-center">
-      <img alt="CaccaBOT Logo" fetchpriority="high" class="mb-5 sm:w-90 xs:w-64" :src="homeImage" />
+      <img alt="CaccaBOT Logo" fetchpriority="high" class="mb-5 sm:w-90 w-64" :src="homeImage" />
       <div class="prose text-center">
         <h1 class="mb-2">{{ globalStore.instance.name }}</h1>
         <p class="m-0 mb-4 p-2 text-xl">{{ globalStore.instance.description }}</p>
