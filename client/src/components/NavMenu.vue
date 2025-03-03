@@ -5,8 +5,11 @@ import HeroiconsUser from "~icons/heroicons/user"
 import MaterialSymbolsPassword from "~icons/material-symbols/password"
 import { useSessionStore } from "../stores/session"
 import HeroiconsPaintBrush from "~icons/heroicons/paint-brush"
+import { ref, watch, nextTick } from "vue"
+import gsap from "gsap"
 
 const sessionStore = useSessionStore()
+const navMenu = ref<HTMLElement | null>(null)
 
 function showChangePasswordModal() {
   if (sessionStore.session.id) {
@@ -23,11 +26,38 @@ function logout() {
   sessionStore.showLoginModal = false
   router.push("/leaderboard")
 }
+
+watch(
+  () => sessionStore.showNavMenu,
+  async (newVal) => {
+    await nextTick()
+
+    if (newVal && navMenu.value) {
+      gsap.fromTo(
+        navMenu.value,
+        { opacity: 0, y: -30, x: 10, scale: 0.75 },
+        { opacity: 1, y: 0, x: 0, scale: 1, duration: 0.3, ease: "power2.out" }
+      )
+    } else if (navMenu.value) {
+      gsap.to(navMenu.value, {
+        opacity: 0,
+        y: -10,
+        scale: 0.95,
+        duration: 0.2,
+        ease: "power2.in",
+        onComplete: () => {
+          sessionStore.showNavMenu = false
+        },
+      })
+    }
+  }
+)
 </script>
 
 <template>
   <div
-    v-show="sessionStore.session.id && sessionStore.showNavMenu"
+    v-if="sessionStore.session.id && sessionStore.showNavMenu"
+    ref="navMenu"
     class="nav-menu-wrapper absolute right-[5vw] top-[8.5vh] z-100"
   >
     <ul
@@ -62,5 +92,3 @@ function logout() {
     </ul>
   </div>
 </template>
-
-<style scoped></style>

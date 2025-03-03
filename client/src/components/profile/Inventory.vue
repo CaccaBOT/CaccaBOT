@@ -1,25 +1,35 @@
 <script setup lang="ts">
-import { ref } from "vue"
-import { Card } from "../../types/Card"
-import { getCardRarityClass } from "../../services/collectibleService"
-import HeroiconsChevronDown16Solid from "~icons/heroicons/chevron-down-16-solid"
+import { ref, onMounted, watch, nextTick } from "vue";
+import { gsap } from "gsap";
+import { Card } from "../../types/Card";
+import { getCardRarityClass } from "../../services/collectibleService";
+import HeroiconsChevronDown16Solid from "~icons/heroicons/chevron-down-16-solid";
 
-const props = defineProps<{
-  userCollectibles: Card[]
-}>()
-const inventoryExpanded = ref(false)
+const props = defineProps<{ userCollectibles: Card[] }>();
+const inventoryExpanded = ref(false);
+
 function toggleInventory() {
-  inventoryExpanded.value = !inventoryExpanded.value
+  inventoryExpanded.value = !inventoryExpanded.value;
 }
-function shouldShowToggleArrow() {
-  if (document.querySelector(".inventory")) {
-    if (document.querySelector(".inventory").clientHeight > 250) {
-      inventoryExpanded.value = false
-    }
-  }
 
-  return true
+function animateInventory(expanded: boolean) {
+  nextTick(() => {
+    gsap.to(".inventory", {
+      height: expanded ? "auto" : "245px",
+      duration: 0.5,
+      ease: "power2.inOut",
+      overflow: "hidden",
+    });
+  });
 }
+
+watch(inventoryExpanded, (newVal) => {
+  animateInventory(newVal);
+});
+
+onMounted(() => {
+  animateInventory(inventoryExpanded.value);
+});
 </script>
 
 <template>
@@ -33,10 +43,7 @@ function shouldShowToggleArrow() {
 
     <div
       class="inventory m-5 flex flex-row flex-wrap justify-center md:justify-start"
-      :style="{
-        height: inventoryExpanded ? 'auto' : '245px',
-        overflow: inventoryExpanded ? 'visible' : 'hidden',
-      }"
+      style="height: 245px; overflow: hidden;"
     >
       <div
         class="collectible prose relative m-5 mb-5 w-32 cursor-pointer"
@@ -55,11 +62,8 @@ function shouldShowToggleArrow() {
         <h4 class="mt-0 p-0 text-center">{{ collectible.name }}</h4>
       </div>
     </div>
-    <div
-      v-if="shouldShowToggleArrow()"
-      class="mb-2 w-full"
-      @click="toggleInventory"
-    >
+
+    <div class="mb-2 w-full" @click="toggleInventory">
       <HeroiconsChevronDown16Solid
         class="mx-auto cursor-pointer text-4xl"
         :class="{ 'rotate-180': inventoryExpanded }"
@@ -67,6 +71,3 @@ function shouldShowToggleArrow() {
     </div>
   </div>
 </template>
-
-<style scoped>
-</style>

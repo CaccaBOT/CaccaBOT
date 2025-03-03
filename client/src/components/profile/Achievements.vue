@@ -3,14 +3,13 @@ import { useAchievementStore } from "../../stores/achievement"
 import { Achievement } from "../../types/Achievement"
 import { UserAchievement } from "../../types/UserAchievement"
 import HeroiconsTrophy from "~icons/heroicons/trophy"
-import { computed, ref } from "vue"
+import { computed, ref, watch, nextTick, onMounted } from "vue"
 import HeroiconsChevronDown16Solid from "~icons/heroicons/chevron-down-16-solid"
 import { formatDate } from "../../utils/dateFormatter"
+import { gsap } from "gsap"
 
 const achievementStore = useAchievementStore()
-const props = defineProps<{
-  userAchievements: UserAchievement[]
-}>()
+const props = defineProps<{ userAchievements: UserAchievement[] }>()
 const achievements = computed(() => achievementStore.achievements)
 const isLoading = computed(() => achievements.value.length === 0)
 
@@ -25,14 +24,33 @@ function getDifficultyClass(achievement?: Achievement) {
     3: "text-rarity-epic",
     4: "text-rarity-legendary",
   }
-
   return difficultyMap[achievement?.difficulty_id] || ""
 }
 
 const achievementsExpanded = ref(false)
+
 function toggleAchievements() {
   achievementsExpanded.value = !achievementsExpanded.value
 }
+
+function animateAchievements(expanded: boolean) {
+  nextTick(() => {
+    gsap.to(".achievements-container", {
+      height: expanded ? "auto" : "140px",
+      duration: 0.5,
+      ease: "power2.inOut",
+      overflow: "hidden",
+    })
+  })
+}
+
+watch(achievementsExpanded, (newVal) => {
+  animateAchievements(newVal)
+})
+
+onMounted(() => {
+  animateAchievements(achievementsExpanded.value)
+})
 </script>
 
 <template>
@@ -44,12 +62,7 @@ function toggleAchievements() {
       <h2>Achievements</h2>
     </div>
 
-    <div
-      :style="{
-        height: achievementsExpanded ? 'auto' : '140px',
-        overflow: achievementsExpanded ? 'visible' : 'hidden',
-      }"
-    >
+    <div class="achievements-container" style="height: 140px; overflow: hidden;">
       <div
         v-if="!isLoading"
         class="achievements flex flex-row flex-wrap justify-center"
@@ -62,19 +75,14 @@ function toggleAchievements() {
           <div class="icon-wrapper m-4 rounded-full bg-base-100 p-4">
             <HeroiconsTrophy
               class="text-xl"
-              :class="
-                getDifficultyClass(
-                  getAchievement(userAchievement.achievement_id),
-                )
-              "
+              :class="getDifficultyClass(getAchievement(userAchievement.achievement_id))"
             />
           </div>
           <div class="flex h-full w-full flex-col">
             <h4 class="mt-5 p-0 text-lg font-bold"
-            v-tooltip="getAchievement(userAchievement.achievement_id)?.description">
+              v-tooltip="getAchievement(userAchievement.achievement_id)?.description">
               {{
-                getAchievement(userAchievement.achievement_id)?.name ||
-                "Unknown"
+                getAchievement(userAchievement.achievement_id)?.name || "Unknown"
               }}
             </h4>
             <p class="ml-auto mt-auto text-sm font-thin text-gray-400">
@@ -84,6 +92,7 @@ function toggleAchievements() {
         </div>
       </div>
     </div>
+
     <div class="mb-2 w-full" @click="toggleAchievements">
       <HeroiconsChevronDown16Solid
         class="mx-auto cursor-pointer text-4xl"
@@ -92,6 +101,3 @@ function toggleAchievements() {
     </div>
   </div>
 </template>
-
-<style scoped>
-</style>
