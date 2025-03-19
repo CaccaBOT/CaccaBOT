@@ -13,6 +13,9 @@ import { useAPIStore } from "./stores/api.ts"
 import { useGlobalStore } from "./stores/global.ts"
 import { useToast } from "vue-toastification"
 import ChangeThemeModal from "./components/modals/ChangeThemeModal.vue"
+import Lenis from "lenis"
+
+import 'lenis/dist/lenis.css'
 
 const toast = useToast()
 const globalStore = useGlobalStore()
@@ -51,6 +54,10 @@ onMounted(async () => {
   await achievementStore.loadAchievements()
   // @ts-expect-error - window.umami is defined by the Umami script
   window.umami.identify({ username: sessionStore.session.username })
+
+  new Lenis({
+    autoRaf: true
+  })
 })
 </script>
 
