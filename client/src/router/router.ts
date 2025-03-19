@@ -44,9 +44,14 @@ const routes = [
     name: "users",
   },
   {
-    path: "/manual",
-    component: () => import("../views/Manual.vue"),
-    name: "manual",
+    path: "/info/manual",
+    component: () => import("../views/info/Manual.vue"),
+    name: "manualInfo",
+  },
+  {
+    path: "/info/achievements",
+    component: () => import("../views/info/AchievementsInfo.vue"),
+    name: "achievementsInfo",
   },
   {
     path: "/cards/pack",

@@ -10,6 +10,7 @@ import UilCancel from '~icons/uil/cancel'
 import CardWithCount from '../../components/convert/CardWithCount.vue'
 import JSConfetti from "js-confetti"
 import cardBack from '../../assets/card_back.webp'
+import cantConvert from '../../assets/cant_convert.webp'
 
 const { client } = useAPIStore()
 const sessionStore = useSessionStore()
@@ -132,8 +133,9 @@ onMounted(async () => {
         <CardWithCount @click="select(collectible)" class="collectible prose relative m-5 mb-5 w-32 cursor-pointer"
           v-for="collectible of collectibles" :collectible="collectible" :count="getSelectedCount(collectible)" />
       </div>
-      <div v-if="collectibles.length == 0" class="no-collectibles-wrapper w-full h-[60vh] flex flex-col items-center justify-center">
-        <h1 class="text-4xl text-center font-bold text-error mb-10">You don't have any collectibles to convert</h1>
+      <div v-if="collectibles.length == 0" class="no-collectibles-wrapper w-full h-[80vh] flex flex-col items-center justify-center">
+        <h1 class="text-4xl text-center font-bold text-error">You don't have any collectibles to convert</h1>
+        <img :src="cantConvert" alt="No collectibles" class="w-10/12 sm:w-5/8 lg:w-1/3" />
       </div>
     </div>
 

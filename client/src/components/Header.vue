@@ -17,6 +17,8 @@ import IconoirBoxIso from '~icons/iconoir/box-iso'
 import WeuiShopOutlined from '~icons/weui/shop-outlined'
 import HugeiconsMenu02 from '~icons/hugeicons/menu-02'
 import HeroiconsOutlineRefresh from '~icons/heroicons-outline/refresh'
+import RiAwardLine from '~icons/ri/award-line'
+import HeroiconsInformationCircle from '~icons/heroicons/information-circle'
 
 const sessionStore = useSessionStore()
 
@@ -66,12 +68,28 @@ const menuItems = ref<MenuItem[]>([
     requiresAuth: false
   },
   {
-    label: "Manual",
-    icon: HeroiconsBookOpen,
-    route: "/manual",
+    label: "Info",
+    icon: HeroiconsInformationCircle,
+    route: "/info",
     class: "text-secondary",
     requiresAdmin: false,
-    requiresAuth: false
+    requiresAuth: false,
+    subsections: [
+      {
+        label: "Manual",
+        icon: HeroiconsBookOpen,
+        route: "/info/manual",
+        requiresAdmin: false,
+        requiresAuth: false
+      },
+      {
+        label: "Achievements",
+        icon: RiAwardLine,
+        route: "/info/achievements",
+        requiresAdmin: false,
+        requiresAuth: false
+      }
+    ]
   },
   {
     label: "Stats",

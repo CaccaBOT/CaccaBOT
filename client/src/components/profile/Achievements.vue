@@ -1,31 +1,15 @@
 <script setup lang="ts">
 import { useAchievementStore } from "../../stores/achievement"
-import { Achievement } from "../../types/Achievement"
 import { UserAchievement } from "../../types/UserAchievement"
-import HeroiconsTrophy from "~icons/heroicons/trophy"
 import { computed, ref, watch, nextTick, onMounted } from "vue"
 import HeroiconsChevronDown16Solid from "~icons/heroicons/chevron-down-16-solid"
-import { formatDate } from "../../utils/dateFormatter"
 import { gsap } from "gsap"
+import AchievementBadge from "./UserAchievementBadge.vue"
 
 const achievementStore = useAchievementStore()
 const props = defineProps<{ userAchievements: UserAchievement[] }>()
 const achievements = computed(() => achievementStore.achievements)
 const isLoading = computed(() => achievements.value.length === 0)
-
-function getAchievement(id: string) {
-  return achievements.value.find((a) => a.id === id)
-}
-
-function getDifficultyClass(achievement?: Achievement) {
-  const difficultyMap = {
-    1: "text-rarity-common",
-    2: "text-rarity-rare",
-    3: "text-rarity-epic",
-    4: "text-rarity-legendary",
-  }
-  return difficultyMap[achievement?.difficulty_id] || ""
-}
 
 const achievementsExpanded = ref(false)
 
@@ -72,23 +56,7 @@ onMounted(() => {
           v-for="userAchievement of userAchievements"
           :key="userAchievement.achievement_id"
         >
-          <div class="icon-wrapper m-4 rounded-full bg-base-100 p-4">
-            <HeroiconsTrophy
-              class="text-xl"
-              :class="getDifficultyClass(getAchievement(userAchievement.achievement_id))"
-            />
-          </div>
-          <div class="flex h-full w-full flex-col">
-            <h4 class="mt-5 p-0 text-lg font-bold"
-              v-tooltip="getAchievement(userAchievement.achievement_id)?.description">
-              {{
-                getAchievement(userAchievement.achievement_id)?.name || "Unknown"
-              }}
-            </h4>
-            <p class="ml-auto mt-auto text-sm font-thin text-gray-400">
-              {{ formatDate(userAchievement.timestamp) }}
-            </p>
-          </div>
+        <AchievementBadge :achievement="userAchievement" />
         </div>
       </div>
     </div>
