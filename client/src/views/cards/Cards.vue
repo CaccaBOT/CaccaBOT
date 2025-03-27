@@ -75,6 +75,7 @@ async function reset() {
     <button
       v-if="!sessionStore.session.id"
       class="lg:w-1/8 btn btn-error mx-auto w-2/3 sm:w-2/3 md:w-1/5"
+      @click="() => sessionStore.showLoginModal = true"
     >
       Login required
     </button>

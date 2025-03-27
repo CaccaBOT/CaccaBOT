@@ -9,13 +9,16 @@ const sessionStore = useSessionStore();
 const { client } = useAPIStore();
 const toast = useToast();
 
+const isLoading = ref(false)
 const username = ref("");
 const password = ref("");
 
 async function login() {
   try {
+    isLoading.value = true
     const response = await client.login(username.value, password.value);
     const body = await response.json();
+    isLoading.value = false
     username.value = "";
     password.value = "";
     if (!response.ok) {
@@ -60,6 +63,7 @@ function dismissModal(event) {
         </fieldset>
       </div>
       <button :disabled="username.length == 0 || password.length == 0" class="btn btn-primary my-4 w-2/3 text-lg" @click="login">
+        <span v-if="isLoading" class="loading loading-spinner w-4 mx-2"></span>
         Login
       </button>
     </form>
