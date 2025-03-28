@@ -11,6 +11,8 @@ import UsernameValidator from '../validators/username'
 import usernameGenerator from "username-gen"
 import { UserCollectible } from '../types/UserCollectible'
 import { Collectible } from '../types/Collectible'
+import { Order } from '../types/Order'
+import { OrderType, OrderSide } from '../types/OrderEnums'
 import log from 'loglevel'
 
 const timezone = config.timezone || 'UTC'
@@ -56,11 +58,22 @@ export function getCollectible(collectibleId: number) {
 }
 
 export function getCollectibleOwnerships(userId: string): UserCollectible[] {
-	return db.prepare(`SELECT * FROM user_collectible WHERE user_id = ?`).all(userId)
+	const userCollectible = db.prepare(`SELECT * FROM user_collectible WHERE user_id = ?`).all(userId)
+
+	for(let i in userCollectible)
+		if(userCollectible[i])
+			userCollectible[i].selling = Boolean(userCollectible[i].selling)
+
+	return userCollectible;
 }
 
 export function getCollectibleOwnershipById(userCollectibleId: number): UserCollectible {
-	return db.prepare(`SELECT * FROM user_collectible WHERE id = ?`).get(userCollectibleId)
+	const userCollectible =  db.prepare(`SELECT * FROM user_collectible WHERE id = ?`).get(userCollectibleId)
+
+	if(userCollectible)
+		userCollectible.selling = Boolean(userCollectible.selling)
+
+	return userCollectible
 }
 
 export function deleteUserCollectible(userCollectibleId: number) {
@@ -582,6 +595,8 @@ export function isUsernameAvailable(username: string): boolean {
 }
 
 export function getUserCollectibles(userId: string) {
+	// * I DON'T KNOW WHAT THIS DOES, I JUST NEED HOW TO FUCKING
+	// * PUT THE selling PROPERTY
 	return db
 		.prepare(
 		`
@@ -1148,4 +1163,106 @@ export function getUserAchievements(userId: string) {
 
 export function getAllAchievements() {
 	return db.prepare('SELECT a.* FROM achievement a').all()
+}
+
+// card market
+
+export function createOrder(userId: string, collectibleId: number, type: OrderType, side: OrderSide, price: number) {
+	switch(type) {
+		case 'MARKET': {
+			db.prepare(
+				'INSERT INTO order (user_id, collectible_id, `type`, side) VALUES (?, ?, ?, ?)',
+			).run(userId, collectibleId, type, side)
+		}
+		default: {
+			db.prepare(
+				'INSERT INTO `order` (user_id, collectible_id, `type`, side, price) VALUES (?, ?, ?, ?, ?)',
+			).run(userId, collectibleId, type, side, price)
+		}
+	}
+}
+
+export function getOrderById(orderId: number): Order {
+	const order = db.prepare('SELECT * FROM order WHERE id = ?').get(orderId)
+
+	if(order)
+		order.active = Boolean(order.active)
+
+	return order
+}
+
+export function getCollectibleOwnershipsNotSelling(userId: string): UserCollectible[] {
+	const userCollectibles = db
+		.prepare(`SELECT * FROM user_collectible WHERE user_id = ? AND selling = 0`)
+		.all(userId)
+	
+	for(let i in userCollectibles)
+		if(userCollectibles[i])
+			userCollectibles[i].selling = Boolean(userCollectibles[i].selling)
+
+	return userCollectibles
+}
+
+export function getCollectibleOwnershipsSelling(userId: string): UserCollectible[] {
+	const userCollectibles = db
+		.prepare(`SELECT * FROM user_collectible WHERE user_id = ? AND selling = 1`)
+		.all(userId)
+
+	for(let i in userCollectibles)
+		if(userCollectibles[i])
+			userCollectibles[i].selling = Boolean(userCollectibles[i].selling)
+
+	return userCollectibles
+}
+
+export function getSpecificCollectibleOwnershipsNotSelling(userId: string, collectibleId: number): UserCollectible[] {
+	const userCollectibles = db
+		.prepare(`SELECT * FROM user_collectible WHERE user_id = ? AND collectible_id = ? AND selling = 0`)
+		.all(userId, collectibleId)
+
+	for(let i in userCollectibles)
+		if(userCollectibles[i])
+			userCollectibles[i].selling = Boolean(userCollectibles[i].selling)
+
+	return userCollectibles
+}
+
+export function getSpecificCollectibleOwnershipsSelling(userId: string, collectibleId: number): UserCollectible[] {
+	const userCollectibles = db
+		.prepare(`SELECT * FROM user_collectible WHERE user_id = ? AND collectible_id = ? AND selling = 1`)
+		.all(userId, collectibleId)
+
+	for(let i in userCollectibles)
+		if(userCollectibles[i])
+			userCollectibles[i].selling = Boolean(userCollectibles[i].selling)
+
+	return userCollectibles
+}
+
+export function updateCollectibleOwnershipToSelling(userCollectibleId: number) {
+	db.prepare(`UPDATE user_collectible SET selling = 1 WHERE id = ?`).run(userCollectibleId)
+}
+
+export function updateCollectibleOwnershipsToSelling(...userCollectibleIds: number[]) {
+	const placeholder = userCollectibleIds.map(() => '?').join(', ')
+
+	db.prepare(`UPDATE user_collectible SET selling = 1 WHERE id IN (${placeholder})`).run(...userCollectibleIds)
+}
+
+export function updateCollectibleOwnershipToNotSelling(userCollectibleId: number) {
+	db.prepare(`UPDATE user_collectible SET selling = 0 WHERE id = ?`).run(userCollectibleId)
+}
+
+export function updateCollectibleOwnershipsToNotSelling(...userCollectibleIds: number[]) {
+	const placeholder = userCollectibleIds.map(() => '?').join(', ')
+
+	db.prepare(`UPDATE user_collectible SET selling = 0 WHERE id IN ${placeholder}`).run(...userCollectibleIds)
+}
+
+export function getAllOrderSides() {
+	return db.prepare(`SELECT * FROM order_side`).all()
+}
+
+export function getAllOrderTypes() {
+	return db.prepare(`SELECT * FROM order_type`).all()
 }
