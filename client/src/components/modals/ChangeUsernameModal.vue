@@ -2,7 +2,9 @@
 import { ref } from "vue"
 import { useSessionStore } from "../../stores/session"
 import { useAPIStore } from "../../stores/api"
+import { useModalStore } from "../../stores/modal"
 
+const modalStore = useModalStore()
 const sessionStore = useSessionStore()
 const { client } = useAPIStore()
 
@@ -32,15 +34,14 @@ async function change() {
       .querySelectorAll("input")
       .forEach((x) => x.classList.add("input-error"))
   } else {
-    sessionStore.showChangeUsernameModal = false
-    sessionStore.showLoginModal = false
+    modalStore.close()
     sessionStore.session.username = username
   }
 }
 
 function dismissModal(event) {
   if (event.target.classList.contains("change-username-panel-wrapper")) {
-    sessionStore.showChangeUsernameModal = false
+    modalStore.close()
   }
   newUsername.value = ""
   usernameError.value = ""

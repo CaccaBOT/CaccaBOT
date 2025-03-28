@@ -5,9 +5,12 @@ import { ref } from "vue";
 import { useSessionStore } from "../../stores/session";
 import { useAPIStore } from "../../stores/api";
 import { useToast } from "vue-toastification";
+import { useModalStore } from "../../stores/modal";
+
 const sessionStore = useSessionStore();
 const { client } = useAPIStore();
 const toast = useToast();
+const modalStore = useModalStore();
 
 const isLoading = ref(false)
 const username = ref("");
@@ -29,6 +32,7 @@ async function login() {
 
     sessionStore.session = body;
     sessionStore.save();
+    modalStore.close()
   } catch (e) {
     toast.error("Failed to login");
   }
@@ -36,7 +40,7 @@ async function login() {
 
 function dismissModal(event) {
   if (event.target.classList.contains("login-panel-wrapper")) {
-    sessionStore.showLoginModal = false;
+    modalStore.close()
   }
 }
 </script>

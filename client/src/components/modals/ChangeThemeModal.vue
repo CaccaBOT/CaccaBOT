@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { ref, watch } from "vue"
 import { useSessionStore } from "../../stores/session"
+import { useModalStore } from "../../stores/modal"
 
-const sessionStore = useSessionStore()
+const modalStore = useModalStore()
 
 const themes = [
   "dark",
   "light",
-  "mocha",
   "synthwave",
   "cyberpunk",
   "valentine",
@@ -31,7 +31,7 @@ watch(theme, () => {
 
 function dismissModal(event) {
   if (event.target.classList.contains("change-theme-panel-wrapper")) {
-    sessionStore.showChangeThemeModal = false
+    modalStore.close()
   }
 }
 

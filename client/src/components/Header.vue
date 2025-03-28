@@ -19,8 +19,11 @@ import HugeiconsMenu02 from '~icons/hugeicons/menu-02'
 import HeroiconsOutlineRefresh from '~icons/heroicons-outline/refresh'
 import RiAwardLine from '~icons/ri/award-line'
 import HeroiconsInformationCircle from '~icons/heroicons/information-circle'
+import { useModalStore } from '../stores/modal'
+import { ModalEnum } from '../types/ModalEnum';
 
 const sessionStore = useSessionStore()
+const modalStore = useModalStore()
 
 function isActive(route: string): boolean {
   return router.currentRoute.value.path.startsWith(route)
@@ -28,7 +31,7 @@ function isActive(route: string): boolean {
 
 function showLoginModal() {
   if (sessionStore.session.id == null) {
-    sessionStore.showLoginModal = true
+    modalStore.open(ModalEnum.Login)
   }
 }
 

@@ -4,7 +4,10 @@ import { ref } from "vue";
 import { useSessionStore } from "../../stores/session"
 import { useAPIStore } from "../../stores/api"
 import { useToast } from "vue-toastification"
+import { useModalStore } from "../../stores/modal";
+
 const sessionStore = useSessionStore();
+const modalStore = useModalStore();
 const { client } = useAPIStore();
 const toast = useToast();
 
@@ -19,8 +22,8 @@ async function change() {
       const body = await response.json();
       toast.error(body.error);
     }
-    sessionStore.showChangePasswordModal = false;
-    sessionStore.showLoginModal = false;
+
+    modalStore.close()
     sessionStore.logout();
     router.push("/");
   } catch (e) {
@@ -30,7 +33,7 @@ async function change() {
 
 function dismissModal(event) {
   if (event.target.classList.contains("change-password-panel-wrapper")) {
-    sessionStore.showChangePasswordModal = false;
+    modalStore.close()
   }
   newPassword.value = "";
 }

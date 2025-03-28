@@ -1,26 +1,25 @@
 <script setup lang="ts">
 import Header from "./components/Header.vue"
-import LoginModal from "./components/modals/LoginModal.vue"
 import { useSessionStore } from "./stores/session"
 import { useHead } from "@unhead/vue"
 import { baseURL } from "./services/API.ts"
-import ChangePasswordModal from "./components/modals/ChangePasswordModal.vue"
-import ChangePfpModal from "./components/modals/ChangePfpModal.vue"
-import ChangeUsernameModal from "./components/modals/ChangeUsernameModal.vue"
 import { useAchievementStore } from "./stores/achievement.ts"
-import { onMounted } from "vue"
+import { computed, onMounted } from "vue"
 import { useAPIStore } from "./stores/api.ts"
 import { useGlobalStore } from "./stores/global.ts"
 import { useToast } from "vue-toastification"
-import ChangeThemeModal from "./components/modals/ChangeThemeModal.vue"
 import Lenis from "lenis"
-
 import 'lenis/dist/lenis.css'
+import { useModalStore } from "./stores/modal.ts"
 
 const toast = useToast()
 const globalStore = useGlobalStore()
 const { client } = useAPIStore()
 const achievementStore = useAchievementStore()
+const modalStore = useModalStore()
+
+const activeModalComponent = computed(() => modalStore.modalComponent)
+const activeModalProps = computed(() => modalStore.modalProps)
 
 const sessionStore = useSessionStore()
 sessionStore.load()
@@ -63,20 +62,11 @@ onMounted(async () => {
 
 <template>
   <Header />
-  <LoginModal
-    v-show="!sessionStore.session.id && sessionStore.showLoginModal"
-  />
-  <ChangePasswordModal
-    v-show="sessionStore.session.id && sessionStore.showChangePasswordModal"
-  />
-  <ChangeUsernameModal
-    v-show="sessionStore.session.id && sessionStore.showChangeUsernameModal"
-  />
-  <ChangePfpModal
-    v-show="sessionStore.session.id && sessionStore.showChangePfpModal"
-  />
-  <ChangeThemeModal
-    v-show="sessionStore.session.id && sessionStore.showChangeThemeModal"
+  <component
+    v-if="activeModalComponent"
+    :is="activeModalComponent"
+    v-bind="activeModalProps"
+    @close="modalStore.close"
   />
   <router-view v-slot="{ Component, route }">
     <Transition name="bounce">

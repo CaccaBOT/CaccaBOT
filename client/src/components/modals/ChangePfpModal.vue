@@ -5,8 +5,11 @@ import { onMounted, ref } from "vue"
 import { useSessionStore } from "../../stores/session"
 import { useAPIStore } from "../../stores/api"
 import { useGlobalStore } from "../../stores/global"
+import { useModalStore } from "../../stores/modal"
+
 const sessionStore = useSessionStore()
-const globalStore = useGlobalStore()
+const modalStore = useModalStore()
+
 const { client } = useAPIStore()
 const selectedFile = ref<File | null>(null)
 const previewSrc = ref<string | null>(null)
@@ -16,7 +19,7 @@ async function change() {
     const response = await client.changePfp(previewSrc.value)
     if (response.ok) {
       const { url } = await response.json()
-      sessionStore.showChangePfpModal = false
+      modalStore.close()
       sessionStore.session.pfp = url
       sessionStore.save()
       previewSrc.value = url
@@ -27,19 +30,19 @@ async function change() {
 async function clearPfp() {
   const response = await client.removePfp()
   if (response.ok) {
-    sessionStore.showChangePfpModal = false
+    modalStore.close()
     sessionStore.session.pfp = null
     sessionStore.save()
   }
 }
 
 function selectPfp() {
-  ;(document.querySelector("#pfpSelector") as HTMLElement).click()
+  (document.querySelector("#pfpSelector") as HTMLElement).click()
 }
 
 function dismissModal(event) {
   if (event.target.classList.contains("change-profile-picture-panel-wrapper")) {
-    sessionStore.showChangePfpModal = false
+    modalStore.close()
   }
 }
 

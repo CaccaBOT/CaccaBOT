@@ -27,7 +27,11 @@ const deletePoopEndpoint = async function (
 
         const id = parseInt(req.params['id'])
 		res.code(200).send(deletePoop(id))
-        client.sendMessage(config.groupId, `*[ADMIN]* ${user.username} deleted poop #${id}`)
+		
+		if (config.whatsappModuleEnabled) {
+			client.sendMessage(config.groupId, `*[ADMIN]* ${user.username} deleted poop #${id}`)
+		}
+
 	})
 }
 

@@ -48,7 +48,14 @@ export function initDatabase() {
 }
 
 export function deletePoop(poopId: number) {
+
+	const poop = db.prepare(`SELECT * FROM poop WHERE id = ?`).get(poopId)
+
 	db.prepare(`DELETE FROM poop WHERE id = ?`).run(poopId)
+
+	db.prepare(
+		`UPDATE user SET money = (SELECT money FROM user WHERE id = ?) - 1 WHERE id = ?`,
+	).run(poop.user_id, poop.user_id)
 }
 
 export function getCollectible(collectibleId: number) {
