@@ -28,14 +28,14 @@ const insertOrderEndpoint = async function (
 	server: FastifyInstance,
 	options: RouteOptions,
 ) {
-	server.patch(
-		'/order/:collectibleId/:type/:side/:price/:quantity',
-		async (req: FastifyRequest<{ Params: Params }>, res: FastifyReply) => {
-			const collectibleId = Number.parseInt(req.params.collectibleId)
-			const type = req.params.type
-			const side = req.params.side
-			const price = req.params.price
-			const quantity = req.params.quantity
+	server.post(
+		'/order',
+		async (req: FastifyRequest<{ Body: Params }>, res: FastifyReply) => {
+			const collectibleId = Number.parseInt(req.body.collectibleId)
+			const type = req.body.type
+			const side = req.body.side
+			const price = req.body.price
+			const quantity = req.body.quantity
 
 			const user = await authenticate(req, res)
 
