@@ -1,5 +1,12 @@
 <script setup lang="ts">
-//TODO: imlement settings saving
+import { watch } from 'vue'
+import { useSettingsStore } from '../stores/settings'
+const settingsStore = useSettingsStore()
+
+watch(settingsStore.$state, () => {
+    console.log('calling save')
+  settingsStore.save()
+}, { deep: true })
 </script>
 
 <template>
@@ -8,7 +15,7 @@
             <legend class="fieldset-legend text-lg">UI</legend>
             <label class="fieldset-label flex justify-around text-white text-lg">
                 Smooth Scrolling
-                <input type="checkbox" class="toggle toggle-success" />
+                <input type="checkbox" v-model="settingsStore.smoothScrolling" class="toggle toggle-success" />
             </label>
         </fieldset>
     </div>

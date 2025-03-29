@@ -11,6 +11,7 @@ import { useToast } from "vue-toastification"
 import Lenis from "lenis"
 import 'lenis/dist/lenis.css'
 import { useModalStore } from "./stores/modal.ts"
+import { useSettingsStore } from "./stores/settings.ts"
 
 const toast = useToast()
 const globalStore = useGlobalStore()
@@ -22,6 +23,7 @@ const activeModalComponent = computed(() => modalStore.modalComponent)
 const activeModalProps = computed(() => modalStore.modalProps)
 
 const sessionStore = useSessionStore()
+const settingsStore = useSettingsStore()
 sessionStore.load()
 
 useHead({
@@ -35,6 +37,8 @@ useHead({
 })
 
 onMounted(async () => {
+  settingsStore.load()
+  
   try {
     const instanceInfo = await (await client.getInstanceInfo()).json()
     globalStore.instance.name = instanceInfo.name
@@ -54,20 +58,22 @@ onMounted(async () => {
   // @ts-expect-error - window.umami is defined by the Umami script
   window.umami.identify({ username: sessionStore.session.username })
 
-  new Lenis({
-    autoRaf: true
-  })
+  if (settingsStore.smoothScrolling) {
+    console.log('enabling smooth scrolling')
+    new Lenis({
+      autoRaf: true
+    })
+  }
+
 })
 </script>
 
 <template>
   <Header />
-  <component
-    v-if="activeModalComponent"
-    :is="activeModalComponent"
-    v-bind="activeModalProps"
-    @close="modalStore.close"
-  />
+  <Transition name="fade">
+    <component v-if="activeModalComponent" :is="activeModalComponent" v-bind="activeModalProps"
+      @close="modalStore.close" />
+  </Transition>
   <router-view v-slot="{ Component, route }">
     <Transition name="bounce">
       <component :is="Component" />
@@ -84,11 +90,28 @@ onMounted(async () => {
   0% {
     transform: scale(0);
   }
+
   50% {
     transform: scale(1.05);
   }
+
   100% {
     transform: scale(1);
   }
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.15s ease
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
+.fade-enter-to,
+.fade-leave-from {
+  opacity: 1;
 }
 </style>

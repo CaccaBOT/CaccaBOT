@@ -143,3 +143,7 @@ body {
 .apexcharts-tooltip-candlestick {
   display: none;
 }
+
+.custom-modal {
+  background: #000a;
+}

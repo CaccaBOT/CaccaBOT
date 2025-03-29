@@ -32,7 +32,7 @@ async function change() {
 }
 
 function dismissModal(event) {
-  if (event.target.classList.contains("change-password-panel-wrapper")) {
+  if (event.target.classList.contains("custom-modal")) {
     modalStore.close()
   }
   newPassword.value = "";
@@ -40,7 +40,7 @@ function dismissModal(event) {
 </script>
 
 <template>
-  <div class="change-password-panel-wrapper fixed left-0 top-0 z-50 flex h-[100vh] w-full items-center justify-center" @click="dismissModal($event)">
+  <div class="change-password-panel-wrapper custom-modal fixed left-0 top-0 z-50 flex h-[100vh] w-full items-center justify-center" @click="dismissModal($event)">
     <div class="mx-auto flex w-[85vw] flex-col items-center gap-4 rounded-2xl bg-base-300 p-4 shadow-xl sm:w-2/3 md:h-[50vh] md:w-[50vw] lg:h-[35vh] lg:w-[40vw] xl:w-[30vw]">
       <div class="prose mx-auto my-4">
         <h1>Change Password</h1>
@@ -59,7 +59,5 @@ function dismissModal(event) {
 </template>
 
 <style scoped>
-.change-password-panel-wrapper {
-  background: #000a;
-}
+
 </style>

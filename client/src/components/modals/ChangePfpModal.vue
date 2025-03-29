@@ -41,7 +41,7 @@ function selectPfp() {
 }
 
 function dismissModal(event) {
-  if (event.target.classList.contains("change-profile-picture-panel-wrapper")) {
+  if (event.target.classList.contains("custom-modal")) {
     modalStore.close()
   }
 }
@@ -62,7 +62,7 @@ function onFileChange(event: Event) {
 
 <template>
   <div
-    class="change-profile-picture-panel-wrapper fixed left-0 top-0 z-50 flex h-[100vh] w-full items-center justify-center"
+    class="change-profile-picture-panel-wrapper custom-modal fixed left-0 top-0 z-50 flex h-[100vh] w-full items-center justify-center"
     @click="dismissModal($event)"
   >
     <div
@@ -111,7 +111,5 @@ function onFileChange(event: Event) {
 </template>
 
 <style scoped>
-.change-profile-picture-panel-wrapper {
-  background: #000a;
-}
+
 </style>

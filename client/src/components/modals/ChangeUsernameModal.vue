@@ -40,7 +40,7 @@ async function change() {
 }
 
 function dismissModal(event) {
-  if (event.target.classList.contains("change-username-panel-wrapper")) {
+  if (event.target.classList.contains("custom-modal")) {
     modalStore.close()
   }
   newUsername.value = ""
@@ -55,7 +55,7 @@ function validate() {
 
 <template>
   <div
-    class="change-username-panel-wrapper fixed left-0 top-0 z-50 flex h-[100vh] w-full items-center justify-center"
+    class="change-username-panel-wrapper custom-modal fixed left-0 top-0 z-50 flex h-[100vh] w-full items-center justify-center"
     @click="dismissModal($event)"
   >
     <div
@@ -89,7 +89,5 @@ function validate() {
 </template>
 
 <style scoped>
-.change-username-panel-wrapper {
-  background: #000a;
-}
+
 </style>
