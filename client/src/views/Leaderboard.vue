@@ -173,7 +173,7 @@ function updateNewMonth() {
     </div>
     <div
       v-show="globalStore.leaderboard.length > 0 && !globalStore.isFetching"
-      class="overflow-x-auto"
+      class="overflow-x-auto april-fools"
     >
       <table class="table-xl table w-full">
         <thead>
@@ -218,6 +218,10 @@ function updateNewMonth() {
 </template>
 
 <style scoped>
+.april-fools {
+  transform: rotateY(180deg);
+}
+
 .header h1 {
   font-size: 2rem;
   font-weight: bold;

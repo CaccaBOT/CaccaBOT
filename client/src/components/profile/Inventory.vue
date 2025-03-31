@@ -15,7 +15,7 @@ function toggleInventory() {
 function animateInventory(expanded: boolean) {
   nextTick(() => {
     gsap.to(".inventory", {
-      height: expanded ? "auto" : "245px",
+      height: expanded ? "auto" : "250px",
       duration: 0.5,
       ease: "power2.inOut",
       overflow: "hidden",
