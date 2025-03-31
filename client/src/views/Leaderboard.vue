@@ -218,9 +218,6 @@ function updateNewMonth() {
 </template>
 
 <style scoped>
-.april-fools {
-  transform: rotateY(180deg);
-}
 
 .header h1 {
   font-size: 2rem;
