@@ -15,11 +15,6 @@
     <meta name="description" content="The Official CaccaBOT Website!" />
     <link href="https://umami.polp.online/" rel="preconnect" />
     <style>
-
-      #app {
-        transition: transform 0.5s ease-in-out;
-      }
-
       .loading-message {
         font-size: 3rem;
       }
@@ -75,15 +70,5 @@
       data-website-id="2fd6b9bf-5a25-4725-b8cd-318b34e134b4"
       data-domains="caccabot.duckdns.org"
     ></script>
-    <script>
-      document.body.addEventListener("click", () => {
-          const x = (Math.random() - 0.5) * 2;  // Random value between -1 and 1
-          const y = (Math.random() - 0.5) * 2;
-          const z = (Math.random() - 0.5) * 2;
-          const angle = (Math.random() * 90) - 45; // Random angle between -45 and 45 degrees
-
-          document.querySelector('#app').style.transform = `rotate3d(${x.toFixed(2)}, ${y.toFixed(2)}, ${z.toFixed(2)}, ${angle.toFixed(2)}deg)`;
-      });
-    </script>
   </body>
 </html>
