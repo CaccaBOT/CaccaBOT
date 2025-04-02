@@ -1171,7 +1171,7 @@ export function createOrder(userId: string, collectibleId: number, type: OrderTy
 	switch(type) {
 		case 'MARKET': {
 			db.prepare(
-				'INSERT INTO order (user_id, collectible_id, `type`, side) VALUES (?, ?, ?, ?)',
+				'INSERT INTO `order` (user_id, collectible_id, `type`, side) VALUES (?, ?, ?, ?)',
 			).run(userId, collectibleId, type, side)
 		}
 		default: {
@@ -1183,7 +1183,7 @@ export function createOrder(userId: string, collectibleId: number, type: OrderTy
 }
 
 export function getOrderById(orderId: number): Order {
-	const order = db.prepare('SELECT * FROM order WHERE id = ?').get(orderId)
+	const order = db.prepare('SELECT * FROM `order` WHERE id = ?').get(orderId)
 
 	if(order)
 		order.active = Boolean(order.active)
@@ -1192,7 +1192,7 @@ export function getOrderById(orderId: number): Order {
 }
 
 export function deleteOrderById(orderId: number) {
-	db.prepare('DELETE from order WHERE id = ?').run()
+	db.prepare('DELETE from `order` WHERE id = ?').run(orderId)
 }
 
 export function getCollectibleOwnershipsNotSelling(userId: string): UserCollectible[] {

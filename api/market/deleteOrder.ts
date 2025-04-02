@@ -12,7 +12,7 @@ import {
 } from '../../database/index'
 
 interface Params {
-	orderId: string
+	id: string
 }
 
 const insertOrderEndpoint = async function (
@@ -22,7 +22,7 @@ const insertOrderEndpoint = async function (
 	server.delete(
 		'/order/:id',
 		async (req: FastifyRequest<{ Params: Params }>, res: FastifyReply) => {
-			const orderId = Number.parseInt(req.params.orderId)
+			const orderId = Number.parseInt(req.params.id)
 
 			const user = await authenticate(req, res)
 
@@ -30,7 +30,7 @@ const insertOrderEndpoint = async function (
 
 			// Input validation
 
-			if (order == null) {
+			if (!order) {
 				res.code(404).send({
 					error: "The order doesn't exist.",
 				})
