@@ -46,7 +46,7 @@ const insertOrderEndpoint = async function (
 				.includes(collectibleId)
 			
 			if (!existsCollectible) {
-				res.code(400).send({
+				res.code(404).send({
 					error: "The collectible doesn't exist.",
 				})
 				return

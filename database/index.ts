@@ -1191,6 +1191,10 @@ export function getOrderById(orderId: number): Order {
 	return order
 }
 
+export function deleteOrderById(orderId: number) {
+	db.prepare('DELETE from order WHERE id = ?').run()
+}
+
 export function getCollectibleOwnershipsNotSelling(userId: string): UserCollectible[] {
 	const userCollectibles = db
 		.prepare(`SELECT * FROM user_collectible WHERE user_id = ? AND selling = 0`)
