@@ -1195,12 +1195,34 @@ export function deleteOrderById(orderId: number) {
 	db.prepare('DELETE from `order` WHERE id = ?').run(orderId)
 }
 
-export function deactivateOrderById(orderId: number) {
+export function deactivateOrderById(orderId: number): boolean {
 	db.prepare('UPDATE `order` SET active = 0 WHERE id = ?').run(orderId)
+
+	const order = getOrderById(orderId)
+	const userCollectible = getSpecificCollectibleOwnershipsSelling(
+		order.user_id, order.collectible_id
+	)
+
+	if(userCollectible.length == 0)
+		return false
+
+	updateCollectibleOwnershipToNotSelling(userCollectible[0].id)
+	return true
 }
 
 export function activateOrderById(orderId: number) {
-	db.prepare('UPDATE `order` SET active = 1 WHERE id = ?').run(orderId)
+	db.prepare('UPDATE `order` SET active = 0 WHERE id = ?').run(orderId)
+
+	const order = getOrderById(orderId)
+	const userCollectible = getSpecificCollectibleOwnershipsNotSelling(
+		order.user_id, order.collectible_id
+	)
+
+	if(userCollectible.length == 0)
+		return false
+
+	updateCollectibleOwnershipToSelling(userCollectible[0].id)
+	return true
 }
 
 export function getCollectibleOwnershipsNotSelling(userId: string): UserCollectible[] {

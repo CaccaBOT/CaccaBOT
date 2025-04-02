@@ -52,9 +52,14 @@ const deleteOrderEndpoint = async function (
 
 			// Logic
 
-			deactivateOrderById(orderId)
+			const opResult = deactivateOrderById(orderId)
 
-			// TODO: desync the user_collectible selling
+			if (opResult == false) {
+				res.code(403).send({
+					error: "The collectible ownership couldn't be synchronized."
+				})
+				return
+			}
 
 			// TODO: call the order logic
 		},
