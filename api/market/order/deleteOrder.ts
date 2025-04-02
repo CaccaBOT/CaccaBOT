@@ -8,7 +8,7 @@ import {
 import { authenticate } from '../../../middleware/auth'
 import {
 	getOrderById,
-	deleteOrderById,
+	deactivateOrderById,
 } from '../../../database/index'
 
 interface Params {
@@ -44,9 +44,15 @@ const deleteOrderEndpoint = async function (
 				return
 			}
 
+			if (!order.active) {
+				res.code(403).send({
+					error: "The order is already inactive.",
+				})
+			}
+
 			// Logic
 
-			deleteOrderById(orderId)
+			deactivateOrderById(orderId)
 
 			// TODO: desync the user_collectible selling
 
