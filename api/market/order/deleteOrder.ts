@@ -5,22 +5,22 @@ import {
 	RouteOptions,
 } from 'fastify'
 
-import { authenticate } from '../../middleware/auth'
+import { authenticate } from '../../../middleware/auth'
 import {
 	getOrderById,
 	deleteOrderById,
-} from '../../database/index'
+} from '../../../database/index'
 
 interface Params {
 	id: string
 }
 
-const insertOrderEndpoint = async function (
+const deleteOrderEndpoint = async function (
 	server: FastifyInstance,
 	options: RouteOptions,
 ) {
 	server.delete(
-		'/order/:id',
+		'/:id',
 		async (req: FastifyRequest<{ Params: Params }>, res: FastifyReply) => {
 			const orderId = Number.parseInt(req.params.id)
 
@@ -48,9 +48,11 @@ const insertOrderEndpoint = async function (
 
 			deleteOrderById(orderId)
 
+			// TODO: desync the user_collectible selling
+
 			// TODO: call the order logic
 		},
 	)
 }
 
-export default insertOrderEndpoint
+export default deleteOrderEndpoint

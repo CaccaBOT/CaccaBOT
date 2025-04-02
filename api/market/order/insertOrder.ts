@@ -5,7 +5,7 @@ import {
 	RouteOptions,
 } from 'fastify'
 
-import { authenticate } from '../../middleware/auth'
+import { authenticate } from '../../../middleware/auth'
 import {
 	getSpecificCollectibleOwnershipsNotSelling,
 	createOrder,
@@ -13,8 +13,8 @@ import {
 	getAllOrderSides,
 	getAllOrderTypes,
 	updateCollectibleOwnershipToSelling,
-} from '../../database/index'
-import { OrderSide, OrderType } from '../../types/OrderEnums'
+} from '../../../database/index'
+import { OrderSide, OrderType } from '../../../types/OrderEnums'
 
 interface Params {
 	collectibleId: string
@@ -29,7 +29,7 @@ const insertOrderEndpoint = async function (
 	options: RouteOptions,
 ) {
 	server.post(
-		'/order',
+		'/',
 		async (req: FastifyRequest<{ Body: Params }>, res: FastifyReply) => {
 			const collectibleId = Number.parseInt(req.body.collectibleId)
 			const type = req.body.type
