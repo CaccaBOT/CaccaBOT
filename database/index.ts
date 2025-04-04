@@ -1167,6 +1167,17 @@ export function getAllAchievements() {
 
 // card market
 
+export function getAllOrderSides() {
+	return db.prepare(`SELECT * FROM order_side`).all()
+}
+
+export function getAllOrderTypes() {
+	return db.prepare(`SELECT * FROM order_type`).all()
+}
+
+// NOTE: input validations is NOT done in the following queries
+// Please validate inputs before calling the methods
+
 export function createOrder(userId: string, collectibleId: number, type: OrderType, side: OrderSide, price: number) {
 	switch(type) {
 		case 'MARKET': {
@@ -1174,25 +1185,36 @@ export function createOrder(userId: string, collectibleId: number, type: OrderTy
 				'INSERT INTO `order` (user_id, collectible_id, `type`, side) VALUES (?, ?, ?, ?)',
 			).run(userId, collectibleId, type, side)
 		}
+		break
+
 		default: {
 			db.prepare(
 				'INSERT INTO `order` (user_id, collectible_id, `type`, side, price) VALUES (?, ?, ?, ?, ?)',
 			).run(userId, collectibleId, type, side, price)
 		}
+		break
 	}
+
+	const userCollectible = getSpecificCollectibleOwnershipsNotSelling(
+		userId, collectibleId
+	)
+	
+	updateCollectibleOwnershipToSelling(userCollectible[0].id)
 }
 
-export function getOrderById(orderId: number): Order {
-	const order = db.prepare('SELECT * FROM `order` WHERE id = ?').get(orderId)
-
-	if(order)
-		order.active = Boolean(order.active)
-
-	return order
-}
-
-export function deleteOrderById(orderId: number) {
+export function deleteOrderById(orderId: number): boolean {
 	db.prepare('DELETE from `order` WHERE id = ?').run(orderId)
+
+	const order = getOrderById(orderId)
+	const userCollectible = getSpecificCollectibleOwnershipsSelling(
+		order.user_id, order.collectible_id
+	)
+
+	if(userCollectible.length == 0)
+		return false
+
+	updateCollectibleOwnershipToNotSelling(userCollectible[0].id)
+	return true
 }
 
 export function deactivateOrderById(orderId: number): boolean {
@@ -1210,7 +1232,7 @@ export function deactivateOrderById(orderId: number): boolean {
 	return true
 }
 
-export function activateOrderById(orderId: number) {
+export function activateOrderById(orderId: number): boolean {
 	db.prepare('UPDATE `order` SET active = 0 WHERE id = ?').run(orderId)
 
 	const order = getOrderById(orderId)
@@ -1224,6 +1246,16 @@ export function activateOrderById(orderId: number) {
 	updateCollectibleOwnershipToSelling(userCollectible[0].id)
 	return true
 }
+
+export function getOrderById(orderId: number): Order {
+	const order = db.prepare('SELECT * FROM `order` WHERE id = ?').get(orderId)
+
+	if(order)
+		order.active = Boolean(order.active)
+
+	return order
+}
+
 
 export function getCollectibleOwnershipsNotSelling(userId: string): UserCollectible[] {
 	const userCollectibles = db
@@ -1293,10 +1325,3 @@ export function updateCollectibleOwnershipsToNotSelling(...userCollectibleIds: n
 	db.prepare(`UPDATE user_collectible SET selling = 0 WHERE id IN ${placeholder}`).run(...userCollectibleIds)
 }
 
-export function getAllOrderSides() {
-	return db.prepare(`SELECT * FROM order_side`).all()
-}
-
-export function getAllOrderTypes() {
-	return db.prepare(`SELECT * FROM order_type`).all()
-}

@@ -104,23 +104,18 @@ const insertOrderEndpoint = async function (
 						return
 					}
 
-					// ! For some reason, if quantity is 2, it creates 8 rows in the db
-					// TODO: FIX IT!!!!!!!!!!!!!!!!!!!!!!!!!!
-					// TODO: and maybe, make createOrder sync the selling in the query itself
-
 					for (let i = 0; i < quantity; i++) {
-						console.log( i )
 						createOrder(user.id, collectibleId, type, side, price)
-
-						updateCollectibleOwnershipToSelling(userCollectibles[i].id)
 					}
 				}
+				break
 
 				case 'BUY': {
 					for (let i = 0; i < quantity; i++) {
 						createOrder(user.id, collectibleId, type, side, price)
 					}
 				}
+				break
 			}
 
 			// TODO: call the order logic
