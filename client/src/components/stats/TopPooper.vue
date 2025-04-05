@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import noPfp from "../../assets/no_pfp.webp"
+import Asset from "../../types/Asset"
 import { Frequency } from "../../types/Frequency"
 import { User } from "../../types/User"
 
@@ -30,7 +30,7 @@ function capitalizeFirstLetter(string: string) {
       <div class="stat-figure text-secondary">
         <div class="avatar">
           <div class="w-16 rounded-full">
-            <img alt="Profile picture" :src="props.user?.pfp ?? noPfp" />
+            <img alt="Profile picture" :src="props.user?.pfp ?? Asset.NO_PFP" />
           </div>
         </div>
       </div>

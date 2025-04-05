@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onMounted, ref, watchEffect } from 'vue'
 import { useAPIStore } from '../../stores/api'
-import noPfp from '../../assets/no_pfp.webp'
+import Asset from '../../types/Asset'
 import { formatDate } from '../../utils/dateFormatter'
 import { User } from '../../types/User'
 import HeroiconsTrash from '~icons/heroicons/trash'
@@ -79,7 +79,7 @@ onMounted(() => {
                             <div class="flex flex-row items-center gap-3">
                                 <div class="avatar">
                                     <div class="rounded-full h-12 w-12">
-                                        <img :src="getUser(poop.user_id)?.pfp ?? noPfp" alt="Profile Picture" />
+                                        <img :src="getUser(poop.user_id)?.pfp ?? Asset.NO_PFP" alt="Profile Picture" />
                                     </div>
                                 </div>
                                 <div>

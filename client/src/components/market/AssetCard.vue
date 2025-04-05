@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Card } from "../../types/Card"
-import merdollar from '../../assets/merdollar.webp'
+import Asset from "../../types/Asset";
 import router from "../../router/router";
 
 const props = defineProps<{
@@ -26,7 +26,7 @@ const props = defineProps<{
                 <div class="w-[50%] rounded-r-full bg-primary flex items-center justify-center">
                     <span class="inline-flex items-center">
                         <p class="text-lg mr-1">{{ price.toFixed(0) }}</p>
-                        <img alt="Merdollar" class="merdollar h-[18px] w-[18px]" :src="merdollar" />
+                        <img alt="Merdollar" class="merdollar h-[18px] w-[18px]" :src="Asset.MERDOLLAR" />
                     </span>
                 </div>
             </div>

@@ -9,8 +9,7 @@ import HeroiconsOutlineRefresh from '~icons/heroicons-outline/refresh'
 import UilCancel from '~icons/uil/cancel'
 import CardWithCount from '../../components/convert/CardWithCount.vue'
 import JSConfetti from "js-confetti"
-import cardBack from '../../assets/card_back.webp'
-import cantConvert from '../../assets/cant_convert.webp'
+import Asset from '../../types/Asset'
 
 const { client } = useAPIStore()
 const sessionStore = useSessionStore()
@@ -104,7 +103,7 @@ function animateConversion() {
       foundCollectibleWrapper.classList.add('hidden')
       document.querySelector('body').style.overflowY = 'auto'
       overlay.remove()
-      foundCollectibleImage.src = cardBack
+      foundCollectibleImage.src = Asset.CARD_BACK
       reset()
       await fetchCollectibles()
     }, 750)
@@ -135,7 +134,7 @@ onMounted(async () => {
       </div>
       <div v-if="collectibles.length == 0" class="no-collectibles-wrapper w-full h-[80vh] flex flex-col items-center justify-center">
         <h1 class="text-4xl text-center font-bold text-error">You don't have any collectibles to convert</h1>
-        <img :src="cantConvert" alt="No collectibles" class="w-10/12 sm:w-5/8 lg:w-1/3" />
+        <img :src="Asset.CANT_CONVERT" alt="No collectibles" class="w-10/12 sm:w-5/8 lg:w-1/3" />
       </div>
     </div>
 
@@ -159,7 +158,7 @@ onMounted(async () => {
     <div class="found-collectible z-30 w-2/3 md:w-1/3 lg:w-1/5 cursor-pointer absolute bottom-[-45%] hidden">
       <img id="foundCollectibleImage" alt="Collectible image" :class="getCardRarityClass(foundCollectible.rarity_id)"
         class="collectible mb-5 rounded-2xl"
-        :src="cardBack" />
+        :src="Asset.CARD_BACK" />
       <h3 class="text-4xl w-full text-center font-bold" :class="{ 'no-opacity': !animationDone }">{{
         foundCollectible.name }}</h3>
       <h3 class="text-2xl w-full text-center font-bold"

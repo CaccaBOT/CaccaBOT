@@ -4,7 +4,7 @@ import router from "../router/router"
 import { useGlobalStore } from "../stores/global"
 import { useAPIStore } from "../stores/api"
 import { UserStats } from "../types/UserStats"
-import noPfp from "../assets/no_pfp.webp"
+import Asset from "../types/Asset.ts"
 import HeroiconsPencil from "~icons/heroicons/pencil"
 import { Poop } from "../types/Profile.ts"
 import { useSessionStore } from "../stores/session.ts"
@@ -99,7 +99,7 @@ onMounted(async () => {
               :src="
                 (isOwnProfile()
                   ? sessionStore.session.pfp
-                  : globalStore.profile.pfp) ?? noPfp
+                  : globalStore.profile.pfp) ?? Asset.NO_PFP
               "
             />
           </div>

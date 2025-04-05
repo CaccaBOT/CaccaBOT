@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onMounted, ref, watch } from "vue"
 import { useAPIStore } from "../stores/api"
-import noPfp from "../assets/no_pfp.webp"
+import Asset from "../types/Asset.ts"
 import { User } from "../types/User.ts"
 import { useToast } from "vue-toastification"
 import router from "../router/router.ts"
@@ -46,7 +46,7 @@ onMounted(async () => {
     <div v-show="users == null" class="loader-wrapper flex h-[85vh] w-full items-center justify-center">
       <span class="loading loading-spinner loading-lg"></span>
     </div>
-    <div class="w-10/12 mx-auto my-2">
+    <div v-show="users != null" class="w-10/12 mx-auto my-2">
       <label class="input w-full">
         <HeroiconsMagnifyingGlass16Solid />
         <input v-model="search" type="search" required placeholder="Search" />
@@ -57,7 +57,7 @@ onMounted(async () => {
         <div class="card-body mx-auto flex flex-col">
           <div class="avatar mx-auto">
             <div class="mb-2 w-20 rounded-full ring-3 ring-primary ring-offset-2 ring-offset-base-100">
-              <img alt="Profile picture" :src="user.pfp ?? noPfp" />
+              <img alt="Profile picture" :src="user.pfp ?? Asset.NO_PFP" />
             </div>
           </div>
           <div class="flex flex-col items-center">

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import merdollar from "../../assets/merdollar.webp"
+import Asset from '../../types/Asset';
 const props = defineProps<{
   value: number
   includesAssets: boolean
@@ -16,7 +16,7 @@ const props = defineProps<{
           <img
             alt="Merdollar"
             class="merdollar ml-2 inline h-[50px] w-[50px]"
-            :src="merdollar"
+            :src="Asset.MERDOLLAR"
           />
         </div>
         <div v-show="props.includesAssets" class="stat-desc mt-2">

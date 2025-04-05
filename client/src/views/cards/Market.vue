@@ -1,9 +1,8 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
-import AssetCard from '../../components/market/AssetCard.vue';
+import { onMounted, ref } from 'vue'
+import AssetCard from '../../components/market/AssetCard.vue'
 import { Card } from '../../types/Card';
-import { CollectibleRarity } from '../../enums/CollectibleRarity';
-import { useAPIStore } from '../../stores/api';
+import { useAPIStore } from '../../stores/api'
 const { client } = useAPIStore()
 const collectibles = ref<Card[]>([])
 

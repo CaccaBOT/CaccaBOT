@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import router from "../../router/router"
-import noPfp from "../../assets/no_pfp.webp"
 import { onMounted, ref } from "vue"
+import Asset from "../../types/Asset"
 import { useSessionStore } from "../../stores/session"
 import { useAPIStore } from "../../stores/api"
 import { useGlobalStore } from "../../stores/global"
@@ -77,7 +77,7 @@ function onFileChange(event: Event) {
         <img
           alt="Profile Picture"
           class="h-24 w-24"
-          :src="previewSrc ?? sessionStore.session.pfp ?? noPfp"
+          :src="previewSrc ?? sessionStore.session.pfp ?? Asset.NO_PFP"
         />
       </div>
       <div>

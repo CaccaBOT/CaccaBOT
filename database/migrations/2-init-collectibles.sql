@@ -32,7 +32,7 @@ VALUES
 			WHERE
 				name = 'Sensazianale'
 		),
-		'https://caccabot-collectibles.pages.dev/jeffmerdos.webp'
+		'https://caccabot-assets.pages.dev/collectibles/jeffmerdos.webp'
 	);
 
 INSERT
@@ -49,7 +49,7 @@ VALUES
 			WHERE
 				name = 'Merdume'
 		),
-		'https://caccabot-collectibles.pages.dev/scopino.webp'
+		'https://caccabot-assets.pages.dev/collectibles/scopino.webp'
 	);
 
 INSERT
@@ -66,7 +66,7 @@ VALUES
 			WHERE
 				name = 'Merdume'
 		),
-		'https://caccabot-collectibles.pages.dev/cesso.webp'
+		'https://caccabot-assets.pages.dev/collectibles/cesso.webp'
 	);
 
 INSERT
@@ -83,7 +83,7 @@ VALUES
 			WHERE
 				name = 'Merdume'
 		),
-		'https://caccabot-collectibles.pages.dev/cartaigienica.webp'
+		'https://caccabot-assets.pages.dev/collectibles/cartaigienica.webp'
 	);
 
 INSERT
@@ -100,7 +100,7 @@ VALUES
 			WHERE
 				name = 'Merdume'
 		),
-		'https://caccabot-collectibles.pages.dev/cacapops.webp'
+		'https://caccabot-assets.pages.dev/collectibles/cacapops.webp'
 	);
 
 INSERT
@@ -117,7 +117,7 @@ VALUES
 			WHERE
 				name = 'Caccasmagorico'
 		),
-		'https://caccabot-collectibles.pages.dev/una_giornata_di_merda.webp'
+		'https://caccabot-assets.pages.dev/collectibles/una_giornata_di_merda.webp'
 	);
 
 INSERT
@@ -134,7 +134,7 @@ VALUES
 			WHERE
 				name = 'Escrementale'
 		),
-		'https://caccabot-collectibles.pages.dev/supercacca.webp'
+		'https://caccabot-assets.pages.dev/collectibles/supercacca.webp'
 	);
 
 INSERT
@@ -151,7 +151,7 @@ VALUES
 			WHERE
 				name = 'Escrementale'
 		),
-		'https://caccabot-collectibles.pages.dev/merdinfiore.webp'
+		'https://caccabot-assets.pages.dev/collectibles/merdinfiore.webp'
 	);
 
 INSERT
@@ -168,7 +168,7 @@ VALUES
 			WHERE
 				name = 'Escrementale'
 		),
-		'https://caccabot-collectibles.pages.dev/merdangelo.webp'
+		'https://caccabot-assets.pages.dev/collectibles/merdangelo.webp'
 	);
 
 INSERT
@@ -185,7 +185,7 @@ VALUES
 			WHERE
 				name = 'Merdume'
 		),
-		'https://caccabot-collectibles.pages.dev/gelano.webp'
+		'https://caccabot-assets.pages.dev/collectibles/gelano.webp'
 	);
 
 INSERT
@@ -202,7 +202,7 @@ VALUES
 			WHERE
 				name = 'Caccasmagorico'
 		),
-		'https://caccabot-collectibles.pages.dev/cesso_jeff_merdos.webp'
+		'https://caccabot-assets.pages.dev/collectibles/cesso_jeff_merdos.webp'
 	);
 
 INSERT
@@ -219,7 +219,7 @@ VALUES
 			WHERE
 				name = 'Escrementale'
 		),
-		'https://caccabot-collectibles.pages.dev/caccasamurai.webp'
+		'https://caccabot-assets.pages.dev/collectibles/caccasamurai.webp'
 	);
 
 INSERT
@@ -236,7 +236,7 @@ VALUES
 			WHERE
 				name = 'Sensazianale'
 		),
-		'https://caccabot-collectibles.pages.dev/caccantante.webp'
+		'https://caccabot-assets.pages.dev/collectibles/caccantante.webp'
 	);
 
 INSERT
@@ -253,7 +253,7 @@ VALUES
 			WHERE
 				name = 'Merdume'
 		),
-		'https://caccabot-collectibles.pages.dev/cheesmerdo.webp'
+		'https://caccabot-assets.pages.dev/collectibles/cheesmerdo.webp'
 	);
 
 INSERT
@@ -270,7 +270,7 @@ VALUES
 			WHERE
 				name = 'Escrementale'
 		),
-		'https://caccabot-collectibles.pages.dev/merdella.webp'
+		'https://caccabot-assets.pages.dev/collectibles/merdella.webp'
 	);
 
 INSERT
@@ -287,7 +287,7 @@ VALUES
 			WHERE
 				name = 'Escrementale'
 		),
-		'https://caccabot-collectibles.pages.dev/merdiamante.webp'
+		'https://caccabot-assets.pages.dev/collectibles/merdiamante.webp'
 	);
 
 INSERT
@@ -304,7 +304,7 @@ VALUES
 			WHERE
 				name = 'Merdume'
 		),
-		'https://caccabot-collectibles.pages.dev/caccode.webp'
+		'https://caccabot-assets.pages.dev/collectibles/caccode.webp'
 	);
 
 INSERT
@@ -321,7 +321,7 @@ VALUES
 			WHERE
 				name = 'Merdume'
 		),
-		'https://caccabot-collectibles.pages.dev/fontanale.webp'
+		'https://caccabot-assets.pages.dev/collectibles/fontanale.webp'
 	);
 
 INSERT
@@ -338,7 +338,7 @@ VALUES
 			WHERE
 				name = 'Merdume'
 		),
-		'https://caccabot-collectibles.pages.dev/micismerdo.webp'
+		'https://caccabot-assets.pages.dev/collectibles/micismerdo.webp'
 	);
 
 INSERT
@@ -355,7 +355,7 @@ VALUES
 			WHERE
 				name = 'Sensazianale'
 		),
-		'https://caccabot-collectibles.pages.dev/caccometa.webp'
+		'https://caccabot-assets.pages.dev/collectibles/caccometa.webp'
 	);
 
 INSERT
@@ -372,7 +372,7 @@ VALUES
 			WHERE
 				name = 'Escrementale'
 		),
-		'https://caccabot-collectibles.pages.dev/merdavid.webp'
+		'https://caccabot-assets.pages.dev/collectibles/merdavid.webp'
 	);
 
 INSERT
@@ -389,7 +389,7 @@ VALUES
 			WHERE
 				name = 'Caccasmagorico'
 		),
-		'https://caccabot-collectibles.pages.dev/merdapocalypse.webp'
+		'https://caccabot-assets.pages.dev/collectibles/merdapocalypse.webp'
 	);
 
 INSERT
@@ -406,7 +406,7 @@ VALUES
 			WHERE
 				name = 'Merdume'
 		),
-		'https://caccabot-collectibles.pages.dev/lumacano.webp'
+		'https://caccabot-assets.pages.dev/collectibles/lumacano.webp'
 	);
 
 INSERT
@@ -423,7 +423,7 @@ VALUES
 			WHERE
 				name = 'Sensazianale'
 		),
-		'https://caccabot-collectibles.pages.dev/caccahacker.webp'
+		'https://caccabot-assets.pages.dev/collectibles/caccahacker.webp'
 	);
 
 INSERT
@@ -440,7 +440,7 @@ VALUES
 			WHERE
 				name = 'Escrementale'
 		),
-		'https://caccabot-collectibles.pages.dev/cagamella.webp'
+		'https://caccabot-assets.pages.dev/collectibles/cagamella.webp'
 	);
 
 INSERT
@@ -457,5 +457,5 @@ VALUES
 			WHERE
 				name = 'Sensazianale'
 		),
-		'https://caccabot-collectibles.pages.dev/caccompleanno.webp'
+		'https://caccabot-assets.pages.dev/collectibles/caccompleanno.webp'
 	);

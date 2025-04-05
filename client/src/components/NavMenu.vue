@@ -10,7 +10,9 @@ import gsap from "gsap"
 import { useModalStore } from "../stores/modal"
 import { ModalEnum } from "../types/ModalEnum"
 import AkarIconsGear from '~icons/akar-icons/gear'
+import { useToast } from "vue-toastification"
 
+const toast = useToast()
 const sessionStore = useSessionStore()
 const modalStore = useModalStore()
 const navMenu = ref<HTMLElement | null>(null)
@@ -33,6 +35,7 @@ function logout() {
   sessionStore.logout()
   modalStore.close()
   router.push("/leaderboard")
+  toast.success("Logged out successfully")
 }
 
 watch(

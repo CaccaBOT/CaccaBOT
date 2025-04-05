@@ -5,7 +5,7 @@ import HeroiconsTrophy from "~icons/heroicons/trophy"
 import HeroiconsBookOpen from "~icons/heroicons/book-open"
 import HeroiconsChartBar from "~icons/heroicons/chart-bar"
 import HeroiconsUsers from "~icons/heroicons/users"
-import noPfp from "../assets/no_pfp.webp"
+import Asset from '../types/Asset';
 import { useSessionStore } from "../stores/session"
 import NavMenu from "../components/NavMenu.vue"
 import StreamlineCards from "~icons/streamline/cards"
@@ -248,7 +248,7 @@ onMounted(() => {
           sessionStore.session.id != null ? toggleNavMenu() : showLoginModal()
           " class="avatar absolute right-[4vw]">
           <div class="w-16 rounded-full bg-base-300 ring-3 ring-primary ring-offset-2 ring-offset-base-100">
-            <img alt="CaccaBOT Logo" fetchpriority="high" :src="sessionStore.session.pfp ?? noPfp" />
+            <img alt="CaccaBOT Logo" fetchpriority="high" :src="sessionStore.session.pfp ?? Asset.NO_PFP" />
           </div>
         </div>
         <NavMenu />
