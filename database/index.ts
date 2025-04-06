@@ -76,6 +76,10 @@ export function getCollectibleOwnershipById(userCollectibleId: number): UserColl
 	return userCollectible
 }
 
+export function setCollectibleOwnershipUser(userCollectibleId: number, userId: string) {
+	db.prepare('UPDATE user_collectible SET user_id = ? WHERE id = ?').run(userId, userCollectibleId)
+}
+
 export function deleteUserCollectible(userCollectibleId: number) {
 	db.prepare(
 		`DELETE FROM user_collectible WHERE id = ?`,
@@ -1219,7 +1223,9 @@ export function deleteOrder(orderId: number): boolean {
 
 
 export function executeOrder(orderId: number, timestamp: Date): boolean {
-	db.prepare('UPDATE `order` SET executed = 1, execution_timestamp = ? WHERE id = ?').run(timestamp, orderId)
+	db.prepare(
+		'UPDATE `order` SET executed = 1, execution_timestamp = ? WHERE id = ?'
+	).run(timestamp.toISOString(), orderId)
 
 	return deactivateOrder(orderId)
 }
@@ -1254,6 +1260,10 @@ export function activateOrder(orderId: number): boolean {
 	return true
 }
 
+export function updateOrderPrice(orderId: number, price: number) {
+	db.prepare('UPDATE `order` set price = ? WHERE id = ?').run(price, orderId)
+}
+
 export function getOrder(orderId: number): Order {
 	const order = db.prepare('SELECT * FROM `order` WHERE id = ?').get(orderId)
 
@@ -1263,6 +1273,84 @@ export function getOrder(orderId: number): Order {
 	}
 
 	return order
+}
+
+export function getOrdersByType(type: OrderType): Order[] {
+	const orders = db.prepare('SELECT * FROM `order` WHERE type = ?').all(type)
+
+	for(let i in orders)
+		if(orders[i]) {
+			orders[i].active = Boolean(orders[i].active)
+			orders[i].executed = Boolean(orders[i].executed)
+		}
+	
+	return orders
+}
+
+export function getActiveOrdersByType(type: OrderType): Order[] {
+	const orders = db.prepare('SELECT * FROM `order` WHERE active = 1 AND type = ?').all(type)
+
+	for(let i in orders)
+		if(orders[i]) {
+			orders[i].active = Boolean(orders[i].active)
+			orders[i].executed = Boolean(orders[i].executed)
+		}
+	
+	return orders
+}
+
+export function getSellActiveOrdersByType(type: OrderType): Order[] {
+	const orders = db.prepare('SELECT * FROM `order` WHERE type = ? AND side = \'SELL\'').all(type)
+
+	for(let i in orders)
+		if(orders[i]) {
+			orders[i].active = Boolean(orders[i].active)
+			orders[i].executed = Boolean(orders[i].executed)
+		}
+	
+	return orders
+}
+
+export function getBuyActiveOrdersByType(type: OrderType): Order[] {
+	const orders = db.prepare(
+		'SELECT * FROM `order` WHERE active = 1 AND type = ? AND side = \'BUY\''
+	).all(type)
+
+	for(let i in orders)
+		if(orders[i]) {
+			orders[i].active = Boolean(orders[i].active)
+			orders[i].executed = Boolean(orders[i].executed)
+		}
+	
+	return orders
+}
+
+export function getSellActiveOrdersByCollectibleAndType(collectibleId: number, type: OrderType): Order[] {
+	const orders = db.prepare(
+		'SELECT * FROM `order` WHERE active = 1 AND type = ? AND collectible_id = ? side = \'SELL\''
+	).all(collectibleId, type)
+
+	for(let i in orders)
+		if(orders[i]) {
+			orders[i].active = Boolean(orders[i].active)
+			orders[i].executed = Boolean(orders[i].executed)
+		}
+	
+	return orders
+}
+
+export function getBuyActiveOrdersByCollectibleAndType(collectibleId: number, type: OrderType): Order[] {
+	const orders = db.prepare(
+		'SELECT * FROM `order` WHERE active = 1 AND type = ? AND collectible_id = ? AND side = \'BUY\''
+	).all(collectibleId, type)
+
+	for(let i in orders)
+		if(orders[i]) {
+			orders[i].active = Boolean(orders[i].active)
+			orders[i].executed = Boolean(orders[i].executed)
+		}
+	
+	return orders
 }
 
 export function getOrdersExecuted(collectibleId: number): Order[] {
