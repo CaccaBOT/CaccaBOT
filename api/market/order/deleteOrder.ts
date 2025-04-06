@@ -7,8 +7,8 @@ import {
 
 import { authenticate } from '../../../middleware/auth'
 import {
-	getOrderById,
-	deactivateOrderById,
+	getOrder,
+	deactivateOrder,
 } from '../../../database/index'
 
 interface Params {
@@ -26,7 +26,7 @@ const deleteOrderEndpoint = async function (
 
 			const user = await authenticate(req, res)
 
-			const order = getOrderById(orderId)
+			const order = getOrder(orderId)
 
 			// Input validation
 
@@ -52,7 +52,7 @@ const deleteOrderEndpoint = async function (
 
 			// Logic
 
-			const opResult = deactivateOrderById(orderId)
+			const opResult = deactivateOrder(orderId)
 
 			if (opResult == false) {
 				res.code(403).send({

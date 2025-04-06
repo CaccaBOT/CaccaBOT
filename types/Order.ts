@@ -8,4 +8,5 @@ export type Order = {
     side: OrderSide
     price: number
     active: boolean
+    executed: boolean
 }

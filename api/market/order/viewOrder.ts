@@ -6,7 +6,7 @@ import {
 } from 'fastify'
 
 import {
-	getOrderById,
+	getOrder,
 } from '../../../database/index'
 
 interface Params {
@@ -22,7 +22,7 @@ const viewOrderEndpoint = async function (
 		async (req: FastifyRequest<{ Params: Params }>, res: FastifyReply) => {
 			const orderId = Number.parseInt(req.params.id)
 
-			const order = getOrderById(orderId)
+			const order = getOrder(orderId)
 
 			// Input validation
 
