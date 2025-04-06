@@ -5,7 +5,7 @@ import {
 	RouteOptions,
 } from 'fastify'
 
-import { deleteUserCollectible, getCollectiblesOfRarity, addCollectibleToUser, getAllCollectibles, getCollectibleOwnerships, getRarities } from '../../database'
+import { deleteUserCollectible, getCollectiblesOfRarity, addCollectibleToUser, getAllCollectibles, getRarities, getCollectibleOwnershipsNotSelling } from '../../database'
 import { authenticate } from '../../middleware/auth'
 import achievementChecker from '../../achievements/check'
 import { config } from '../../config/loader'
@@ -26,7 +26,7 @@ const convertEndpoint = async function (
             const user = await authenticate(req, res)
             const collectiblesToConvert = req.body.collectibles
             const allCollectibles = getAllCollectibles()
-            const collectibleOwnerships = getCollectibleOwnerships(user.id)
+            const collectibleOwnerships = getCollectibleOwnershipsNotSelling(user.id)
 
             // check for quantity
             if (collectiblesToConvert.length != 10) {
