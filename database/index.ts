@@ -1218,8 +1218,8 @@ export function deleteOrder(orderId: number): boolean {
 }
 
 
-export function executeOrder(orderId: number): boolean {
-	db.prepare('UPDATE `order` SET executed = 1 WHERE id = ?').run(orderId)
+export function executeOrder(orderId: number, timestamp: Date): boolean {
+	db.prepare('UPDATE `order` SET executed = 1, execution_timestamp = ? WHERE id = ?').run(timestamp, orderId)
 
 	return deactivateOrder(orderId)
 }
@@ -1295,7 +1295,7 @@ export function getLimitOrdersExecuted(collectibleId: number): Order[] {
 
 export function getLastLimitOrderExecuted(collectibleId: number): Order {
 	const order = db.prepare(
-		'SELECT * FROM `order` WHERE type = `LIMIT` AND executed = 1 AND collectible_id = ? ORDER BY id DESC LIMIT 1'
+		'SELECT * FROM `order` WHERE type = \'LIMIT\' AND executed = 1 AND collectible_id = ? ORDER BY execution_timestamp DESC LIMIT 1'
 	).get(collectibleId)
 
 	if(order) {

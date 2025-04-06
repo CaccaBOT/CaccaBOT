@@ -22,6 +22,7 @@ CREATE TABLE IF NOT EXISTS "order" (
 	price INTEGER,
 	active INTEGER DEFAULT 1,
 	executed INTEGER DEFAULT 0,
+	execution_timestamp TIMESTAMP,
 	FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE CASCADE ON UPDATE CASCADE,
 	FOREIGN KEY (collectible_id) REFERENCES collectible(id) ON DELETE CASCADE ON UPDATE CASCADE,
 	FOREIGN KEY (type) REFERENCES order_type(value),
