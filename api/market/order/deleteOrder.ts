@@ -10,6 +10,7 @@ import {
 	getOrder,
 	deactivateOrder,
 } from '../../../database/index'
+import marketLogic from '../../../market'
 
 interface Params {
 	id: string
@@ -61,7 +62,7 @@ const deleteOrderEndpoint = async function (
 				return
 			}
 
-			// TODO: call the order logic
+			marketLogic.updateAllOrders()
 		},
 	)
 }

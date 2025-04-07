@@ -1171,11 +1171,11 @@ export function getAllAchievements() {
 
 // card market
 
-export function getAllOrderSides() {
+export function getAllOrderSides(): OrderSide[] {
 	return db.prepare(`SELECT * FROM order_side`).all()
 }
 
-export function getAllOrderTypes() {
+export function getAllOrderTypes(): OrderType[] {
 	return db.prepare(`SELECT * FROM order_type`).all()
 }
 

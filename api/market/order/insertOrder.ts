@@ -15,6 +15,7 @@ import {
 	updateCollectibleOwnershipToSelling,
 } from '../../../database/index'
 import { OrderSide, OrderType } from '../../../types/OrderEnums'
+import marketLogic from '../../../market'
 
 interface Params {
 	collectibleId: string
@@ -118,7 +119,7 @@ const insertOrderEndpoint = async function (
 				break
 			}
 
-			// TODO: call the order logic
+			marketLogic.updateAllOrders()
 		},
 	)
 }
