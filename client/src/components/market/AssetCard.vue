@@ -31,7 +31,7 @@ const props = defineProps<{
                 </div>
             </div>
             <div class="card-actions justify-center mt-5">
-                <RouterLink class="w-full" :to="`${router.currentRoute.value.fullPath}cards/market/order/${collectible.id}`">
+                <RouterLink class="w-full" :to="`${router.currentRoute.value.fullPath}/order/${collectible.id}`">
                     <button class="btn btn-primary w-10/12 mb-5 text-lg">Trade</button>
                 </RouterLink>
             </div>
