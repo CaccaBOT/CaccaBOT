@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import homeImage from "../assets/home.webp"
+import Asset from "../types/Asset"
 import HeroiconsDownload from "~icons/heroicons/arrow-down-tray"
 import { onMounted, ref } from "vue"
-import MdiGithub from '~icons/mdi/github';
-import AntDesignTikTokOutlined from '~icons/ant-design/tik-tok-outlined';
-import SimpleIconsInstagram from '~icons/simple-icons/instagram';
+import MdiGithub from '~icons/mdi/github'
+import AntDesignTikTokOutlined from '~icons/ant-design/tik-tok-outlined'
+import SimpleIconsInstagram from '~icons/simple-icons/instagram'
 import { useGlobalStore } from "../stores/global"
-import HeroiconsUserGroup from "~icons/heroicons/user-group?width=24px&height=24px"
-import { useSessionStore } from "../stores/session";
+import HeroiconsUserGroup from "~icons/heroicons/user-group"
+import { useSessionStore } from "../stores/session"
 const globalStore = useGlobalStore()
 const sessionStore = useSessionStore()
 
@@ -36,7 +36,7 @@ onMounted(async () => {
     </div>
     <div v-if="globalStore.instance.name"
       class="home-wrapper flex h-[85vh] w-full flex-col items-center justify-center">
-      <img alt="CaccaBOT Logo" fetchpriority="high" class="mb-5 sm:w-90 w-64" :src="homeImage" />
+      <img alt="CaccaBOT Logo" fetchpriority="high" class="mb-5 sm:w-90 w-64" :src="Asset.HOME" />
       <div class="prose text-center">
         <h1 class="mb-2">{{ globalStore.instance.name }}</h1>
         <p class="m-0 mb-4 p-2 text-xl">{{ globalStore.instance.description }}</p>

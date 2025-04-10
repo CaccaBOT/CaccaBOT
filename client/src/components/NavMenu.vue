@@ -7,24 +7,35 @@ import { useSessionStore } from "../stores/session"
 import HeroiconsPaintBrush from "~icons/heroicons/paint-brush"
 import { ref, watch, nextTick } from "vue"
 import gsap from "gsap"
+import { useModalStore } from "../stores/modal"
+import { ModalEnum } from "../types/ModalEnum"
+import AkarIconsGear from '~icons/akar-icons/gear'
+import { useToast } from "vue-toastification"
 
+const toast = useToast()
 const sessionStore = useSessionStore()
+const modalStore = useModalStore()
 const navMenu = ref<HTMLElement | null>(null)
 
 function showChangePasswordModal() {
   if (sessionStore.session.id) {
-    sessionStore.showChangePasswordModal = true
+    modalStore.open(ModalEnum.ChangePassword)
   }
 }
 
 function showChangeThemeModal() {
-  sessionStore.showChangeThemeModal = true
+  modalStore.open(ModalEnum.ChangeTheme)
+}
+
+function goToSettings() {
+  router.push("/settings")
 }
 
 function logout() {
   sessionStore.logout()
-  sessionStore.showLoginModal = false
+  modalStore.close()
   router.push("/leaderboard")
+  toast.success("Logged out successfully")
 }
 
 watch(
@@ -81,6 +92,12 @@ watch(
         <button @click="showChangeThemeModal">
           <HeroiconsPaintBrush class="text-xl" />
           Change Theme
+        </button>
+      </li>
+      <li>
+        <button @click="goToSettings">
+          <AkarIconsGear class="text-xl" />
+          Settings
         </button>
       </li>
       <li>

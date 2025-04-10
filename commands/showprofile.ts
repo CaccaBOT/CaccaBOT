@@ -1,18 +1,21 @@
 import { Command, Info } from '../types/Command'
-import { getUserProfileByUsername } from '../database/index'
+import { getUserProfileByPhone, getUserProfileByUsername } from '../database/index'
 import { Message } from 'whatsapp-web.js'
 
 const showprofile: Command = {
 	name: 'showprofile',
 	description: 'view the profile of a user',
 	execute: async (message: Message, info: Info) => {
-		if (!info.args[0]) {
-			message.reply('❌ Please provide a username')
-			return
-		}
 
-		const username = info.args[0]
-		const user = getUserProfileByUsername(username)
+		let user = null
+
+		if (!info.args[0]) {
+			const contact = await message.getContact()
+			user = getUserProfileByPhone(contact.number)
+		} else {
+			const username = info.args[0]
+			user = getUserProfileByUsername(username)
+		}
 
 		if (!user.id) {
 			message.reply('❌ User does not exist')

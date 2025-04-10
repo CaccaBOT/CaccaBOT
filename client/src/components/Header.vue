@@ -5,7 +5,7 @@ import HeroiconsTrophy from "~icons/heroicons/trophy"
 import HeroiconsBookOpen from "~icons/heroicons/book-open"
 import HeroiconsChartBar from "~icons/heroicons/chart-bar"
 import HeroiconsUsers from "~icons/heroicons/users"
-import noPfp from "../assets/no_pfp.webp"
+import Asset from '../types/Asset';
 import { useSessionStore } from "../stores/session"
 import NavMenu from "../components/NavMenu.vue"
 import StreamlineCards from "~icons/streamline/cards"
@@ -17,8 +17,13 @@ import IconoirBoxIso from '~icons/iconoir/box-iso'
 import WeuiShopOutlined from '~icons/weui/shop-outlined'
 import HugeiconsMenu02 from '~icons/hugeicons/menu-02'
 import HeroiconsOutlineRefresh from '~icons/heroicons-outline/refresh'
+import RiAwardLine from '~icons/ri/award-line'
+import HeroiconsInformationCircle from '~icons/heroicons/information-circle'
+import { useModalStore } from '../stores/modal'
+import { ModalEnum } from '../types/ModalEnum';
 
 const sessionStore = useSessionStore()
+const modalStore = useModalStore()
 
 function isActive(route: string): boolean {
   return router.currentRoute.value.path.startsWith(route)
@@ -26,7 +31,7 @@ function isActive(route: string): boolean {
 
 function showLoginModal() {
   if (sessionStore.session.id == null) {
-    sessionStore.showLoginModal = true
+    modalStore.open(ModalEnum.Login)
   }
 }
 
@@ -66,12 +71,28 @@ const menuItems = ref<MenuItem[]>([
     requiresAuth: false
   },
   {
-    label: "Manual",
-    icon: HeroiconsBookOpen,
-    route: "/manual",
+    label: "Info",
+    icon: HeroiconsInformationCircle,
+    route: "/info",
     class: "text-secondary",
     requiresAdmin: false,
-    requiresAuth: false
+    requiresAuth: false,
+    subsections: [
+      {
+        label: "Manual",
+        icon: HeroiconsBookOpen,
+        route: "/info/manual",
+        requiresAdmin: false,
+        requiresAuth: false
+      },
+      {
+        label: "Achievements",
+        icon: RiAwardLine,
+        route: "/info/achievements",
+        requiresAdmin: false,
+        requiresAuth: false
+      }
+    ]
   },
   {
     label: "Stats",
@@ -227,7 +248,7 @@ onMounted(() => {
           sessionStore.session.id != null ? toggleNavMenu() : showLoginModal()
           " class="avatar absolute right-[4vw]">
           <div class="w-16 rounded-full bg-base-300 ring-3 ring-primary ring-offset-2 ring-offset-base-100">
-            <img alt="CaccaBOT Logo" fetchpriority="high" :src="sessionStore.session.pfp ?? noPfp" />
+            <img alt="CaccaBOT Logo" fetchpriority="high" :src="sessionStore.session.pfp ?? Asset.NO_PFP" />
           </div>
         </div>
         <NavMenu />

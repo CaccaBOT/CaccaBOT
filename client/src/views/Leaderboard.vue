@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import noPoopsFound from "../assets/no_poops_found.webp"
 import router from "../router/router"
-import noPfp from "../assets/no_pfp.webp"
+import Asset from "../types/Asset"
 import { useGlobalStore } from "../stores/global"
 import { ref } from "vue"
 import HeroiconsChevronLeft from "~icons/heroicons/chevron-left?width=24px&height=24px"
@@ -156,7 +155,7 @@ function updateNewMonth() {
       alt="No poops found"
       class="mx-auto sm:w-full md:w-1/3"
       v-show="globalStore.leaderboard.length === 0 && !globalStore.isFetching"
-      :src="noPoopsFound"
+      :src="Asset.NO_POOPS_FOUND"
     />
 
     <h2
@@ -173,7 +172,7 @@ function updateNewMonth() {
     </div>
     <div
       v-show="globalStore.leaderboard.length > 0 && !globalStore.isFetching"
-      class="overflow-x-auto"
+      class="overflow-x-auto april-fools"
     >
       <table class="table-xl table w-full">
         <thead>
@@ -196,7 +195,7 @@ function updateNewMonth() {
               >
                 <div class="avatar">
                   <div class="mask mask-circle h-16 w-16">
-                    <img alt="Profile picture" :src="user.pfp ?? noPfp" />
+                    <img alt="Profile picture" :src="user.pfp ?? Asset.NO_PFP" />
                   </div>
                 </div>
                 <div>
@@ -218,6 +217,7 @@ function updateNewMonth() {
 </template>
 
 <style scoped>
+
 .header h1 {
   font-size: 2rem;
   font-weight: bold;

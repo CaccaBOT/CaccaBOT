@@ -1,14 +1,17 @@
 <script setup lang="ts">
-import { onMounted, ref } from "vue"
+import { ref } from "vue"
 import { useAPIStore } from "../../stores/api"
 import { useSessionStore } from "../../stores/session"
 import { Card } from "../../types/Card"
 import Pack from "../../components/Pack.vue"
-import merdollar from "../../assets/merdollar.webp"
+import Asset from "../../types/Asset"
 import { CollectibleRarity } from "../../enums/CollectibleRarity"
 import { getTextRarityClass, getCardRarityClass } from "../../services/collectibleService"
+import { useModalStore } from "../../stores/modal"
+import { ModalEnum } from "../../types/ModalEnum"
 const { client } = useAPIStore()
 const sessionStore = useSessionStore()
+const modalStore = useModalStore()
 const foundCard = ref({} as Card)
 const isOpening = ref(false)
 const packRef = ref(null)
@@ -75,6 +78,7 @@ async function reset() {
     <button
       v-if="!sessionStore.session.id"
       class="lg:w-1/8 btn btn-error mx-auto w-2/3 sm:w-2/3 md:w-1/5"
+      @click="() => modalStore.open(ModalEnum.Login)"
     >
       Login required
     </button>
@@ -85,7 +89,7 @@ async function reset() {
       class="lg:w-1/8 btn btn-success mx-auto w-2/3 sm:w-2/3 md:w-1/5"
       @click="openPack"
     >
-      Open Pack (5 <img class="merdollar h-[20px] w-[20px]" :src="merdollar" />)
+      Open Pack (5 <img class="merdollar h-[20px] w-[20px]" :src="Asset.MERDOLLAR" />)
     </button>
     <button
       id="notEnoughMoney"
@@ -96,7 +100,7 @@ async function reset() {
       <img
         alt="Merdollar"
         class="merdollar h-[20px] w-[20px]"
-        :src="merdollar"
+        :src="Asset.MERDOLLAR"
       />)
     </button>
   </div>

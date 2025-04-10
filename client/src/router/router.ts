@@ -39,14 +39,24 @@ const routes = [
     name: "ownProfile",
   },
   {
+    path: "/settings",
+    component: () => import("../views/Settings.vue"),
+    name: "settings",
+  },
+  {
     path: "/users",
     component: () => import("../views/Users.vue"),
     name: "users",
   },
   {
-    path: "/manual",
-    component: () => import("../views/Manual.vue"),
-    name: "manual",
+    path: "/info/manual",
+    component: () => import("../views/info/Manual.vue"),
+    name: "manualInfo",
+  },
+  {
+    path: "/info/achievements",
+    component: () => import("../views/info/AchievementsInfo.vue"),
+    name: "achievementsInfo",
   },
   {
     path: "/cards/pack",

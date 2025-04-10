@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import noPfp from "../../assets/no_pfp.webp"
-import { Frequency } from "../../types/Frequency"
+import Asset from "../../types/Asset"
 import { User } from "../../types/User"
 
 const props = defineProps<{
@@ -15,7 +14,7 @@ const props = defineProps<{
       <div class="stat-figure text-secondary">
         <div class="avatar">
           <div class="w-16 rounded-full">
-            <img alt="Profile picture" :src="props.user.pfp ?? noPfp" />
+            <img alt="Profile picture" :src="props.user.pfp ?? Asset.NO_PFP" />
           </div>
         </div>
       </div>

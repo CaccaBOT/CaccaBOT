@@ -2,7 +2,9 @@
 import { ref } from "vue"
 import { useSessionStore } from "../../stores/session"
 import { useAPIStore } from "../../stores/api"
+import { useModalStore } from "../../stores/modal"
 
+const modalStore = useModalStore()
 const sessionStore = useSessionStore()
 const { client } = useAPIStore()
 
@@ -32,15 +34,14 @@ async function change() {
       .querySelectorAll("input")
       .forEach((x) => x.classList.add("input-error"))
   } else {
-    sessionStore.showChangeUsernameModal = false
-    sessionStore.showLoginModal = false
+    modalStore.close()
     sessionStore.session.username = username
   }
 }
 
 function dismissModal(event) {
-  if (event.target.classList.contains("change-username-panel-wrapper")) {
-    sessionStore.showChangeUsernameModal = false
+  if (event.target.classList.contains("custom-modal")) {
+    modalStore.close()
   }
   newUsername.value = ""
   usernameError.value = ""
@@ -54,7 +55,7 @@ function validate() {
 
 <template>
   <div
-    class="change-username-panel-wrapper fixed left-0 top-0 z-50 flex h-[100vh] w-full items-center justify-center"
+    class="change-username-panel-wrapper custom-modal fixed left-0 top-0 z-50 flex h-[100vh] w-full items-center justify-center"
     @click="dismissModal($event)"
   >
     <div
@@ -88,7 +89,5 @@ function validate() {
 </template>
 
 <style scoped>
-.change-username-panel-wrapper {
-  background: #000a;
-}
+
 </style>

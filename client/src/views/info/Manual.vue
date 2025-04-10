@@ -19,7 +19,7 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="manual-wrapper prose mx-5">
+  <div class="manual-wrapper prose w-11/12 mx-auto">
     <div
       class="loader-wrapper flex h-[85vh] w-full items-center justify-center"
     >

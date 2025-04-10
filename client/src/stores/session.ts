@@ -5,13 +5,8 @@ import { useAPIStore } from "./api"
 export const useSessionStore = defineStore("session", {
   state: () => ({
     session: {} as Session,
-    showLoginModal: false,
     showNavMenu: false,
-    showChangePasswordModal: false,
-    showChangeUsernameModal: false,
-    showChangePfpModal: false,
     showMobileNavbar: false,
-    showChangeThemeModal: false,
     updateRequired: false,
   }),
   getters: {},

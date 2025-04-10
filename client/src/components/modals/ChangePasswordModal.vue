@@ -4,7 +4,10 @@ import { ref } from "vue";
 import { useSessionStore } from "../../stores/session"
 import { useAPIStore } from "../../stores/api"
 import { useToast } from "vue-toastification"
+import { useModalStore } from "../../stores/modal";
+
 const sessionStore = useSessionStore();
+const modalStore = useModalStore();
 const { client } = useAPIStore();
 const toast = useToast();
 
@@ -19,8 +22,8 @@ async function change() {
       const body = await response.json();
       toast.error(body.error);
     }
-    sessionStore.showChangePasswordModal = false;
-    sessionStore.showLoginModal = false;
+
+    modalStore.close()
     sessionStore.logout();
     router.push("/");
   } catch (e) {
@@ -29,15 +32,15 @@ async function change() {
 }
 
 function dismissModal(event) {
-  if (event.target.classList.contains("change-password-panel-wrapper")) {
-    sessionStore.showChangePasswordModal = false;
+  if (event.target.classList.contains("custom-modal")) {
+    modalStore.close()
   }
   newPassword.value = "";
 }
 </script>
 
 <template>
-  <div class="change-password-panel-wrapper fixed left-0 top-0 z-50 flex h-[100vh] w-full items-center justify-center" @click="dismissModal($event)">
+  <div class="change-password-panel-wrapper custom-modal fixed left-0 top-0 z-50 flex h-[100vh] w-full items-center justify-center" @click="dismissModal($event)">
     <div class="mx-auto flex w-[85vw] flex-col items-center gap-4 rounded-2xl bg-base-300 p-4 shadow-xl sm:w-2/3 md:h-[50vh] md:w-[50vw] lg:h-[35vh] lg:w-[40vw] xl:w-[30vw]">
       <div class="prose mx-auto my-4">
         <h1>Change Password</h1>
@@ -56,7 +59,5 @@ function dismissModal(event) {
 </template>
 
 <style scoped>
-.change-password-panel-wrapper {
-  background: #000a;
-}
+
 </style>

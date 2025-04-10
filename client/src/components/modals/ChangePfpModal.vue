@@ -1,12 +1,15 @@
 <script setup lang="ts">
 import router from "../../router/router"
-import noPfp from "../../assets/no_pfp.webp"
 import { onMounted, ref } from "vue"
+import Asset from "../../types/Asset"
 import { useSessionStore } from "../../stores/session"
 import { useAPIStore } from "../../stores/api"
 import { useGlobalStore } from "../../stores/global"
+import { useModalStore } from "../../stores/modal"
+
 const sessionStore = useSessionStore()
-const globalStore = useGlobalStore()
+const modalStore = useModalStore()
+
 const { client } = useAPIStore()
 const selectedFile = ref<File | null>(null)
 const previewSrc = ref<string | null>(null)
@@ -16,7 +19,7 @@ async function change() {
     const response = await client.changePfp(previewSrc.value)
     if (response.ok) {
       const { url } = await response.json()
-      sessionStore.showChangePfpModal = false
+      modalStore.close()
       sessionStore.session.pfp = url
       sessionStore.save()
       previewSrc.value = url
@@ -27,19 +30,19 @@ async function change() {
 async function clearPfp() {
   const response = await client.removePfp()
   if (response.ok) {
-    sessionStore.showChangePfpModal = false
+    modalStore.close()
     sessionStore.session.pfp = null
     sessionStore.save()
   }
 }
 
 function selectPfp() {
-  ;(document.querySelector("#pfpSelector") as HTMLElement).click()
+  (document.querySelector("#pfpSelector") as HTMLElement).click()
 }
 
 function dismissModal(event) {
-  if (event.target.classList.contains("change-profile-picture-panel-wrapper")) {
-    sessionStore.showChangePfpModal = false
+  if (event.target.classList.contains("custom-modal")) {
+    modalStore.close()
   }
 }
 
@@ -59,7 +62,7 @@ function onFileChange(event: Event) {
 
 <template>
   <div
-    class="change-profile-picture-panel-wrapper fixed left-0 top-0 z-50 flex h-[100vh] w-full items-center justify-center"
+    class="change-profile-picture-panel-wrapper custom-modal fixed left-0 top-0 z-50 flex h-[100vh] w-full items-center justify-center"
     @click="dismissModal($event)"
   >
     <div
@@ -74,7 +77,7 @@ function onFileChange(event: Event) {
         <img
           alt="Profile Picture"
           class="h-24 w-24"
-          :src="previewSrc ?? sessionStore.session.pfp ?? noPfp"
+          :src="previewSrc ?? sessionStore.session.pfp ?? Asset.NO_PFP"
         />
       </div>
       <div>
@@ -108,7 +111,5 @@ function onFileChange(event: Event) {
 </template>
 
 <style scoped>
-.change-profile-picture-panel-wrapper {
-  background: #000a;
-}
+
 </style>

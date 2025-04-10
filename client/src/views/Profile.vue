@@ -4,7 +4,7 @@ import router from "../router/router"
 import { useGlobalStore } from "../stores/global"
 import { useAPIStore } from "../stores/api"
 import { UserStats } from "../types/UserStats"
-import noPfp from "../assets/no_pfp.webp"
+import Asset from "../types/Asset.ts"
 import HeroiconsPencil from "~icons/heroicons/pencil"
 import { Poop } from "../types/Profile.ts"
 import { useSessionStore } from "../stores/session.ts"
@@ -13,7 +13,10 @@ import UserStatsBadge from "../components/UserStatsBadge.vue"
 import Inventory from "../components/profile/Inventory.vue"
 import ProfilePoopChart from "../components/profile/ProfilePoopChart.vue"
 import PoopUserStats from "../components/profile/PoopUserStats.vue"
+import { useModalStore } from "../stores/modal.ts"
+import { ModalEnum } from "../types/ModalEnum.ts"
 
+const modalStore = useModalStore()
 const globalStore = useGlobalStore()
 const { client } = useAPIStore()
 const sessionStore = useSessionStore()
@@ -96,7 +99,7 @@ onMounted(async () => {
               :src="
                 (isOwnProfile()
                   ? sessionStore.session.pfp
-                  : globalStore.profile.pfp) ?? noPfp
+                  : globalStore.profile.pfp) ?? Asset.NO_PFP
               "
             />
           </div>
@@ -106,7 +109,7 @@ onMounted(async () => {
           >
             <div
               class="flex h-full items-center justify-center"
-              @click="sessionStore.showChangePfpModal = true"
+              @click="modalStore.open(ModalEnum.ChangePfp)"
             >
               <HeroiconsPencil class="mx-auto text-center" color="black" />
             </div>
@@ -121,7 +124,7 @@ onMounted(async () => {
             <HeroiconsPencil
               v-show="isOwnProfile()"
               class="ml-1 inline cursor-pointer text-[1.25rem]"
-              @click="sessionStore.showChangeUsernameModal = true"
+              @click="modalStore.open(ModalEnum.ChangeUsername)"
             />
           </h1>
         </div>

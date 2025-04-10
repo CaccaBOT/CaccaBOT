@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import notFound from "../assets/404.webp"
+import Asset from '../types/Asset';
 </script>
 
 <template>
   <div class="not-found-wrapper flex h-[85vh] items-center justify-center">
     <img
       alt="Page not found"
-      :src="notFound"
+      :src="Asset.NOT_FOUND"
       class="w-[80vw] drop-shadow-xl md:w-[60vw] lg:w-[40vw]"
     />
     <div class="absolute flex flex-col font-black text-error z-[-1]">

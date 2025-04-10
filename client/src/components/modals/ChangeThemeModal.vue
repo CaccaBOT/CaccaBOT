@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { ref, watch } from "vue"
 import { useSessionStore } from "../../stores/session"
+import { useModalStore } from "../../stores/modal"
 
-const sessionStore = useSessionStore()
+const modalStore = useModalStore()
 
 const themes = [
   "dark",
   "light",
-  "mocha",
   "synthwave",
   "cyberpunk",
   "valentine",
@@ -30,8 +30,8 @@ watch(theme, () => {
 })
 
 function dismissModal(event) {
-  if (event.target.classList.contains("change-theme-panel-wrapper")) {
-    sessionStore.showChangeThemeModal = false
+  if (event.target.classList.contains("custom-modal")) {
+    modalStore.close()
   }
 }
 
@@ -46,7 +46,7 @@ theme.value = localStorage.getItem("theme")
 
 <template>
   <div
-    class="change-theme-panel-wrapper fixed left-0 top-0 z-50 flex h-[100vh] w-full items-center justify-center"
+    class="change-theme-panel-wrapper custom-modal fixed left-0 top-0 z-50 flex h-[100vh] w-full items-center justify-center"
     @click="dismissModal($event)"
   >
     <div
@@ -68,7 +68,5 @@ theme.value = localStorage.getItem("theme")
 </template>
 
 <style scoped>
-.change-theme-panel-wrapper {
-  background: #000a;
-}
+
 </style>
