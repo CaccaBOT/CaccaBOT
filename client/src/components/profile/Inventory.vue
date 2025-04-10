@@ -15,7 +15,7 @@ function toggleInventory() {
 function animateInventory(expanded: boolean) {
   nextTick(() => {
     gsap.to(".inventory", {
-      height: expanded ? "auto" : "250px",
+      height: expanded ? "auto" : "240px",
       duration: 0.5,
       ease: "power2.inOut",
       overflow: "hidden",
@@ -43,10 +43,10 @@ onMounted(() => {
 
     <div
       class="inventory m-5 flex flex-row flex-wrap justify-center md:justify-start"
-      style="height: 245px; overflow: hidden;"
+      style="height: 240px; overflow: hidden;"
     >
       <div
-        class="collectible prose relative m-5 mb-5 w-32 cursor-pointer"
+        class="collectible prose relative m-5 mt-0 mb-5 w-32 cursor-pointer"
         v-for="collectible of userCollectibles"
       >
         <span

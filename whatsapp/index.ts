@@ -55,46 +55,44 @@ client.on('message_create', async (message: Message) => {
 	try {
 		const parsedMessage = await parseMessage(message)
 		let id = parsedMessage?.sender
-	
-		if (!poopValidator.validate(parsedMessage?.content)) {
+
+		if (!poopValidator.validate(parsedMessage?.content) || id == null) {
 			return
 		}
-	
-		if (id != null) {
-			let foundUser = getUserProfileByPhone(id)
-	
-			if (!foundUser.id) {
-				const contact = await message.getContact()
-				const username = contact.pushname
-				const bio = await contact.getAbout()
-				createUser(id, username, bio)
-				foundUser = getUserProfileByPhone(id)
-			}
-			addPoop(foundUser.id)
-			const stats = poopStatsFromUserWithFilter(
-				foundUser.id,
-				moment().year(),
-				moment().month() + 1,
-			)
-			const poop = getLastPoop()
-			message.reply(
-				'✅ Saved' +
-					'\nID: ' +
-					poop.id +
-					'\nTimestamp: ' +
-					poop.timestamp +
-					'\nRank: ' +
-					stats.monthlyLeaderboardPosition +
-					'°' +
-					'\nStreak: ' +
-					stats.streak +
-					'\nDaily AVG: ' +
-					stats.poopAverage +
-					'\nMonthly: ' +
-					stats.monthlyPoops,
-			)
-			achievementChecker.checkPoopBased(foundUser, poop, message)
+
+		let foundUser = getUserProfileByPhone(id)
+
+		if (!foundUser.id) {
+			const contact = await message.getContact()
+			const username = contact.pushname
+			const bio = await contact.getAbout()
+			createUser(id, username, bio)
+			foundUser = getUserProfileByPhone(id)
 		}
+		addPoop(foundUser.id)
+		const stats = poopStatsFromUserWithFilter(
+			foundUser.id,
+			moment().year(),
+			moment().month() + 1,
+		)
+		const poop = getLastPoop()
+		message.reply(
+			'✅ Saved' +
+			'\nID: ' +
+			poop.id +
+			'\nTimestamp: ' +
+			poop.timestamp +
+			'\nRank: ' +
+			stats.monthlyLeaderboardPosition +
+			'°' +
+			'\nStreak: ' +
+			stats.streak +
+			'\nDaily AVG: ' +
+			stats.poopAverage +
+			'\nMonthly: ' +
+			stats.monthlyPoops,
+		)
+		achievementChecker.checkPoopBased(foundUser, poop, message)
 	} catch (e) {
 		log.error(e)
 	}
