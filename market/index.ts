@@ -30,7 +30,7 @@ const marketLogic = {
     },
 
     updateAllOrders() {
-        const orderTypesDir = path.resolve(`${__dirname}/action`)
+        const orderTypesDir = path.resolve(`${__dirname}/orderTypes`)
         fs.readdirSync(orderTypesDir).forEach(async (file) => {
             const orderLogicModule = await import(`${orderTypesDir}/${file}`)
             const orderLogic = orderLogicModule.default

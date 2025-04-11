@@ -11,12 +11,12 @@ interface Params {
 	collectibleId: string
 }
 
-const getMarketPrice = async function (
+const getMarketPriceEndpoint = async function (
 	server: FastifyInstance,
 	options: RouteOptions,
 ) {
 	server.get(
-		'/:collectibleId',
+		'/price/:collectibleId',
 		async (req: FastifyRequest<{ Params: Params }>, res: FastifyReply) => {
 			const collectibleId = Number.parseInt(req.params.collectibleId)
 
@@ -37,3 +37,5 @@ const getMarketPrice = async function (
 		},
 	)
 }
+
+export default getMarketPriceEndpoint
