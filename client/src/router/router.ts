@@ -95,7 +95,7 @@ const routes = [
   },
   {
     path: "/settings",
-    component: () => import("../views/UserSettings.vue"),
+    component: () => import("../views/Settings.vue"),
     name: "userSettings",
   },
   {
