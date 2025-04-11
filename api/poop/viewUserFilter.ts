@@ -18,7 +18,7 @@ const viewUserFilterEndpoint = async function (
 	options: RouteOptions,
 ) {
 	server.get(
-		'/:id/:year/:month',
+		'/user/:id/:year/:month',
 		async (req: FastifyRequest<{ Params: Params }>, res: FastifyReply) => {
 			const { id, year, month } = req.params
 			res.code(200).send(getPoopsFromUserWithFilter(id, year, month))

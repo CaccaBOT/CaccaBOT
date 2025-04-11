@@ -90,7 +90,9 @@ client.on('message_create', async (message: Message) => {
 			'\nDaily AVG: ' +
 			stats.poopAverage +
 			'\nMonthly: ' +
-			stats.monthlyPoops,
+			stats.monthlyPoops +
+			'\nCertificate: ' +
+			`${config.serverUrl}/poop/${poop.id}`
 		)
 		achievementChecker.checkPoopBased(foundUser, poop, message)
 	} catch (e) {
