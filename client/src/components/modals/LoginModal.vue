@@ -5,25 +5,25 @@ import { ref } from "vue";
 import { useSessionStore } from "../../stores/session";
 import { useAPIStore } from "../../stores/api";
 import { useToast } from "vue-toastification";
+import LineMdLoadingLoop from '~icons/line-md/loading-loop';
 import { useModalStore } from "../../stores/modal";
-
 const sessionStore = useSessionStore();
 const { client } = useAPIStore();
 const toast = useToast();
 const modalStore = useModalStore();
 
 const isLoading = ref(false)
-const username = ref("");
-const password = ref("");
+const username = ref("")
+const password = ref("")
 
 async function login() {
   try {
     isLoading.value = true
-    const response = await client.login(username.value, password.value)
-    const body = await response.json()
+    const response = await client.login(username.value, password.value);
+    const body = await response.json();
     isLoading.value = false
-    username.value = ""
-    password.value = ""
+    username.value = "";
+    password.value = "";
     if (!response.ok) {
       document.querySelectorAll("input").forEach((x) => x.classList.add("input-error"))
       toast.error(body.error)
@@ -68,8 +68,8 @@ function dismissModal(event) {
         </fieldset>
       </div>
       <button :disabled="username.length == 0 || password.length == 0" class="btn btn-primary my-4 w-2/3 text-lg" @click="login">
-        <span v-if="isLoading" class="loading loading-spinner w-4 mx-2"></span>
-        Login
+        <LineMdLoadingLoop v-if="isLoading"/>
+        <span v-if="!isLoading">Login</span>
       </button>
     </form>
   </div>

@@ -51,6 +51,10 @@ export default defineConfig({
               },
             },
           },
+          {
+            urlPattern: /\/docs$/,
+            handler: "NetworkOnly",
+          },
         ],
       },
     }),

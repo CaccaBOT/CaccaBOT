@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import ApexCharts from "vue3-apexcharts"
-import { onBeforeMount, ref, watch } from "vue"
+import { ref, watch } from "vue"
 import { color } from "../../main.ts"
-import { User } from "../../types/User.ts";
 
 const props = defineProps<{
   users
