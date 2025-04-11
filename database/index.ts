@@ -49,6 +49,10 @@ export function initDatabase() {
 	}
 }
 
+export function getPoop(poopId: number) {
+	return db.prepare(`SELECT * FROM poop WHERE id = ?`).get(poopId)
+}
+
 export function deletePoop(poopId: number) {
 
 	const poop = db.prepare(`SELECT * FROM poop WHERE id = ?`).get(poopId)
