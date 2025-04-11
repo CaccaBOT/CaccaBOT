@@ -71,10 +71,11 @@ export function getCollectible(collectibleId: number) {
 export function getCollectibleOwnerships(userId: string): UserCollectible[] {
 	const userCollectible = db.prepare(`SELECT * FROM user_collectible WHERE user_id = ?`).all(userId)
 
-	for(let i in userCollectible)
-		if(userCollectible[i])
-			userCollectible[i].selling = Boolean(userCollectible[i].selling)
-
+	for(const i in userCollectible) {
+		if (userCollectible[i]) {
+			userCollectible[i].selling = Boolean(userCollectible[i].selling);
+		}
+	}
 	return userCollectible;
 }
 
