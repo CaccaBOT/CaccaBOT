@@ -21,11 +21,18 @@ const viewOrderEndpoint = async function (
 		'/:id',
 		async (req: FastifyRequest<{ Params: Params }>, res: FastifyReply) => {
 			const orderId = Number.parseInt(req.params.id)
+			
+			// Validate orderId is a valid number
+			if (isNaN(orderId)) {
+				res.code(400).send({
+					error: "Invalid order ID format. Must be a number.",
+				})
+				return
+			}
 
 			const order = getOrder(orderId)
 
 			// Input validation
-
 			if (!order) {
 				res.code(404).send({
 					error: "The order doesn't exist.",
@@ -34,7 +41,6 @@ const viewOrderEndpoint = async function (
 			}
 
 			// Logic
-
 			res.code(200).send(order)
 		},
 	)
