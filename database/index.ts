@@ -1258,7 +1258,7 @@ export function deactivateOrder(orderId: number): boolean {
 }
 
 export function activateOrder(orderId: number): boolean {
-	db.prepare('UPDATE `order` SET active = 0 WHERE id = ?').run(orderId)
+	db.prepare('UPDATE `order` SET active = 1 WHERE id = ?').run(orderId)
 
 	const order = getOrder(orderId)
 	const userCollectible = getSpecificCollectibleOwnershipsNotSelling(
