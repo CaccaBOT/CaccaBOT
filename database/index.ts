@@ -1312,7 +1312,7 @@ export function getActiveOrdersByType(type: OrderType): Order[] {
 }
 
 export function getSellActiveOrdersByType(type: OrderType): Order[] {
-	const orders = db.prepare('SELECT * FROM `order` WHERE type = ? AND side = \'SELL\'').all(type)
+	const orders = db.prepare('SELECT * FROM `order` WHERE active = 1 AND type = ? AND side = \'SELL\'').all(type)
 
 	for(let i in orders)
 		if(orders[i]) {
@@ -1339,8 +1339,8 @@ export function getBuyActiveOrdersByType(type: OrderType): Order[] {
 
 export function getSellActiveOrdersByCollectibleAndType(collectibleId: number, type: OrderType): Order[] {
 	const orders = db.prepare(
-		'SELECT * FROM `order` WHERE active = 1 AND type = ? AND collectible_id = ? side = \'SELL\''
-	).all(collectibleId, type)
+		'SELECT * FROM `order` WHERE active = 1 AND type = ? AND collectible_id = ? AND side = \'SELL\''
+	).all(type, collectibleId)
 
 	for(let i in orders)
 		if(orders[i]) {
