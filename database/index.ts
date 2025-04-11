@@ -1471,6 +1471,6 @@ export function updateCollectibleOwnershipToNotSelling(userCollectibleId: number
 export function updateCollectibleOwnershipsToNotSelling(...userCollectibleIds: number[]) {
 	const placeholder = userCollectibleIds.map(() => '?').join(', ')
 
-	db.prepare(`UPDATE user_collectible SET selling = 0 WHERE id IN ${placeholder}`).run(...userCollectibleIds)
+	db.prepare(`UPDATE user_collectible SET selling = 0 WHERE id IN (${placeholder})`).run(...userCollectibleIds)
 }
 

@@ -10,7 +10,7 @@ const market: OrderLogic = {
     updateAll: function() {
         const collectibles = getAllCollectibles()
         
-        for(let i in collectibles)
+        for(const i in collectibles)
             updateMarketOrders(collectibles[i].id)
     }
 }
@@ -43,7 +43,7 @@ function findMatchingBuyOrder(sellOrder: Order): Order | null {
     }
 
     buyOrdersLimit.sort((x, y) => y.price - x.price);
-    for (let buyOrder of buyOrdersLimit) {
+    for (const buyOrder of buyOrdersLimit) {
         if (buyOrder.price >= sellOrder.price) {
             return buyOrder;
         }

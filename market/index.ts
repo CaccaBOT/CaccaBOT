@@ -12,8 +12,8 @@ import {
     setCollectibleOwnershipUser,
     getAllOrderTypes
 } from "../database"
-import fs from 'fs'
-import path from 'path'
+import fs from 'node:fs'
+import path from 'node:path'
 
 
 const defaultMarketPrice = 1
@@ -64,7 +64,7 @@ const marketLogic = {
         const taxation = Math.ceil(price * taxationAmount)
 
         setMoney(sellUser.id, sellUser.money + price - taxation)
-        setMoney(buyUser.id, buyUser - price)
+        setMoney(buyUser.id, buyUser.money - price)
     }
 }
 
