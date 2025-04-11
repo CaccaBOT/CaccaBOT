@@ -94,6 +94,11 @@ const routes = [
     name: "poopTable",
   },
   {
+    path: "/settings",
+    component: () => import("../views/Settings.vue"),
+    name: "userSettings",
+  },
+  {
     path: "/update",
     component: () => import("../views/Updater.vue"),
     name: "update",

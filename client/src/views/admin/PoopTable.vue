@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref, watchEffect } from 'vue'
+import { onMounted, onUnmounted, ref } from 'vue'
 import { useAPIStore } from '../../stores/api'
 import Asset from '../../types/Asset'
 import { formatDate } from '../../utils/dateFormatter'
@@ -39,24 +39,23 @@ async function deletePoop(poop: Poop) {
     poops.value = poops.value.filter((p) => p.id !== poop.id)
 }
 
+const handleScroll = () => {
+    const bottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight
+    if (bottom) {
+        page.value += 1
+        loadPoops(page.value)
+    }
+}
+
 onMounted(() => {
     loadPoops(page.value)
     loadUsers()
-    const handleScroll = () => {
-        const bottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight
-        if (bottom) {
-            page.value += 1
-            loadPoops(page.value)
-        }
-    }
 
     window.addEventListener('scroll', handleScroll)
+})
 
-    watchEffect(() => {
-        return () => {
-            window.removeEventListener('scroll', handleScroll)
-        }
-    })
+onUnmounted(() => {
+    window.removeEventListener('scroll', handleScroll)
 })
 </script>
 
