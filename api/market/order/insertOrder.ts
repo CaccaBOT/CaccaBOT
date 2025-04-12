@@ -91,6 +91,8 @@ const insertOrderEndpoint = async function (
 
 			// Logic
 
+import { db } from '../../../database/index'
+
 			switch (side) {
 				case 'SELL': {
 					const userCollectibles = getSpecificCollectibleOwnershipsNotSelling(
@@ -105,20 +107,23 @@ const insertOrderEndpoint = async function (
 						return
 					}
 
-					for (let i = 0; i < quantity; i++) {
-						createOrder(user.id, collectibleId, type, side, price)
-					}
+					db.transaction(() => {
+						for (let i = 0; i < quantity; i++) {
+							createOrder(user.id, collectibleId, type, side, price)
+						}
+					})()
 				}
 				break
 
 				case 'BUY': {
-					for (let i = 0; i < quantity; i++) {
-						createOrder(user.id, collectibleId, type, side, price)
-					}
+					db.transaction(() => {
+						for (let i = 0; i < quantity; i++) {
+							createOrder(user.id, collectibleId, type, side, price)
+						}
+					})()
 				}
 				break
 			}
-
 			marketLogic.updateAllOrders()
 		},
 	)

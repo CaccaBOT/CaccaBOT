@@ -49,6 +49,7 @@ const deleteOrderEndpoint = async function (
 				res.code(403).send({
 					error: "The order is already inactive.",
 				})
+				return
 			}
 
 			// Logic
@@ -63,6 +64,10 @@ const deleteOrderEndpoint = async function (
 			}
 
 			marketLogic.updateAllOrders()
+			res.code(200).send({
+				success: true,
+				message: "Order successfully deactivated"
+			})
 		},
 	)
 }

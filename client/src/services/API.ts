@@ -6,6 +6,10 @@ export const baseAPIURL = `${baseURL}/api`
 export default class API {
   sessionStore = useSessionStore()
 
+  async getPoop(id: number) {
+    return await fetch(`${baseAPIURL}/poop/${id}`)
+  }
+
   async deletePoop(id: number) {
     return await fetch(`${baseAPIURL}/admin/poop/${id}`, {
       method: "DELETE",
@@ -184,11 +188,11 @@ export default class API {
   }
 
   async getPoopsFromUser(id: string) {
-    return await fetch(`${baseAPIURL}/poop/${id}`)
+    return await fetch(`${baseAPIURL}/poop/user/${id}`)
   }
 
   async getMonthlyPoopsFromUser(id: string, year: number, month: number) {
-    return await fetch(`${baseAPIURL}/poop/${id}/${year}/${month}`)
+    return await fetch(`${baseAPIURL}/poop/user/${id}/${year}/${month}`)
   }
 
   async getMonthlyPoops(date = new Date()) {

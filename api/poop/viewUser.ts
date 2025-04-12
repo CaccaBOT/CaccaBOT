@@ -16,7 +16,7 @@ const viewUserEndpoint = async function (
 	options: RouteOptions,
 ) {
 	server.get(
-		'/:id',
+		'/user/:id',
 		async (req: FastifyRequest<{ Params: Params }>, res: FastifyReply) => {
 			let id = req.params.id
 			res.code(200).send(getPoopsFromUser(id))

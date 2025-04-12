@@ -49,6 +49,10 @@ export function initDatabase() {
 	}
 }
 
+export function getPoop(poopId: number) {
+	return db.prepare(`SELECT * FROM poop WHERE id = ?`).get(poopId)
+}
+
 export function deletePoop(poopId: number) {
 
 	const poop = db.prepare(`SELECT * FROM poop WHERE id = ?`).get(poopId)
@@ -67,10 +71,11 @@ export function getCollectible(collectibleId: number) {
 export function getCollectibleOwnerships(userId: string): UserCollectible[] {
 	const userCollectible = db.prepare(`SELECT * FROM user_collectible WHERE user_id = ?`).all(userId)
 
-	for(let i in userCollectible)
-		if(userCollectible[i])
-			userCollectible[i].selling = Boolean(userCollectible[i].selling)
-
+	for(const i in userCollectible) {
+		if (userCollectible[i]) {
+			userCollectible[i].selling = Boolean(userCollectible[i].selling);
+		}
+	}
 	return userCollectible;
 }
 
@@ -1253,7 +1258,7 @@ export function deactivateOrder(orderId: number): boolean {
 }
 
 export function activateOrder(orderId: number): boolean {
-	db.prepare('UPDATE `order` SET active = 0 WHERE id = ?').run(orderId)
+	db.prepare('UPDATE `order` SET active = 1 WHERE id = ?').run(orderId)
 
 	const order = getOrder(orderId)
 	const userCollectible = getSpecificCollectibleOwnershipsNotSelling(
@@ -1307,7 +1312,7 @@ export function getActiveOrdersByType(type: OrderType): Order[] {
 }
 
 export function getSellActiveOrdersByType(type: OrderType): Order[] {
-	const orders = db.prepare('SELECT * FROM `order` WHERE type = ? AND side = \'SELL\'').all(type)
+	const orders = db.prepare('SELECT * FROM `order` WHERE active = 1 AND type = ? AND side = \'SELL\'').all(type)
 
 	for(let i in orders)
 		if(orders[i]) {
@@ -1334,8 +1339,8 @@ export function getBuyActiveOrdersByType(type: OrderType): Order[] {
 
 export function getSellActiveOrdersByCollectibleAndType(collectibleId: number, type: OrderType): Order[] {
 	const orders = db.prepare(
-		'SELECT * FROM `order` WHERE active = 1 AND type = ? AND collectible_id = ? side = \'SELL\''
-	).all(collectibleId, type)
+		'SELECT * FROM `order` WHERE active = 1 AND type = ? AND collectible_id = ? AND side = \'SELL\''
+	).all(type, collectibleId)
 
 	for(let i in orders)
 		if(orders[i]) {
@@ -1466,6 +1471,6 @@ export function updateCollectibleOwnershipToNotSelling(userCollectibleId: number
 export function updateCollectibleOwnershipsToNotSelling(...userCollectibleIds: number[]) {
 	const placeholder = userCollectibleIds.map(() => '?').join(', ')
 
-	db.prepare(`UPDATE user_collectible SET selling = 0 WHERE id IN ${placeholder}`).run(...userCollectibleIds)
+	db.prepare(`UPDATE user_collectible SET selling = 0 WHERE id IN (${placeholder})`).run(...userCollectibleIds)
 }
 

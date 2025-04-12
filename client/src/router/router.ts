@@ -104,6 +104,11 @@ const routes = [
     name: "update",
   },
   {
+    path: "/poop/:id",
+    component: () => import("../views/PoopCertificate.vue"),
+    name: "poopCertificate"
+  },
+  {
     path: "/:pathMatch(.*)*",
     component: () => import("../views/NotFound.vue"),
     name: "notFound",
