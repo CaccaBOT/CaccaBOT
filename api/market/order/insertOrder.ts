@@ -91,8 +91,6 @@ const insertOrderEndpoint = async function (
 
 			// Logic
 
-import { db } from '../../../database/index'
-
 			switch (side) {
 				case 'SELL': {
 					const userCollectibles = getSpecificCollectibleOwnershipsNotSelling(
@@ -107,20 +105,12 @@ import { db } from '../../../database/index'
 						return
 					}
 
-					db.transaction(() => {
-						for (let i = 0; i < quantity; i++) {
-							createOrder(user.id, collectibleId, type, side, price)
-						}
-					})()
+					createOrder(user.id, collectibleId, type, side, price, quantity)
 				}
 				break
 
 				case 'BUY': {
-					db.transaction(() => {
-						for (let i = 0; i < quantity; i++) {
-							createOrder(user.id, collectibleId, type, side, price)
-						}
-					})()
+					createOrder(user.id, collectibleId, type, side, price, quantity)
 				}
 				break
 			}

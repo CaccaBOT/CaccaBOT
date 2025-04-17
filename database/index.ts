@@ -1,4 +1,5 @@
-const db = require('better-sqlite3')('./storage/db.sqlite3')
+// TODO: update logic of market/index.ts/executeTransaction to not need the export
+export const db = require('better-sqlite3')('./storage/db.sqlite3')
 import crypto from 'crypto'
 import argon2 from 'argon2'
 import moment from 'moment-timezone'
@@ -1194,28 +1195,32 @@ export function getAllOrderTypes(): OrderType[] {
 // NOTE: input validations is NOT done in the following queries
 // Please validate inputs before calling the methods
 
-export function createOrder(userId: string, collectibleId: number, type: OrderType, side: OrderSide, price: number) {
-	switch(type) {
-		case 'MARKET': {
-			db.prepare(
-				'INSERT INTO `order` (user_id, collectible_id, `type`, side) VALUES (?, ?, ?, ?)',
-			).run(userId, collectibleId, type, side)
-		}
-		break
-
-		default: {
-			db.prepare(
-				'INSERT INTO `order` (user_id, collectible_id, `type`, side, price) VALUES (?, ?, ?, ?, ?)',
-			).run(userId, collectibleId, type, side, price)
-		}
-		break
-	}
-
-	const userCollectible = getSpecificCollectibleOwnershipsNotSelling(
-		userId, collectibleId
-	)
+export function createOrder(userId: string, collectibleId: number, type: OrderType, side: OrderSide, price: number, quantity: number) {
+	db.transaction(() => {
+		switch(type) {
+			case 'MARKET': {
+				for (let i = 0; i < quantity; i++)
+					db.prepare(
+						'INSERT INTO `order` (user_id, collectible_id, `type`, side) VALUES (?, ?, ?, ?)',
+					).run(userId, collectibleId, type, side)
+			}
+			break
 	
-	updateCollectibleOwnershipToSelling(userCollectible[0].id)
+			default: {
+				for (let i = 0; i < quantity; i++)
+					db.prepare(
+						'INSERT INTO `order` (user_id, collectible_id, `type`, side, price) VALUES (?, ?, ?, ?, ?)',
+					).run(userId, collectibleId, type, side, price)
+			}
+			break
+		}
+	
+		const userCollectible = getSpecificCollectibleOwnershipsNotSelling(
+			userId, collectibleId
+		)
+		
+		updateCollectibleOwnershipToSelling(userCollectible[0].id)
+	})()
 }
 
 export function deleteOrder(orderId: number): boolean {

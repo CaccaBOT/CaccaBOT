@@ -10,7 +10,8 @@ import {
     setMoney,
     getSpecificCollectibleOwnershipsNotSelling,
     setCollectibleOwnershipUser,
-    getAllOrderTypes
+    getAllOrderTypes,
+    db
 } from "../database"
 import fs from 'node:fs'
 import path from 'node:path'
@@ -45,26 +46,28 @@ const marketLogic = {
         const buyUser = getUserProfileById(buyOrder.user_id)
         const timestamp = new Date()
 
-        updateOrderPrice(sellOrder.id, price)
-        updateOrderPrice(buyOrder.id, price)
+        db.transaction(() => {
+            updateOrderPrice(sellOrder.id, price)
+            updateOrderPrice(buyOrder.id, price)
 
-        executeOrder(sellOrder.id, timestamp)
-        executeOrder(buyOrder.id, timestamp)
+            executeOrder(sellOrder.id, timestamp)
+            executeOrder(buyOrder.id, timestamp)
 
-        // Update userCollectible
-        const userCollectibles = 
-            getSpecificCollectibleOwnershipsNotSelling(sellUser.id, sellOrder.collectible_id)
-        
-        if(userCollectibles.length == 0)
-            return
+            // Update userCollectible
+            const userCollectibles = 
+                getSpecificCollectibleOwnershipsNotSelling(sellUser.id, sellOrder.collectible_id)
+            
+            if(userCollectibles.length == 0)
+                return
 
-        setCollectibleOwnershipUser(userCollectibles[0].id, buyUser.id)
+            setCollectibleOwnershipUser(userCollectibles[0].id, buyUser.id)
 
-        // Update money
-        const taxation = Math.ceil(price * taxationAmount)
+            // Update money
+            const taxation = Math.ceil(price * taxationAmount)
 
-        setMoney(sellUser.id, sellUser.money + price - taxation)
-        setMoney(buyUser.id, buyUser.money - price)
+            setMoney(sellUser.id, sellUser.money + price - taxation)
+            setMoney(buyUser.id, buyUser.money - price)
+        })()
     }
 }
 
