@@ -1214,12 +1214,15 @@ export function createOrder(userId: string, collectibleId: number, type: OrderTy
 			}
 			break
 		}
-	
-		const userCollectible = getSpecificCollectibleOwnershipsNotSelling(
-			userId, collectibleId
-		)
-		
-		updateCollectibleOwnershipToSelling(userCollectible[0].id)
+
+		if (side == 'SELL') {
+			const userCollectible = getSpecificCollectibleOwnershipsNotSelling(
+				userId, collectibleId
+			)
+			
+			for (let i = 0; i < quantity; i++)
+				updateCollectibleOwnershipToSelling(userCollectible[i].id)
+		}
 	})()
 }
 
@@ -1359,7 +1362,7 @@ export function getSellActiveOrdersByCollectibleAndType(collectibleId: number, t
 export function getBuyActiveOrdersByCollectibleAndType(collectibleId: number, type: OrderType): Order[] {
 	const orders = db.prepare(
 		'SELECT * FROM `order` WHERE active = 1 AND type = ? AND collectible_id = ? AND side = \'BUY\''
-	).all(collectibleId, type)
+	).all(type, collectibleId)
 
 	for(let i in orders)
 		if(orders[i]) {

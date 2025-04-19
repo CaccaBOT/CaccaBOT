@@ -39,6 +39,10 @@ const marketLogic = {
         })
     },
 
+    getTaxatedPrice(price: number) {
+        return price - Math.ceil(price * taxationAmount)
+    },
+
     executeTransaction(sellOrderId: number, buyOrderId: number, price: number) {
         const sellOrder = getOrder(sellOrderId)
         const buyOrder = getOrder(buyOrderId)
@@ -63,9 +67,8 @@ const marketLogic = {
             setCollectibleOwnershipUser(userCollectibles[0].id, buyUser.id)
 
             // Update money
-            const taxation = Math.ceil(price * taxationAmount)
 
-            setMoney(sellUser.id, sellUser.money + price - taxation)
+            setMoney(sellUser.id, sellUser.money + this.getTaxatedPrice(price))
             setMoney(buyUser.id, buyUser.money - price)
         })()
     }

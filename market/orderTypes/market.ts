@@ -52,4 +52,4 @@ function findMatchingBuyOrder(sellOrder: Order): Order | null {
     return null;
 }
 
-export default marketLogic
+export default market

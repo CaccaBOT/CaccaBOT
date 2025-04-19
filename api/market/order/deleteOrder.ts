@@ -53,7 +53,7 @@ const deleteOrderEndpoint = async function (
 			}
 
 			// Logic
-
+			
 			const opResult = deactivateOrder(orderId)
 
 			if (opResult == false) {
@@ -66,7 +66,7 @@ const deleteOrderEndpoint = async function (
 			marketLogic.updateAllOrders()
 			res.code(200).send({
 				success: true,
-				message: "Order successfully deactivated"
+				message: "Order successfully deactivated."
 			})
 		},
 	)
