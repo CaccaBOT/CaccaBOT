@@ -1,4 +1,5 @@
-const db = require('better-sqlite3')('./storage/db.sqlite3')
+// TODO: update logic of market/index.ts/executeTransaction to not need the export
+export const db = require('better-sqlite3')('./storage/db.sqlite3')
 import crypto from 'crypto'
 import argon2 from 'argon2'
 import moment from 'moment-timezone'
@@ -11,6 +12,8 @@ import UsernameValidator from '../validators/username'
 import usernameGenerator from "username-gen"
 import { UserCollectible } from '../types/UserCollectible'
 import { Collectible } from '../types/Collectible'
+import { Order } from '../types/Order'
+import { OrderType, OrderSide } from '../types/OrderEnums'
 import log from 'loglevel'
 
 const timezone = config.timezone || 'UTC'
@@ -67,11 +70,27 @@ export function getCollectible(collectibleId: number) {
 }
 
 export function getCollectibleOwnerships(userId: string): UserCollectible[] {
-	return db.prepare(`SELECT * FROM user_collectible WHERE user_id = ?`).all(userId)
+	const userCollectible = db.prepare(`SELECT * FROM user_collectible WHERE user_id = ?`).all(userId)
+
+	for(const i in userCollectible) {
+		if (userCollectible[i]) {
+			userCollectible[i].selling = Boolean(userCollectible[i].selling);
+		}
+	}
+	return userCollectible;
 }
 
 export function getCollectibleOwnershipById(userCollectibleId: number): UserCollectible {
-	return db.prepare(`SELECT * FROM user_collectible WHERE id = ?`).get(userCollectibleId)
+	const userCollectible =  db.prepare(`SELECT * FROM user_collectible WHERE id = ?`).get(userCollectibleId)
+
+	if(userCollectible)
+		userCollectible.selling = Boolean(userCollectible.selling)
+
+	return userCollectible
+}
+
+export function setCollectibleOwnershipUser(userCollectibleId: number, userId: string) {
+	db.prepare('UPDATE user_collectible SET user_id = ? WHERE id = ?').run(userId, userCollectibleId)
 }
 
 export function deleteUserCollectible(userCollectibleId: number) {
@@ -593,6 +612,8 @@ export function isUsernameAvailable(username: string): boolean {
 }
 
 export function getUserCollectibles(userId: string) {
+	// * I DON'T KNOW WHAT THIS DOES, I JUST NEED HOW TO FUCKING
+	// * PUT THE selling PROPERTY
 	return db
 		.prepare(
 		`
@@ -1160,3 +1181,304 @@ export function getUserAchievements(userId: string) {
 export function getAllAchievements() {
 	return db.prepare('SELECT a.* FROM achievement a').all()
 }
+
+// card market
+
+export function getAllOrderSides(): OrderSide[] {
+	return db.prepare(`SELECT * FROM order_side`).all()
+}
+
+export function getAllOrderTypes(): OrderType[] {
+	return db.prepare(`SELECT * FROM order_type`).all()
+}
+
+// NOTE: input validations is NOT done in the following queries
+// Please validate inputs before calling the methods
+
+export function createOrder(userId: string, collectibleId: number, type: OrderType, side: OrderSide, price: number, quantity: number) {
+	db.transaction(() => {
+		switch(type) {
+			case 'MARKET': {
+				for (let i = 0; i < quantity; i++)
+					db.prepare(
+						'INSERT INTO `order` (user_id, collectible_id, `type`, side) VALUES (?, ?, ?, ?)',
+					).run(userId, collectibleId, type, side)
+			}
+			break
+	
+			default: {
+				for (let i = 0; i < quantity; i++)
+					db.prepare(
+						'INSERT INTO `order` (user_id, collectible_id, `type`, side, price) VALUES (?, ?, ?, ?, ?)',
+					).run(userId, collectibleId, type, side, price)
+			}
+			break
+		}
+
+		if (side == 'SELL') {
+			const userCollectible = getSpecificCollectibleOwnershipsNotSelling(
+				userId, collectibleId
+			)
+			
+			for (let i = 0; i < quantity; i++)
+				updateCollectibleOwnershipToSelling(userCollectible[i].id)
+		}
+	})()
+}
+
+export function deleteOrder(orderId: number): boolean {
+	db.prepare('DELETE from `order` WHERE id = ?').run(orderId)
+
+	const order = getOrder(orderId)
+	const userCollectible = getSpecificCollectibleOwnershipsSelling(
+		order.user_id, order.collectible_id
+	)
+
+	if(userCollectible.length == 0)
+		return false
+
+	updateCollectibleOwnershipToNotSelling(userCollectible[0].id)
+	return true
+}
+
+
+export function executeOrder(orderId: number, timestamp: Date): boolean {
+	db.prepare(
+		'UPDATE `order` SET executed = 1, execution_timestamp = ? WHERE id = ?'
+	).run(timestamp.toISOString(), orderId)
+
+	return deactivateOrder(orderId)
+}
+
+export function deactivateOrder(orderId: number): boolean {
+	db.prepare('UPDATE `order` SET active = 0 WHERE id = ?').run(orderId)
+
+	const order = getOrder(orderId)
+	const userCollectible = getSpecificCollectibleOwnershipsSelling(
+		order.user_id, order.collectible_id
+	)
+
+	if(userCollectible.length == 0)
+		return false
+
+	updateCollectibleOwnershipToNotSelling(userCollectible[0].id)
+	return true
+}
+
+export function activateOrder(orderId: number): boolean {
+	db.prepare('UPDATE `order` SET active = 1 WHERE id = ?').run(orderId)
+
+	const order = getOrder(orderId)
+	const userCollectible = getSpecificCollectibleOwnershipsNotSelling(
+		order.user_id, order.collectible_id
+	)
+
+	if(userCollectible.length == 0)
+		return false
+
+	updateCollectibleOwnershipToSelling(userCollectible[0].id)
+	return true
+}
+
+export function updateOrderPrice(orderId: number, price: number) {
+	db.prepare('UPDATE `order` set price = ? WHERE id = ?').run(price, orderId)
+}
+
+export function getOrder(orderId: number): Order {
+	const order = db.prepare('SELECT * FROM `order` WHERE id = ?').get(orderId)
+
+	if(order) {
+		order.active = Boolean(order.active)
+		order.executed = Boolean(order.executed)
+	}
+
+	return order
+}
+
+export function getOrdersByType(type: OrderType): Order[] {
+	const orders = db.prepare('SELECT * FROM `order` WHERE type = ?').all(type)
+
+	for(let i in orders)
+		if(orders[i]) {
+			orders[i].active = Boolean(orders[i].active)
+			orders[i].executed = Boolean(orders[i].executed)
+		}
+	
+	return orders
+}
+
+export function getActiveOrdersByType(type: OrderType): Order[] {
+	const orders = db.prepare('SELECT * FROM `order` WHERE active = 1 AND type = ?').all(type)
+
+	for(let i in orders)
+		if(orders[i]) {
+			orders[i].active = Boolean(orders[i].active)
+			orders[i].executed = Boolean(orders[i].executed)
+		}
+	
+	return orders
+}
+
+export function getSellActiveOrdersByType(type: OrderType): Order[] {
+	const orders = db.prepare('SELECT * FROM `order` WHERE active = 1 AND type = ? AND side = \'SELL\'').all(type)
+
+	for(let i in orders)
+		if(orders[i]) {
+			orders[i].active = Boolean(orders[i].active)
+			orders[i].executed = Boolean(orders[i].executed)
+		}
+	
+	return orders
+}
+
+export function getBuyActiveOrdersByType(type: OrderType): Order[] {
+	const orders = db.prepare(
+		'SELECT * FROM `order` WHERE active = 1 AND type = ? AND side = \'BUY\''
+	).all(type)
+
+	for(let i in orders)
+		if(orders[i]) {
+			orders[i].active = Boolean(orders[i].active)
+			orders[i].executed = Boolean(orders[i].executed)
+		}
+	
+	return orders
+}
+
+export function getSellActiveOrdersByCollectibleAndType(collectibleId: number, type: OrderType): Order[] {
+	const orders = db.prepare(
+		'SELECT * FROM `order` WHERE active = 1 AND type = ? AND collectible_id = ? AND side = \'SELL\''
+	).all(type, collectibleId)
+
+	for(let i in orders)
+		if(orders[i]) {
+			orders[i].active = Boolean(orders[i].active)
+			orders[i].executed = Boolean(orders[i].executed)
+		}
+	
+	return orders
+}
+
+export function getBuyActiveOrdersByCollectibleAndType(collectibleId: number, type: OrderType): Order[] {
+	const orders = db.prepare(
+		'SELECT * FROM `order` WHERE active = 1 AND type = ? AND collectible_id = ? AND side = \'BUY\''
+	).all(type, collectibleId)
+
+	for(let i in orders)
+		if(orders[i]) {
+			orders[i].active = Boolean(orders[i].active)
+			orders[i].executed = Boolean(orders[i].executed)
+		}
+	
+	return orders
+}
+
+export function getOrdersExecuted(collectibleId: number): Order[] {
+	const orders = db.prepare(
+		'SELECT * FROM `order` WHERE executed = 1 AND collectible_id = ?'
+	).all(collectibleId)
+
+	for(let i in orders)
+		if(orders[i]) {
+			orders[i].active = Boolean(orders[i].active)
+			orders[i].executed = Boolean(orders[i].executed)
+		}
+	
+	return orders
+}
+
+export function getLimitOrdersExecuted(collectibleId: number): Order[] {
+	const orders = db.prepare(
+		'SELECT * FROM `order` WHERE type = `LIMIT` AND executed = 1'
+	).all(collectibleId)
+
+	for(let i in orders)
+		if(orders[i]) {
+			orders[i].active = Boolean(orders[i].active)
+			orders[i].executed = Boolean(orders[i].executed)
+		}
+	
+	return orders
+}
+
+export function getLastLimitOrderExecuted(collectibleId: number): Order {
+	const order = db.prepare(
+		'SELECT * FROM `order` WHERE type = \'LIMIT\' AND executed = 1 AND collectible_id = ? ORDER BY execution_timestamp DESC LIMIT 1'
+	).get(collectibleId)
+
+	if(order) {
+		order.active = Boolean(order.active)
+		order.executed = Boolean(order.executed)
+	}
+	
+	return order
+}
+
+export function getCollectibleOwnershipsNotSelling(userId: string): UserCollectible[] {
+	const userCollectibles = db
+		.prepare(`SELECT * FROM user_collectible WHERE user_id = ? AND selling = 0`)
+		.all(userId)
+	
+	for(let i in userCollectibles)
+		if(userCollectibles[i])
+			userCollectibles[i].selling = Boolean(userCollectibles[i].selling)
+
+	return userCollectibles
+}
+
+export function getCollectibleOwnershipsSelling(userId: string): UserCollectible[] {
+	const userCollectibles = db
+		.prepare(`SELECT * FROM user_collectible WHERE user_id = ? AND selling = 1`)
+		.all(userId)
+
+	for(let i in userCollectibles)
+		if(userCollectibles[i])
+			userCollectibles[i].selling = Boolean(userCollectibles[i].selling)
+
+	return userCollectibles
+}
+
+export function getSpecificCollectibleOwnershipsNotSelling(userId: string, collectibleId: number): UserCollectible[] {
+	const userCollectibles = db
+		.prepare(`SELECT * FROM user_collectible WHERE user_id = ? AND collectible_id = ? AND selling = 0`)
+		.all(userId, collectibleId)
+
+	for(let i in userCollectibles)
+		if(userCollectibles[i])
+			userCollectibles[i].selling = Boolean(userCollectibles[i].selling)
+
+	return userCollectibles
+}
+
+export function getSpecificCollectibleOwnershipsSelling(userId: string, collectibleId: number): UserCollectible[] {
+	const userCollectibles = db
+		.prepare(`SELECT * FROM user_collectible WHERE user_id = ? AND collectible_id = ? AND selling = 1`)
+		.all(userId, collectibleId)
+
+	for(let i in userCollectibles)
+		if(userCollectibles[i])
+			userCollectibles[i].selling = Boolean(userCollectibles[i].selling)
+
+	return userCollectibles
+}
+
+export function updateCollectibleOwnershipToSelling(userCollectibleId: number) {
+	db.prepare(`UPDATE user_collectible SET selling = 1 WHERE id = ?`).run(userCollectibleId)
+}
+
+export function updateCollectibleOwnershipsToSelling(...userCollectibleIds: number[]) {
+	const placeholder = userCollectibleIds.map(() => '?').join(', ')
+
+	db.prepare(`UPDATE user_collectible SET selling = 1 WHERE id IN (${placeholder})`).run(...userCollectibleIds)
+}
+
+export function updateCollectibleOwnershipToNotSelling(userCollectibleId: number) {
+	db.prepare(`UPDATE user_collectible SET selling = 0 WHERE id = ?`).run(userCollectibleId)
+}
+
+export function updateCollectibleOwnershipsToNotSelling(...userCollectibleIds: number[]) {
+	const placeholder = userCollectibleIds.map(() => '?').join(', ')
+
+	db.prepare(`UPDATE user_collectible SET selling = 0 WHERE id IN (${placeholder})`).run(...userCollectibleIds)
+}
+
