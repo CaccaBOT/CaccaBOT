@@ -1,11 +1,12 @@
 {
 	"name": "caccabot",
-	"version": "7.8.0",
+	"version": "7.8.1",
 	"description": "The official CaccaBOT project",
 	"main": "index.ts",
 	"scripts": {
 		"build": "tsc -p tsconfig.json",
-		"start": "node index.ts"
+		"start": "node index.ts",
+		"deploy-commands": "tsc -p tsconfig.json && node ./scripts/deploy-commands.cjs"
 	},
 	"author": "CaccaBOT Team",
 	"license": "MIT",
@@ -30,7 +31,6 @@
 		"npm": "^8.19.4",
 		"puppeteer": "^13.7.0",
 		"qrcode-terminal": "^0.12.0",
-		"ts-node": "^10.9.2",
 		"username-gen": "^1.0.1",
 		"whatsapp-web.js": "1.26.1-alpha.3"
 	},
@@ -41,6 +41,7 @@
 		"@types/node-schedule": "^2.1.7",
 		"prettier-plugin-tailwindcss": "^0.6.9",
 		"regenerator-runtime": "^0.14.1",
-		"typescript": "^5.6.2"
+		"ts-node": "^10.9.2",
+		"typescript": "^5.8.3"
 	}
 }
