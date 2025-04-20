@@ -36,6 +36,11 @@ onMounted(async () => {
     </div>
     <div v-if="globalStore.instance.name"
       class="home-wrapper flex h-[85vh] w-full flex-col items-center justify-center">
+      <div role="alert" class="alert alert-warning alert-soft w-11/12 mb-5">
+        <span><b>Avviso</b>: Viste le problematiche di WhatsApp, 
+          il Team di CaccaBOT ha preso la decisione di spostare il sistema su Discord.
+        Nel momento opportuno sarete notificati delle azioni da intraprendere per continuare a partecipare.</span>
+      </div>
       <img alt="CaccaBOT Logo" fetchpriority="high" class="mb-5 sm:w-90 w-64" :src="Asset.HOME" />
       <div class="prose text-center">
         <h1 class="mb-2">{{ globalStore.instance.name }}</h1>
