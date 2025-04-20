@@ -10,7 +10,7 @@ import { authenticate } from '../../middleware/auth'
 import achievementChecker from '../../achievements/check'
 import { config } from '../../config/loader'
 import { MessageMedia } from 'whatsapp-web.js'
-import { client } from '../../whatsapp'
+import { whatsappClient } from '../../whatsapp'
 
 interface ConvertBody {
 	collectibles: number[]
@@ -78,7 +78,7 @@ const convertEndpoint = async function (
             if (config.whatsappModuleEnabled) {
                 const rarities = getRarities()
                 const media = await MessageMedia.fromUrl(collectible.asset_url)
-                client.sendMessage(config.groupId, media, {
+                whatsappClient.sendMessage(config.groupId, media, {
                     caption: `*[CONVERT] ${user.username}* found *${collectible.name}* (${rarities[collectible.rarity_id - 1].name})`,
                 })
             }

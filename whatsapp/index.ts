@@ -19,7 +19,7 @@ import { config } from '../config/loader'
 import log from 'loglevel'
 export let commands: Command[] = []
 
-export const client = new Client({
+export const whatsappClient = new Client({
 	authStrategy: new LocalAuth(),
 	puppeteer: {
 		handleSIGINT: false,
@@ -28,9 +28,9 @@ export const client = new Client({
 	},
 })
 
-client.on('qr', (qr) => QRCode.generate(qr, { small: true }))
+whatsappClient.on('qr', (qr) => QRCode.generate(qr, { small: true }))
 
-client.on('ready', async () => {
+whatsappClient.on('ready', async () => {
 	const commandsDir = fs
 		.readdirSync(`${path.resolve('./commands')}`)
 		.filter((file) => file.endsWith('.ts') || file.endsWith('.js'))
@@ -40,18 +40,18 @@ client.on('ready', async () => {
 		log.info(`[COMMAND] ${cmd.default.name}`)
 	}
 
-	log.info('[WHATSAPP] Ready on ' + client.info.wid.user)
+	log.info('[WHATSAPP] Ready on ' + whatsappClient.info.wid.user)
 
 	/*
 	 fetch the last 100 messages to avoid errors
 	 on messages where the application was not active
 	*/
 	await (
-		await client.getChatById(config.groupId)
+		await whatsappClient.getChatById(config.groupId)
 	).fetchMessages({ limit: 100 })
 })
 
-client.on('message_create', async (message: Message) => {
+whatsappClient.on('message_create', async (message: Message) => {
 	try {
 		const parsedMessage = await parseMessage(message)
 		let id = parsedMessage?.sender
@@ -178,6 +178,6 @@ async function parseMessage(
 
 process.on('SIGINT', async () => {
 	log.error('\n[SYSTEM] Terminating process due to SIGINT signal')
-	await client.destroy()
+	await whatsappClient.destroy()
 	process.exit(0)
 })

@@ -1,5 +1,5 @@
 import { Job } from '../types/Job'
-import { client } from '../whatsapp'
+import { whatsappClient } from '../whatsapp'
 import { deleteUser, getInactiveUsers } from '../database'
 import moment from 'moment'
 import { RawUser } from '../types/User'
@@ -18,7 +18,7 @@ const monthlyPurge: Job = {
 			)
 
 			let purgeMsg = '*Running Monthly Purge*\n'
-			const chat = await client.getChatById(config.groupId)
+			const chat = await whatsappClient.getChatById(config.groupId)
 			if (chat.isGroup) {
 				const inactiveUsers = getInactiveUsers(
 					moment().subtract(1, 'month').toDate(),

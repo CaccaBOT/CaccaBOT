@@ -6,7 +6,7 @@ import {
 	addOpenedPack,
 } from '../../database'
 import { authenticate } from '../../middleware/auth'
-import { client } from '../../whatsapp/index'
+import { whatsappClient } from '../../whatsapp/index'
 import { MessageMedia } from 'whatsapp-web.js'
 import {
 	FastifyInstance,
@@ -41,7 +41,7 @@ const openPackEndpoint = async function (
 		addOpenedPack(user.id)
 		if (config.whatsappModuleEnabled) {
 			const media = await MessageMedia.fromUrl(collectible.asset_url)
-			client.sendMessage(config.groupId, media, {
+			whatsappClient.sendMessage(config.groupId, media, {
 				caption: `*[PACK] ${user.username}* found *${collectible.name}* (${rarities[collectible.rarity_id - 1].name})`,
 			})
 		}

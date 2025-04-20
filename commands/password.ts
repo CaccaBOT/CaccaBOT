@@ -2,7 +2,7 @@ import { Message } from 'whatsapp-web.js'
 import { Command, Info } from '../types/Command'
 import { updatePassword, getUserProfileByPhone } from '../database/index'
 import crypto from 'crypto'
-import { client } from '../whatsapp/index'
+import { whatsappClient } from '../whatsapp/index'
 import { config } from '../config/loader'
 
 const password: Command = {
@@ -19,7 +19,7 @@ const password: Command = {
 
 		const password = crypto.randomBytes(10).toString('hex')
 		updatePassword(user.id, password)
-		client.sendMessage(
+		whatsappClient.sendMessage(
 			message.author!,
 			`Your CaccaBOT password is: ${password}\nRemember to change it as soon as possible\n${config.serverUrl}`,
 		)

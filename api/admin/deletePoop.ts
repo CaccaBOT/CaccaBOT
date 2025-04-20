@@ -6,7 +6,7 @@ import {
 } from 'fastify'
 import { deletePoop } from '../../database'
 import { authenticate } from '../../middleware/auth'
-import { client } from '../../whatsapp'
+import { whatsappClient } from '../../whatsapp'
 import { config } from '../../config/loader'
 
 interface Params {
@@ -29,7 +29,7 @@ const deletePoopEndpoint = async function (
 		res.code(200).send(deletePoop(id))
 		
 		if (config.whatsappModuleEnabled) {
-			client.sendMessage(config.groupId, `*[ADMIN]* ${user.username} deleted poop #${id}`)
+			whatsappClient.sendMessage(config.groupId, `*[ADMIN]* ${user.username} deleted poop #${id}`)
 		}
 
 	})

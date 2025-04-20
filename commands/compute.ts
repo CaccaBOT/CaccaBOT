@@ -7,7 +7,7 @@ import {
 	hashId,
 	poopStatsFromUserWithFilter,
 } from '../database'
-import { client } from '../whatsapp'
+import { whatsappClient } from '../whatsapp'
 import moment from 'moment'
 
 const help: Command = {
@@ -27,7 +27,7 @@ const help: Command = {
 		}
 
 		let messages = await (
-			await client.getChatById((await poopMessage.getChat()).id._serialized)
+			await whatsappClient.getChatById((await poopMessage.getChat()).id._serialized)
 		).fetchMessages({ limit: parseInt(info.args[0]) ?? 100 })
 		let match = messages.find(
 			(m) => m.id._serialized == poopMessage.id._serialized,

@@ -3,7 +3,7 @@ const server = require('fastify')({
 	http2: process.env.ENVIRONMENT == 'production',
 })
 import { FastifyRequest, FastifyReply } from 'fastify'
-import { client } from './whatsapp/index'
+import { whatsappClient } from './whatsapp/index'
 import { initDatabase } from './database/index'
 import fs from 'fs'
 import path from 'path'
@@ -12,6 +12,7 @@ import { version } from './package.json'
 import schedule from 'node-schedule'
 import { config, loadConfig } from './config/loader'
 import log from 'loglevel'
+import { client } from './discord/client'
 
 loadConfig()
 
@@ -159,7 +160,7 @@ loadConfig()
 
 		try { fs.unlinkSync(sessionLockFile) } catch (_) {}
 
-		client.initialize()
+		whatsappClient.initialize()
 	}
 
 	async function initJobs()
@@ -187,6 +188,7 @@ loadConfig()
 			}
 			initDatabase()
 			await initJobs()
+			await client.login(process.env.DISCORD_TOKEN)
 			if (config.monthlyPurge)
 			{
 				log.warn(

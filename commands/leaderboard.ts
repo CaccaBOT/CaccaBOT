@@ -1,4 +1,4 @@
-import { client } from '../whatsapp/index'
+import { whatsappClient } from '../whatsapp/index'
 import { poopLeaderboardWithFilter } from '../database/index'
 import { GroupChat, Message } from 'whatsapp-web.js'
 import { Command, Info } from '../types/Command'
@@ -25,7 +25,7 @@ const leaderboard: Command = {
 			let participants = chat.participants
 
 			for (const participant of participants) {
-				let contact = await client.getContactById(participant.id._serialized)
+				let contact = await whatsappClient.getContactById(participant.id._serialized)
 				mentions.push(contact)
 			}
 
