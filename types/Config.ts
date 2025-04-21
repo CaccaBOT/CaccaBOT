@@ -5,6 +5,7 @@ export type Config = {
 	serverUrl: string
 	groupId: string
 	whatsappModuleEnabled: boolean
+	discordModuleEnabled: boolean
 	monthlyPurge: boolean
 	timezone: string
 	loglevel: string

@@ -14,6 +14,7 @@ export let config: Config = {
 	serverUrl: '',
 	groupId: '',
 	whatsappModuleEnabled: false,
+	discordModuleEnabled: false,
 	monthlyPurge: false,
 	timezone: '',
 	loglevel: '',

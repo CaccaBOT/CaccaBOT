@@ -5,6 +5,7 @@
 	"serverUrl": "http://localhost:3000",
 	"groupId": "120363272256807045@g.us",
 	"whatsappModuleEnabled": false,
+	"discordModuleEnabled": false,
 	"monthlyPurge": false,
 	"timezone": "Europe/Rome",
 	"loglevel": "debug",

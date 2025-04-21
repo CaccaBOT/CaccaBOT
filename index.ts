@@ -188,7 +188,11 @@ loadConfig()
 			}
 			initDatabase()
 			await initJobs()
-			await client.login(process.env.DISCORD_TOKEN)
+
+			if (config.discordModuleEnabled) {
+				await client.login(process.env.DISCORD_TOKEN)
+			}
+
 			if (config.monthlyPurge)
 			{
 				log.warn(

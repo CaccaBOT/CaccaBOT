@@ -5,6 +5,7 @@
 	"serverUrl": "https://caccabot.duckdns.org",
 	"groupId": "120363283575526755@g.us",
 	"whatsappModuleEnabled": true,
+	"discordModuleEnabled": true,
 	"monthlyPurge": true,
 	"timezone": "Europe/Rome",
 	"loglevel": "info",
