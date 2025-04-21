@@ -43,7 +43,7 @@ jobs:
         if: success()
         with:
           severity: info
-          details: Build and publish succeeded!
+          details: Build & Publish succeeded!
           webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
 
       # Discord Notification - Failure
@@ -52,7 +52,7 @@ jobs:
         if: failure()
         with:
           severity: error
-          details: Build or publish failed!
+          details: Build & Publish failed!
           webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
 
       # Discord Notification - Cancelled
@@ -61,5 +61,5 @@ jobs:
         if: cancelled()
         with:
           severity: warn
-          details: Build or publish was cancelled.
+          details: Build & publish was cancelled!
           webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
