@@ -34,4 +34,32 @@ jobs:
           tags: |
             ${{ env.IMAGE_NAME }}:${{ github.sha }}
             ${{ env.IMAGE_NAME }}:latest
+
         if: github.ref == 'refs/heads/main'
+
+      # Discord Notification - Success
+      - name: Notify Discord on Success
+        uses: rjstone/discord-webhook-notify@v1.0.4
+        if: success()
+        with:
+          severity: info
+          details: Build and publish succeeded!
+          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
+
+      # Discord Notification - Failure
+      - name: Notify Discord on Failure
+        uses: rjstone/discord-webhook-notify@v1.0.4
+        if: failure()
+        with:
+          severity: error
+          details: Build or publish failed!
+          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
+
+      # Discord Notification - Cancelled
+      - name: Notify Discord on Cancelled
+        uses: rjstone/discord-webhook-notify@v1.0.4
+        if: cancelled()
+        with:
+          severity: warn
+          details: Build or publish was cancelled.
+          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
