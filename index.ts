@@ -144,6 +144,7 @@ loadConfig()
 		if (req.url.toLowerCase().startsWith('/api'))
 		{
 			res.code(404).send({ error: 'This endpoint does not exist' })
+			return
 		}
 
 		const stream = fs.createReadStream(`${__dirname}/public/client/index.html`)
