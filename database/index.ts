@@ -1254,12 +1254,18 @@ export function deactivateOrder(orderId: number): boolean {
 	db.prepare('UPDATE `order` SET active = 0 WHERE id = ?').run(orderId)
 
 	const order = getOrder(orderId)
+
+	if (order.side == 'BUY') {
+		return true
+	}
+
 	const userCollectible = getSpecificCollectibleOwnershipsSelling(
 		order.user_id, order.collectible_id
 	)
 
-	if(userCollectible.length == 0)
+	if (userCollectible.length == 0) {
 		return false
+	}
 
 	updateCollectibleOwnershipToNotSelling(userCollectible[0].id)
 	return true

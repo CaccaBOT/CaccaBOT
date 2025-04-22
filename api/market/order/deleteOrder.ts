@@ -10,7 +10,7 @@ import {
 	getOrder,
 	deactivateOrder,
 } from '../../../database/index'
-import marketLogic from '../../../market'
+import MarketLogic from '../../../market'
 
 interface Params {
 	id: string
@@ -63,7 +63,7 @@ const deleteOrderEndpoint = async function (
 				return
 			}
 
-			marketLogic.updateAllOrders()
+			MarketLogic.updateAllOrders()
 			res.code(200).send({
 				success: true,
 				message: "Order successfully deactivated."

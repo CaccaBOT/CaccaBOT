@@ -5,7 +5,7 @@ import {
 	RouteOptions,
 } from 'fastify'
 import { getCollectible } from '../../database'
-import marketLogic from '../../market'
+import MarketLogic from '../../market'
 
 interface Params {
 	collectibleId: string
@@ -32,7 +32,7 @@ const getMarketPriceEndpoint = async function (
 			// Logic
 
 			res.code(200).send({
-                marketPrice: marketLogic.getMarketPrice(collectibleId),
+                marketPrice: MarketLogic.getMarketPrice(collectibleId),
             })
 		},
 	)
