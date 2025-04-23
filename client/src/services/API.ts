@@ -1,10 +1,26 @@
 import { useSessionStore } from "../stores/session"
+import { OrderRequest } from "../types/OrderRequest"
 
 export const baseURL = import.meta.env.VITE_API_URL
 export const baseAPIURL = `${baseURL}/api`
 
 export default class API {
   sessionStore = useSessionStore()
+
+  async getAssetPrice(collectibleId: number) {
+    return await fetch(`${baseAPIURL}/market/price/${collectibleId}`)
+  }
+
+  async createOrder(order: OrderRequest) {
+    return await fetch(`${baseAPIURL}/market/order`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-Auth-Token": this.sessionStore.session.token,
+      },
+      body: JSON.stringify(order)
+    })
+  }
 
   async getPoop(id: number) {
     return await fetch(`${baseAPIURL}/poop/${id}`)

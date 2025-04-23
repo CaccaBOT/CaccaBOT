@@ -12,7 +12,6 @@ import {
 	getAllCollectibles,
 	getAllOrderSides,
 	getAllOrderTypes,
-	updateCollectibleOwnershipToSelling,
 } from '../../../database/index'
 import { OrderSide, OrderType } from '../../../types/OrderEnums'
 import MarketLogic from '../../../market'
