@@ -109,6 +109,11 @@ const routes = [
     name: "poopCertificate"
   },
   {
+    path: "/auth/discord",
+    component: () => import("../views/DiscordLink.vue"),
+    name: "discordLink",
+  },
+  {
     path: "/:pathMatch(.*)*",
     component: () => import("../views/NotFound.vue"),
     name: "notFound",

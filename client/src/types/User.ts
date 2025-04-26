@@ -7,4 +7,5 @@ export type User = {
   rank: number
   money: number
   admin: number
+  discordId: string | null
 }

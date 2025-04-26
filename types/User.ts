@@ -10,6 +10,7 @@ export type RawUser = {
 	money: number
 	openedPacks: number
 	admin: boolean
+	discordId: string | null
 }
 
 export type User = {
@@ -21,4 +22,5 @@ export type User = {
 	money: number
 	openedPacks: number
 	admin: boolean
+	discordId: string | null
 }

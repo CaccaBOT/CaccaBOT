@@ -9,7 +9,7 @@ dotenv.config();
 // Discord bot credentials
 const clientId = '1363521664578621700';
 const guildId = '1229739123770785792';
-const token = process.env.DISCORD_TOKEN || '';
+const token = process.env.DISCORD_BOT_TOKEN || '';
 
 // Command loading logic
 const commands = [];

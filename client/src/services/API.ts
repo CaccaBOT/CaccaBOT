@@ -7,6 +7,15 @@ export const baseAPIURL = `${baseURL}/api`
 export default class API {
   sessionStore = useSessionStore()
 
+  async linkDiscord(code: string) {
+    return await fetch(`${import.meta.env.VITE_API_URL}/api/auth/discord?code=${code}`, {
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Auth-Token': this.sessionStore.session.token
+      }
+    })
+  }
+
   async getAssetPrice(collectibleId: number) {
     return await fetch(`${baseAPIURL}/market/price/${collectibleId}`)
   }

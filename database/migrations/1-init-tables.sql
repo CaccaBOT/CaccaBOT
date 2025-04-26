@@ -10,7 +10,8 @@ CREATE TABLE IF NOT EXISTS user (
 	pfp TEXT,
 	bio TEXT,
 	money INTEGER DEFAULT 0,
-	openedPacks INTEGER DEFAULT 0
+	openedPacks INTEGER DEFAULT 0,
+	discordId TEXT
 );
 
 CREATE TABLE IF NOT EXISTS poop (

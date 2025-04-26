@@ -50,6 +50,10 @@ export function initDatabase() {
 	}
 }
 
+export function setDiscordId(userId: string, discordId: string) {
+	db.prepare(`UPDATE user SET discordId = ? WHERE id = ?`).run(discordId, userId)
+}
+
 export function getPoop(poopId: number) {
 	return db.prepare(`SELECT * FROM poop WHERE id = ?`).get(poopId)
 }

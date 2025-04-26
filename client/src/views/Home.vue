@@ -8,6 +8,8 @@ import SimpleIconsInstagram from '~icons/simple-icons/instagram'
 import { useGlobalStore } from "../stores/global"
 import HeroiconsUserGroup from "~icons/heroicons/user-group"
 import { useSessionStore } from "../stores/session"
+import IcBaselineDiscord from '~icons/ic/baseline-discord'
+import router from "../router/router"
 const globalStore = useGlobalStore()
 const sessionStore = useSessionStore()
 
@@ -17,8 +19,8 @@ async function install() {
   await installPrompt.value.prompt()
 }
 
-function joinGroup() {
-  window.open("https://chat.whatsapp.com/DZSxzyKd2Il9aFPNGTg5K9", "_blank")
+function discordLogin() {
+  router.push("/auth/discord")
 }
 
 onMounted(async () => {
@@ -36,20 +38,15 @@ onMounted(async () => {
     </div>
     <div v-if="globalStore.instance.name"
       class="home-wrapper flex h-[85vh] w-full flex-col items-center justify-center">
-      <div role="alert" class="alert alert-warning alert-soft w-11/12 mb-5">
-        <span><b>Avviso</b>: Viste le problematiche di WhatsApp, 
-          il Team di CaccaBOT ha preso la decisione di spostare il sistema su Discord.
-        Nel momento opportuno sarete notificati delle azioni da intraprendere per continuare a partecipare.</span>
-      </div>
       <img alt="CaccaBOT Logo" fetchpriority="high" class="mb-5 sm:w-90 w-64" :src="Asset.HOME" />
       <div class="prose text-center">
         <h1 class="mb-2">{{ globalStore.instance.name }}</h1>
         <p class="m-0 mb-4 p-2 text-xl">{{ globalStore.instance.description }}</p>
         <p class="m-0 text-2xl">{{ globalStore.instance.version }}</p>
       </div>
-      <button v-if="!sessionStore.session.id" @click="joinGroup" class="btn btn-success mt-6 w-80">
-        <HeroiconsUserGroup class="text-xl" />
-        Join Group
+      <button v-if="sessionStore.session.id && !sessionStore.session.discordId" @click="discordLogin" class="btn btn-primary mt-6 w-80">
+        <IcBaselineDiscord class="text-xl" />
+        Link to Discord
       </button>
       <button v-show="installPrompt != null" @click="install" class="btn btn-success mt-6 w-80">
         <HeroiconsDownload class="text-xl" />

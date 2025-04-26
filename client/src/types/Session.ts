@@ -8,4 +8,5 @@ export type Session = {
   frozen: boolean
   money: number
   admin: boolean
+  discordId: string | null
 }

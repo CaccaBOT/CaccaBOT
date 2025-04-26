@@ -191,7 +191,7 @@ loadConfig()
 			await initJobs()
 
 			if (config.discordModuleEnabled) {
-				await client.login(process.env.DISCORD_TOKEN)
+				await client.login(process.env.DISCORD_BOT_TOKEN)
 			}
 
 			if (config.monthlyPurge)
