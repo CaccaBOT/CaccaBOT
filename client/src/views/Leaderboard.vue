@@ -2,7 +2,7 @@
 import router from "../router/router"
 import Asset from "../types/Asset"
 import { useGlobalStore } from "../stores/global"
-import { ref } from "vue"
+import { ref, watch } from "vue"
 import HeroiconsChevronLeft from "~icons/heroicons/chevron-left?width=24px&height=24px"
 import HeroiconsChevronRight from "~icons/heroicons/chevron-right?width=24px&height=24px"
 const globalStore = useGlobalStore()
@@ -33,7 +33,6 @@ function prevMonth() {
   router.push(
     `/leaderboard/${globalStore.selectedDate.getFullYear()}/${globalStore.selectedDate.getMonth() + 1}`,
   )
-  setTime()
 }
 
 function nextMonth() {
@@ -41,7 +40,6 @@ function nextMonth() {
   router.push(
     `/leaderboard/${globalStore.selectedDate.getFullYear()}/${globalStore.selectedDate.getMonth() + 1}`,
   )
-  setTime()
 }
 
 type TimeUntilNewMonth = {
@@ -101,6 +99,11 @@ function updateNewMonth() {
     1,
   )
 }
+
+watch(() => globalStore.selectedDate, () => {
+  updateNewMonth()
+  timeUntilNewMonth.value = setTime()
+})
 </script>
 
 <template>

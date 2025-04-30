@@ -120,7 +120,7 @@ async function fetchCollectibles() {
 }
 
 onMounted(async () => {
-  fetchCollectibles()
+  await fetchCollectibles()
   updateConfettiConfig()
 })
 </script>
