@@ -2,11 +2,12 @@
 import router from "../router/router"
 import Asset from "../types/Asset"
 import { useGlobalStore } from "../stores/global"
-import { ref, watch } from "vue"
+import { onBeforeUnmount, ref, watch } from "vue"
 import HeroiconsChevronLeft from "~icons/heroicons/chevron-left?width=24px&height=24px"
 import HeroiconsChevronRight from "~icons/heroicons/chevron-right?width=24px&height=24px"
 const globalStore = useGlobalStore()
 import type { Ref } from "vue"
+import { TimeUntilNewMonth } from "../types/TimeUntilNewMonth"
 
 const { year, month } = router.currentRoute.value.params
 
@@ -42,13 +43,6 @@ function nextMonth() {
   )
 }
 
-type TimeUntilNewMonth = {
-  days: number
-  hours: number
-  minutes: number
-  seconds: number
-}
-
 const newMonth = ref(
   new Date(
     globalStore.selectedDate.getFullYear(),
@@ -58,7 +52,7 @@ const newMonth = ref(
 )
 
 const timeUntilNewMonth: Ref = ref(setTime())
-const interval = setInterval(() => {
+let interval = setInterval(() => {
   timeUntilNewMonth.value = setTime()
 }, 1000)
 
@@ -103,6 +97,14 @@ function updateNewMonth() {
 watch(() => globalStore.selectedDate, () => {
   updateNewMonth()
   timeUntilNewMonth.value = setTime()
+  clearInterval(interval)
+  interval = setInterval(() => {
+    timeUntilNewMonth.value = setTime()
+  }, 1000)
+})
+
+onBeforeUnmount(() => {
+  clearInterval(interval)
 })
 </script>
 
