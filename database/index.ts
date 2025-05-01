@@ -50,6 +50,10 @@ export function initDatabase() {
 	}
 }
 
+export function getUserByDiscordId(discordId: string) {
+	return db.prepare(`SELECT * FROM user WHERE discordId = ?`).get(discordId)
+}
+
 export function setDiscordId(userId: string, discordId: string) {
 	db.prepare(`UPDATE user SET discordId = ? WHERE id = ?`).run(discordId, userId)
 }
@@ -755,7 +759,7 @@ export function poopLeaderboardWithFilter(year: number, month: number) {
 	const result = db
 		.prepare(
 			`
-        SELECT u.id, u.phone, u.username, u.pfp, u.bio, u.frozen, u.money, 
+        SELECT u.id, u.phone, u.username, u.pfp, u.bio, u.frozen, u.money, u.discordId,
                poops,
                ROW_NUMBER() OVER (ORDER BY poops DESC) AS rank
         FROM (

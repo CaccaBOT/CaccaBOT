@@ -1,4 +1,8 @@
-import { CommandInteraction, SlashCommandBuilder, EmbedBuilder } from 'discord.js';
+import {
+	CommandInteraction,
+	SlashCommandBuilder,
+	EmbedBuilder,
+} from 'discord.js'
 
 export default {
 	data: new SlashCommandBuilder()
@@ -10,9 +14,9 @@ export default {
 		const days = Math.floor(uptime / 86400)
 		const hours = Math.floor((uptime % 86400) / 3600)
 		const minutes = Math.floor((uptime % 3600) / 60)
-		const seconds = Math.floor(uptime % 60);
+		const seconds = Math.floor(uptime % 60)
 
-		const formattedUptime = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+		const formattedUptime = `${days}d ${hours}h ${minutes}m ${seconds}s`
 
 		const embed = new EmbedBuilder()
 			.setTitle('🤖 Uptime')
@@ -21,4 +25,4 @@ export default {
 
 		await interaction.reply({ embeds: [embed] })
 	},
-};
+}
