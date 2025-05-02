@@ -14,7 +14,9 @@ const saveMarketHistory: Job = {
     execute: async () => {
         const day = moment().tz(config.timezone).startOf('day').subtract(1, 'days').utc().toDate()
 
-        log.info(`[MARKET] Saving prices for day ${day.toISOString().slice(0, 10)}`)
+        const actualDay = new Date(day)
+        actualDay.setHours(actualDay.getHours() + 2)
+        log.info(`[MARKET] Saving prices for day ${actualDay.toISOString().slice(0, 10)}`)
 
         const collectibles = getAllCollectibles()
 
