@@ -4,6 +4,7 @@ export type Config = {
 	prefix: string
 	serverUrl: string
 	groupId: string
+	guildId: string
 	whatsappModuleEnabled: boolean
 	discordModuleEnabled: boolean
 	monthlyPurge: boolean

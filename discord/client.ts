@@ -33,25 +33,24 @@ client.once(Events.ClientReady, async readyClient => {
     for (const file of commandFiles) {
         try {
             const imported = await import(`./commands/${file}`)
-            const command = imported.default;
+            const command = imported.default
             
             if (command && command.data && command.execute) {
                 commands.set(command.data.name, command)
-                log.info(`[DISCORD] Loaded command: ${command.data.name}`)
+                log.info(`[COMMAND] ${command.data.name}`)
             } else {
                 log.warn(`[DISCORD] Command in ${file} is missing required properties`)
             }
         } catch (error) {
-            log.error(`[DISCORD] Failed to load command from ${file}:`, error)
+            log.error(`[COMMAND] Failed to load command from ${file}:`, error)
         }
     }
 
     log.info(`[DISCORD] Ready on ${readyClient.user.tag}`)
-    log.info(`[DISCORD] Loaded ${commands.size} commands`)
 })
 
 client.on(Events.InteractionCreate, async (interaction) => {
-    if (!interaction.isCommand()) {
+    if (!interaction.isCommand() || interaction.guild?.id !== config.guildId) {
         return
     }
 

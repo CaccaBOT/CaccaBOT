@@ -51,6 +51,12 @@ export function initDatabase() {
 	}
 }
 
+export function getHistoricalMarketDays(collectibleId: number) {
+	return db
+		.prepare(`SELECT * FROM market_price_history WHERE collectible_id = ?`)
+		.all(collectibleId)
+}
+
 export function getUserByDiscordId(discordId: string) {
 	return db.prepare(`SELECT * FROM user WHERE discordId = ?`).get(discordId)
 }

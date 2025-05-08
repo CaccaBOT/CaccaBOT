@@ -4,6 +4,7 @@
 	"prefix": "cacca",
 	"serverUrl": "https://caccabot.duckdns.org",
 	"groupId": "120363283575526755@g.us",
+	"guildId": "1229739123770785792",
 	"whatsappModuleEnabled": true,
 	"discordModuleEnabled": true,
 	"monthlyPurge": true,

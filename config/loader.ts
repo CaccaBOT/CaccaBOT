@@ -13,6 +13,7 @@ export let config: Config = {
 	prefix: '',
 	serverUrl: '',
 	groupId: '',
+	guildId: '',
 	whatsappModuleEnabled: false,
 	discordModuleEnabled: false,
 	monthlyPurge: false,

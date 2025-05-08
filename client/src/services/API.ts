@@ -7,6 +7,26 @@ export const baseAPIURL = `${baseURL}/api`
 export default class API {
   sessionStore = useSessionStore()
 
+  async getMarketHistory(collectibleId: number) {
+    return await fetch(`${baseAPIURL}/market/history/${collectibleId}`)
+  }
+
+  async getOwnOrdersForCollectible(collectibleId: number) {
+    return await fetch(`${baseAPIURL}/market/order/${collectibleId}`, {
+      headers: {
+        "X-Auth-Token": this.sessionStore.session.token,
+      }
+    })
+  }
+
+  async getOrdersForCollectible(collectibleId: number) {
+    return await fetch(`${baseAPIURL}/market/order/${collectibleId}/all`)
+  }
+
+  async getMarketPrices() {
+    return await fetch(`${baseAPIURL}/market/price`)
+  }
+
   async linkDiscord(code: string) {
     return await fetch(`${import.meta.env.VITE_API_URL}/api/auth/discord?code=${code}`, {
       headers: {

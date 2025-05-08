@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from "vue"
+import { onMounted, ref } from "vue"
 
 const loadingPhrases = [
   "Unclogging the toilet",
@@ -25,6 +25,12 @@ function changePhrase() {
   phrase.value =
     loadingPhrases[Math.floor(Math.random() * loadingPhrases.length)]
 }
+
+onMounted(() => {
+  setTimeout(() => {
+    window.location.reload()
+  }, 5000)
+})
 </script>
 
 <template>

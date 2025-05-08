@@ -3,74 +3,48 @@ import { computed, onMounted, ref } from 'vue'
 import router from '../../router/router'
 import { useAPIStore } from '../../stores/api'
 import { Card } from '../../types/Card'
-import HeroiconsInformationCircle from '~icons/heroicons/information-circle'
-import { color } from '../../main'
 import { OrderSide } from '../../enums/OrderSideEnum'
 import { Order } from '../../types/Order'
 import { OrderRequest } from '../../types/OrderRequest'
-import { OrderType } from '../../enums/OrderTypeEnum'
 import { useSessionStore } from '../../stores/session'
 import { useToast } from 'vue-toastification'
+import { MarketHistoryDay } from '../../types/MarketHistoryDay'
+import OrderBook from '../../components/market/OrderBook.vue'
+import MarketChart from '../../components/market/MarketChart.vue'
+import OrderForm from '../../components/market/OrderForm.vue'
+import MyOrders from '../../components/market/MyOrders.vue'
+import { OrderType } from '../../enums/OrderTypeEnum'
 
 const { client } = useAPIStore()
 let url = router.currentRoute.value.fullPath.split('/')
 const collectibleId = parseInt(url[url.length - 1])
 const collectible = ref<Card>()
-const selectedOrderType = ref<string>(OrderType.MARKET)
-const selectedAmount = ref(1)
 const sessionStore = useSessionStore()
 const toast = useToast()
 const userCollectibles = ref<Card[]>([])
+const ownOrders = ref<Order[]>([])
 
 const assetPrice = ref(0)
-const series = ref([{ data: [] }])
 
 const allOrders = ref<Order[]>([])
-const buyOrders = ref<Order[]>([])
-const sellOrders = ref<Order[]>([])
+const history = ref<MarketHistoryDay[]>([])
 
-const chartOptions = {
-  chart: {
-    type: 'candlestick',
-    background: 'transparent',
-    animations: { enabled: false },
-  },
-  xaxis: { type: 'datetime' },
-  yaxis: { tooltip: { enabled: true } },
-  theme: { mode: color },
-};
+const manualPrice = ref(0)
 
-const selectedPrice = computed(() => {
-  if (selectedOrderType.value === 'Market') {
-    return assetPrice.value * selectedAmount.value;
-  } else {
-    return selectedPrice.value;
-  }
-});
-
-async function createOrder(orderSide: OrderSide) {
-  // for now it works only locally
+async function createOrder(order: OrderRequest): Promise<boolean> {
   if (window.location.hostname != 'localhost') {
     toast.error('This feature is not available yet')
     return
   }
 
-  let order: OrderRequest = {
-    collectibleId: collectibleId,
-    price: selectedPrice.value,
-    quantity: selectedAmount.value,
-    side: orderSide,
-    type: OrderType[selectedOrderType.value],
-  }
-
   // check if the user has enough liquidity to complete the order
-  if (orderSide == OrderSide.BUY && sessionStore.session.money < order.price) {
-    toast.error("You don't enough liquidity to complete this order")
+  if (order.side == OrderSide.BUY && sessionStore.session.money < order.price) {
+    toast.error("You don't have enough liquidity to complete this order")
     return
   }
 
   // check if the user owns all the collectibles they want to sell
-  if (orderSide == OrderSide.SELL) {
+  if (order.side == OrderSide.SELL) {
     let foundCollectible = userCollectibles.value.find((c) => c.id == collectibleId)
     let isCollectibleOwned = (foundCollectible != null)
     if (!isCollectibleOwned) {
@@ -92,7 +66,26 @@ async function createOrder(orderSide: OrderSide) {
     return
   }
 
-  toast.success('Order created successfully')
+  toast.success('Created order '
+    + order.side + ' '
+    + (order.type == OrderType.MARKET ? order.type : '')
+      + order.quantity + ' @ '
+      + (order.type == OrderType.LIMIT ? order.price : '')
+    , { timeout: 2000 })
+  await fetchOrders()
+}
+
+async function fetchHistory() {
+  history.value = await (await client.getMarketHistory(collectibleId)).json()
+}
+
+async function fetchOrders() {
+  let orders = await (await client.getOrdersForCollectible(collectibleId)).json()
+  allOrders.value = orders
+}
+
+async function fetchOwnOrders() {
+  ownOrders.value = await (await client.getOwnOrdersForCollectible(collectibleId)).json()
 }
 
 onMounted(async () => {
@@ -100,82 +93,40 @@ onMounted(async () => {
   let collectibleResponse = await (await client.getCollectible(collectibleId)).json()
   collectible.value = collectibleResponse
   userCollectibles.value = await (await client.getUserCollectibles(sessionStore.session.id)).json()
+  fetchOrders()
+  fetchHistory()
+  fetchOwnOrders()
+  manualPrice.value = assetPrice.value
 })
 </script>
 
 <template>
-  <div class="order-wrapper w-11/12 flex flex-col justify-center items-center mx-auto h-[85vh] gap-4">
-    <div class="info-wrapper w-full h-full flex flex-row gap-4">
-      <div class="chart-wrapper rounded-xl w-2/3 bg-base-300 h-[55vh]">
+  <div class="order-wrapper w-11/12 flex flex-col justify-center items-center mx-auto lg:h-[85vh] gap-4">
+    <div class="info-wrapper w-full h-full flex flex-row gap-4 mb-12 lg:mb-0">
+      <div class="chart-wrapper rounded-xl lg:w-3/4 w-full bg-base-300 h-[50vh]">
         <h1 class="font-bold text-xl m-2 ml-4">{{ collectible?.name }}</h1>
-        <apexchart type="candlestick" width="100%" height="80%" :options="chartOptions" :series="series"></apexchart>
+        <MarketChart :history="history" />
       </div>
-      <div class="order-book-wrapper rounded-xl w-1/3 bg-base-300 h-[55vh] flex flex-col p-2">
-        <h2 class="text-center text-lg font-bold mb-2">Order Book</h2>
-        <div class="order-book grid grid-cols-3 text-xs text-gray-400 p-1 border-b">
-          <span>Price</span>
-          <span>Amount</span>
-          <span>Total</span>
-        </div>
-        <div class="sell-orders flex flex-col-reverse text-red-500">
-          <div v-for="order in sellOrders" :key="order.price" class="order-row grid grid-cols-3 text-xs p-1">
-            <span>{{ order.price.toFixed(0) }}</span>
-            <span>0</span>
-            <span>0</span>
-          </div>
-        </div>
-        <div class="current-price text-center font-bold text-lg text-green-500 my-2">
-          {{ assetPrice }}
-        </div>
-        <div class="buy-orders flex flex-col text-green-500">
-          <div v-for="order in buyOrders" :key="order.price" class="order-row grid grid-cols-3 text-xs p-1">
-            <span>{{ order.price.toFixed(0) }}</span>
-            <span>0</span>
-            <span>0</span>
-          </div>
-        </div>
+      <div class="w-1/4 h-[55vh] lg:visible lg:relative invisible absolute">
+        <OrderBook :orders="allOrders" :assetPrice="assetPrice" />
       </div>
     </div>
-    <div class="w-full rounded-xl bg-base-300 h-[50vh] p-4 flex flex-row">
-      <div class="flex flex-col justify-between h-full w-96">
-        <fieldset class="fieldset">
-          <legend class="fieldset-legend">Order type</legend>
-          <select v-model="selectedOrderType" class="select">
-            <option selected>{{ OrderType.MARKET }}</option>
-            <option>{{ OrderType.LIMIT }}</option>
-          </select>
-        </fieldset>
-        <div class="order-info-wrapper flex flex-col">
-          <div class="flex justify-center items-center">
-            <HeroiconsInformationCircle class="text-xl mr-2 w-10" />
-            <p v-if="selectedOrderType == OrderType.MARKET">
-              Market orders are executed immediately at the best available price.
-            </p>
-            <p v-if="selectedOrderType == OrderType.LIMIT">
-              Limit orders are executed at a specific price or better, only when the market reaches that price.
-            </p>
-          </div>
+    <div class="w-full flex lg:flex-row flex-col lg:h-[30vh] lg:space-x-5 lg:space-y-0 space-y-5">
+      <div class="lg:w-1/3 lg:visible lg:relative invisible absolute w-full rounded-xl bg-base-300 p-5">
+        <div class="flex flex-row justify-center items-center h-full">
+          <!-- <img :src="collectible?.asset_url" class="rounded-xl lg:w-1/3 w-1/6" alt="Collectible Image" />
+          <div class="flex flex-col ml-5">
+            <h1 class="font-bold text-xl">{{ collectible?.name }}</h1>
+          </div> -->
+          <h1 class="text-3xl text-gray-400">Coming Soon</h1>
         </div>
       </div>
-      <div class="order-form flex flex-col w-96 justify-center items-center">
-        <div>
-          <fieldset class="fieldset">
-            <legend class="fieldset-legend">Price</legend>
-            <input :disabled="selectedOrderType == 'Market'" v-model="selectedPrice" type="number" class="input" />
-          </fieldset>
-        </div>
-        <div>
-          <fieldset class="fieldset">
-            <legend class="fieldset-legend">Amount</legend>
-            <input v-model="selectedAmount" type="number" class="input" />
-          </fieldset>
-        </div>
-        <div class="flex flex-row justify-center mt-4">
-          <button @click="createOrder(OrderSide.BUY)" :disabled="selectedAmount == 0"
-            class="btn btn-success w-full">Buy</button>
-          <button @click="createOrder(OrderSide.SELL)" :disabled="selectedAmount == 0"
-            class="btn btn-error w-full">Sell</button>
-        </div>
+      <div class="lg:w-1/3 w-full rounded-xl bg-base-300 flex flex-row justify-center">
+        <OrderForm :collectible-id="collectibleId" :asset-price="assetPrice" :collectible="collectible"
+          @submit="createOrder" />
+      </div>
+      <div class="lg:w-1/3 w-full rounded-xl bg-base-300 overflow-auto">
+        <MyOrders :own-orders="ownOrders" />
       </div>
     </div>
   </div>

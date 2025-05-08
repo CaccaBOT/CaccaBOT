@@ -24,7 +24,7 @@ type OrderType = 'LIMIT' | 'MARKET'
 const MarketLogic = {
     getMarketPrice(collectibleId: number, day: Date): number {
         if (compareDays(day, new Date()) < 0) {
-            return getMarketPriceHistory(collectibleId, day).close_price
+            return getMarketPriceHistory(collectibleId, day)?.close_price
         }
         
         const lastOrder = getLastOrderExecuted(collectibleId)

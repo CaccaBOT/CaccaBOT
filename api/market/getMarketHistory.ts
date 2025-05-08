@@ -4,8 +4,7 @@ import {
 	FastifyRequest,
 	RouteOptions,
 } from 'fastify'
-import { getCollectible } from '../../database'
-import MarketLogic from '../../market'
+import { getCollectible, getHistoricalMarketDays } from '../../database'
 
 interface Params {
 	collectibleId: string
@@ -16,7 +15,7 @@ const getMarketHistoryEndpoint = async function (
 	options: RouteOptions,
 ) {
 	server.get(
-		'/price/:collectibleId',
+		'/history/:collectibleId',
 		async (req: FastifyRequest<{ Params: Params }>, res: FastifyReply) => {
 			const collectibleId = Number.parseInt(req.params.collectibleId)
 
@@ -27,13 +26,9 @@ const getMarketHistoryEndpoint = async function (
 				return
 			}
 
-			res.code(200).send({
-				marketPrice: MarketLogic.getMarketPrice(collectibleId, new Date()),
-				dailyVariation: MarketLogic.getDailyVariation(
-					collectibleId,
-					new Date(),
-				),
-			})
+			const historicalMarketDays = getHistoricalMarketDays(collectibleId)
+
+			res.code(200).send(historicalMarketDays)
 		},
 	)
 }

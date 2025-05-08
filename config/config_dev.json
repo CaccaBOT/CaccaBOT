@@ -4,6 +4,7 @@
 	"prefix": "cacca",
 	"serverUrl": "http://localhost:3000",
 	"groupId": "120363272256807045@g.us",
+	"guildId": "1229739123770785792",
 	"whatsappModuleEnabled": false,
 	"discordModuleEnabled": false,
 	"monthlyPurge": false,

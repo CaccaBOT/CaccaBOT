@@ -9,6 +9,7 @@ export type Order = {
     side: OrderSide
     price: number
     active: boolean
+    creation_timestamp: Date
     executed: boolean
     execution_timestamp: Date
 }

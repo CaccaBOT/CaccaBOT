@@ -133,7 +133,7 @@ loadConfig()
 		(req: FastifyRequest, res: FastifyReply, done: () => void) =>
 		{
 			if (!req.headers['x-auth-token']) {
-				log.info(`${new Date().toISOString()} | ${req.method} | ${req.url}`)
+				log.info(`${req.method} | ${req.url}`)
 			}
 			done()
 		},

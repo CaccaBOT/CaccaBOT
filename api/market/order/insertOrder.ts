@@ -45,7 +45,7 @@ const insertOrderEndpoint = async function (
 
 			if (!existsCollectible) {
 				res.code(404).send({
-					error: "The collectible doesn't exist.",
+					error: "The collectible doesn't exist",
 				})
 				return
 			}
@@ -56,7 +56,7 @@ const insertOrderEndpoint = async function (
 
 			if (!existsSide) {
 				res.code(400).send({
-					error: 'Illegal order side.',
+					error: 'Illegal order side',
 				})
 				return
 			}
@@ -67,21 +67,21 @@ const insertOrderEndpoint = async function (
 
 			if (!existsType) {
 				res.code(400).send({
-					error: 'Illegal order type.',
+					error: 'Illegal order type',
 				})
 				return
 			}
 
 			if (price <= 0 && type != 'MARKET') {
 				res.code(400).send({
-					error: 'The price must be positive.',
+					error: 'The price must be positive',
 				})
 				return
 			}
 
 			if (quantity <= 0) {
 				res.code(400).send({
-					error: 'The quantity must be positive.',
+					error: 'The quantity must be positive',
 				})
 				return
 			}
@@ -96,7 +96,7 @@ const insertOrderEndpoint = async function (
 
 						if (userCollectibles.length < quantity) {
 							res.code(403).send({
-								error: "You don't have enough cards of the chosen type.",
+								error: "You don't have enough cards of the chosen type",
 							})
 							return
 						}
