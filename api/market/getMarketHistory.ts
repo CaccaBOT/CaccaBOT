@@ -11,7 +11,7 @@ interface Params {
 	collectibleId: string
 }
 
-const getMarketPriceEndpoint = async function (
+const getMarketHistoryEndpoint = async function (
 	server: FastifyInstance,
 	options: RouteOptions,
 ) {
@@ -20,8 +20,6 @@ const getMarketPriceEndpoint = async function (
 		async (req: FastifyRequest<{ Params: Params }>, res: FastifyReply) => {
 			const collectibleId = Number.parseInt(req.params.collectibleId)
 
-			// Input validation
-
 			if (!getCollectible(collectibleId)) {
 				res.code(404).send({
 					error: "The collectible doesn't exist.",
@@ -29,13 +27,15 @@ const getMarketPriceEndpoint = async function (
 				return
 			}
 
-			// Logic
-
 			res.code(200).send({
-                marketPrice: MarketLogic.getMarketPrice(collectibleId),
-            })
+				marketPrice: MarketLogic.getMarketPrice(collectibleId, new Date()),
+				dailyVariation: MarketLogic.getDailyVariation(
+					collectibleId,
+					new Date(),
+				),
+			})
 		},
 	)
 }
 
-export default getMarketPriceEndpoint
+export default getMarketHistoryEndpoint

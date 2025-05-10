@@ -15,6 +15,7 @@ import { Collectible } from '../types/Collectible'
 import { Order } from '../types/Order'
 import { OrderType, OrderSide } from '../types/OrderEnums'
 import log from 'loglevel'
+import { MarketPriceHistory } from '../types/MarketPriceHistory'
 
 const timezone = config.timezone || 'UTC'
 
@@ -78,14 +79,15 @@ export function getCollectible(collectibleId: number) {
 }
 
 export function getCollectibleOwnerships(userId: string): UserCollectible[] {
-	const userCollectible = db.prepare(`SELECT * FROM user_collectible WHERE user_id = ?`).all(userId)
+	const userCollectibles = db.prepare(`SELECT * FROM user_collectible WHERE user_id = ?`).all(userId)
 
-	for(const i in userCollectible) {
-		if (userCollectible[i]) {
-			userCollectible[i].selling = Boolean(userCollectible[i].selling);
+	for(const userCollectible of userCollectibles) {
+		if (userCollectible) {
+			userCollectible.selling = Boolean(userCollectible.selling);
 		}
 	}
-	return userCollectible;
+	
+	return userCollectibles;
 }
 
 export function getCollectibleOwnershipById(userCollectibleId: number): UserCollectible {
@@ -1203,6 +1205,19 @@ export function getAllOrderTypes(): OrderType[] {
 // NOTE: input validations is NOT done in the following queries
 // Please validate inputs before calling the methods
 
+export function getAllOrders(): Order[] {
+	const orders = db.prepare('SELECT * FROM `order`').all()
+
+	for(const order of orders) {
+		if(order) {
+			order.active = Boolean(order.active)
+			order.executed = Boolean(order.executed)
+		}
+	}
+
+	return orders
+}
+
 export function createOrder(userId: string, collectibleId: number, type: OrderType, side: OrderSide, price: number, quantity: number) {
 	db.transaction(() => {
 		switch(type) {
@@ -1312,23 +1327,38 @@ export function getOrder(orderId: number): Order {
 export function getOrdersByType(type: OrderType): Order[] {
 	const orders = db.prepare('SELECT * FROM `order` WHERE type = ?').all(type)
 
-	for(let i in orders)
-		if(orders[i]) {
-			orders[i].active = Boolean(orders[i].active)
-			orders[i].executed = Boolean(orders[i].executed)
+	for(const order of orders) {
+		if(order) {
+			order.active = Boolean(order.active)
+			order.executed = Boolean(order.executed)
 		}
+	}
 	
+	return orders
+}
+
+export function getActiveOrdersByCollectible(collectibleId: number) {
+	const orders = db.prepare('SELECT * FROM `order` WHERE collectible_id = ?').all(collectibleId)
+
+	for(const order of orders) {
+		if(order) {
+			order.active = Boolean(order.active)
+			order.executed = Boolean(order.executed)
+		}
+	}
+
 	return orders
 }
 
 export function getActiveOrdersByType(type: OrderType): Order[] {
 	const orders = db.prepare('SELECT * FROM `order` WHERE active = 1 AND type = ?').all(type)
 
-	for(let i in orders)
-		if(orders[i]) {
-			orders[i].active = Boolean(orders[i].active)
-			orders[i].executed = Boolean(orders[i].executed)
+	for(const order of orders) {
+		if(order) {
+			order.active = Boolean(order.active)
+			order.executed = Boolean(order.executed)
 		}
+	}
 	
 	return orders
 }
@@ -1336,11 +1366,12 @@ export function getActiveOrdersByType(type: OrderType): Order[] {
 export function getSellActiveOrdersByType(type: OrderType): Order[] {
 	const orders = db.prepare('SELECT * FROM `order` WHERE active = 1 AND type = ? AND side = \'SELL\'').all(type)
 
-	for(let i in orders)
-		if(orders[i]) {
-			orders[i].active = Boolean(orders[i].active)
-			orders[i].executed = Boolean(orders[i].executed)
+	for(const order of orders) {
+		if(order) {
+			order.active = Boolean(order.active)
+			order.executed = Boolean(order.executed)
 		}
+	}
 	
 	return orders
 }
@@ -1350,11 +1381,12 @@ export function getBuyActiveOrdersByType(type: OrderType): Order[] {
 		'SELECT * FROM `order` WHERE active = 1 AND type = ? AND side = \'BUY\''
 	).all(type)
 
-	for(let i in orders)
-		if(orders[i]) {
-			orders[i].active = Boolean(orders[i].active)
-			orders[i].executed = Boolean(orders[i].executed)
+	for(const order of orders) {
+		if(order) {
+			order.active = Boolean(order.active)
+			order.executed = Boolean(order.executed)
 		}
+	}
 	
 	return orders
 }
@@ -1364,11 +1396,12 @@ export function getSellActiveOrdersByCollectibleAndType(collectibleId: number, t
 		'SELECT * FROM `order` WHERE active = 1 AND type = ? AND collectible_id = ? AND side = \'SELL\''
 	).all(type, collectibleId)
 
-	for(let i in orders)
-		if(orders[i]) {
-			orders[i].active = Boolean(orders[i].active)
-			orders[i].executed = Boolean(orders[i].executed)
+	for(const order of orders) {
+		if(order) {
+			order.active = Boolean(order.active)
+			order.executed = Boolean(order.executed)
 		}
+	}
 	
 	return orders
 }
@@ -1378,11 +1411,12 @@ export function getBuyActiveOrdersByCollectibleAndType(collectibleId: number, ty
 		'SELECT * FROM `order` WHERE active = 1 AND type = ? AND collectible_id = ? AND side = \'BUY\''
 	).all(type, collectibleId)
 
-	for(let i in orders)
-		if(orders[i]) {
-			orders[i].active = Boolean(orders[i].active)
-			orders[i].executed = Boolean(orders[i].executed)
+	for(const order of orders) {
+		if(order) {
+			order.active = Boolean(order.active)
+			order.executed = Boolean(order.executed)
 		}
+	}
 	
 	return orders
 }
@@ -1392,12 +1426,66 @@ export function getOrdersExecuted(collectibleId: number): Order[] {
 		'SELECT * FROM `order` WHERE executed = 1 AND collectible_id = ?'
 	).all(collectibleId)
 
-	for(let i in orders)
-		if(orders[i]) {
-			orders[i].active = Boolean(orders[i].active)
-			orders[i].executed = Boolean(orders[i].executed)
+	for(const order of orders) {
+		if(order) {
+			order.active = Boolean(order.active)
+			order.executed = Boolean(order.executed)
 		}
+	}
 	
+	return orders
+}
+
+export function getOrdersExecutedInDay(collectibleId: number, day: Date): Order[] {
+	const startOfDay = moment(day).tz(timezone).startOf('day').utc().toISOString()
+	const endOfDay = moment(day).tz(timezone).endOf('day').utc().toISOString()
+
+	const orders = db.prepare(
+		`SELECT * FROM \`order\` 
+		 WHERE executed = 1 
+		 AND collectible_id = ? 
+		 AND execution_timestamp >= ? 
+		 AND execution_timestamp <= ?
+		 ORDER by execution_timestamp`
+	).all(collectibleId, startOfDay, endOfDay)
+
+	for (const order of orders) {
+		if (order) {
+			order.active = Boolean(order.active)
+			order.executed = Boolean(order.executed)
+		}
+	}
+
+	return orders
+}
+
+export function getOrdersOfUser(userId: string, collectibleId: number): Order[] {
+	const orders = db.prepare(
+		'SELECT * FROM `order` WHERE user_id = ? AND collectible_id = ?'
+	).all(userId, collectibleId)
+
+	for(const order of orders) {
+		if(order) {
+			order.active = Boolean(order.active)
+			order.executed = Boolean(order.executed)
+		}
+	}
+
+	return orders
+}
+
+export function getActiveOrdersOfUser(userId: string, collectibleId: number): Order[] {
+	const orders = db.prepare(
+		'SELECT * FROM `order` WHERE active = 1 AND user_id = ? AND collectible_id = ?'
+	).all(userId, collectibleId)
+
+	for(const order of orders) {
+		if(order) {
+			order.active = Boolean(order.active)
+			order.executed = Boolean(order.executed)
+		}
+	}
+
 	return orders
 }
 
@@ -1406,18 +1494,19 @@ export function getLimitOrdersExecuted(collectibleId: number): Order[] {
 		'SELECT * FROM `order` WHERE type = `LIMIT` AND executed = 1'
 	).all(collectibleId)
 
-	for(let i in orders)
-		if(orders[i]) {
-			orders[i].active = Boolean(orders[i].active)
-			orders[i].executed = Boolean(orders[i].executed)
+	for(const order of orders) {
+		if(order) {
+			order.active = Boolean(order.active)
+			order.executed = Boolean(order.executed)
 		}
+	}
 	
 	return orders
 }
 
-export function getLastLimitOrderExecuted(collectibleId: number): Order {
+export function getLastOrderExecuted(collectibleId: number): Order {
 	const order = db.prepare(
-		'SELECT * FROM `order` WHERE type = \'LIMIT\' AND executed = 1 AND collectible_id = ? ORDER BY execution_timestamp DESC LIMIT 1'
+		'SELECT * FROM `order` WHERE executed = 1 AND collectible_id = ? ORDER BY execution_timestamp DESC LIMIT 1'
 	).get(collectibleId)
 
 	if(order) {
@@ -1433,9 +1522,10 @@ export function getCollectibleOwnershipsNotSelling(userId: string): UserCollecti
 		.prepare(`SELECT * FROM user_collectible WHERE user_id = ? AND selling = 0`)
 		.all(userId)
 	
-	for(let i in userCollectibles)
-		if(userCollectibles[i])
-			userCollectibles[i].selling = Boolean(userCollectibles[i].selling)
+	for(let userCollectible of userCollectibles) {
+		if(userCollectible)
+			userCollectible.selling = Boolean(userCollectible.selling)
+	}
 
 	return userCollectibles
 }
@@ -1445,9 +1535,10 @@ export function getCollectibleOwnershipsSelling(userId: string): UserCollectible
 		.prepare(`SELECT * FROM user_collectible WHERE user_id = ? AND selling = 1`)
 		.all(userId)
 
-	for(let i in userCollectibles)
-		if(userCollectibles[i])
-			userCollectibles[i].selling = Boolean(userCollectibles[i].selling)
+	for(const userCollectible of userCollectibles) {
+		if(userCollectible)
+			userCollectible.selling = Boolean(userCollectible.selling)
+	}
 
 	return userCollectibles
 }
@@ -1457,9 +1548,10 @@ export function getSpecificCollectibleOwnershipsNotSelling(userId: string, colle
 		.prepare(`SELECT * FROM user_collectible WHERE user_id = ? AND collectible_id = ? AND selling = 0`)
 		.all(userId, collectibleId)
 
-	for(let i in userCollectibles)
-		if(userCollectibles[i])
-			userCollectibles[i].selling = Boolean(userCollectibles[i].selling)
+	for(const userCollectible of userCollectibles) {
+		if(userCollectible)
+			userCollectible.selling = Boolean(userCollectible.selling)
+	}
 
 	return userCollectibles
 }
@@ -1469,9 +1561,10 @@ export function getSpecificCollectibleOwnershipsSelling(userId: string, collecti
 		.prepare(`SELECT * FROM user_collectible WHERE user_id = ? AND collectible_id = ? AND selling = 1`)
 		.all(userId, collectibleId)
 
-	for(let i in userCollectibles)
-		if(userCollectibles[i])
-			userCollectibles[i].selling = Boolean(userCollectibles[i].selling)
+	for(const userCollectible of userCollectibles) {
+		if(userCollectible)
+			userCollectible.selling = Boolean(userCollectible.selling)
+	}
 
 	return userCollectibles
 }
@@ -1496,3 +1589,56 @@ export function updateCollectibleOwnershipsToNotSelling(...userCollectibleIds: n
 	db.prepare(`UPDATE user_collectible SET selling = 0 WHERE id IN (${placeholder})`).run(...userCollectibleIds)
 }
 
+
+export function getMarketPriceHistory(collectibleId: number, day: Date): MarketPriceHistory {
+	const startOfDay = moment.tz(config.timezone).startOf('day').toISOString()
+	const endOfDay = moment.tz(config.timezone).endOf('day').toISOString()
+
+	return db.prepare(
+		'SELECT * FROM market_price_history WHERE collectible_id = ? AND timestamp BETWEEN ? AND ?'
+	).get(collectibleId, startOfDay, endOfDay)
+}
+
+export function addMarketPriceHistory(
+	collectibleId: number,
+	day: Date,
+	prices: {
+		highPrice: number | null;
+		lowPrice: number | null;
+		openPrice: number | null;
+		closePrice: number | null;
+	}
+) {
+	const existing = getMarketPriceHistory(collectibleId, day);
+
+	if (!existing) {
+		db.prepare(
+			`INSERT INTO market_price_history 
+			 (collectible_id, timestamp, high_price, low_price, open_price, close_price) 
+			 VALUES (?, ?, ?, ?, ?, ?)`
+		).run(
+			collectibleId,
+			day.toISOString(),
+			prices.highPrice,
+			prices.lowPrice,
+			prices.openPrice,
+			prices.closePrice
+		)
+	} else {
+		db.prepare(
+			`UPDATE market_price_history SET 
+			 high_price = ?, 
+			 low_price = ?, 
+			 open_price = ?, 
+			 close_price = ? 
+			 WHERE collectible_id = ? AND timestamp = ?`
+		).run(
+			prices.highPrice,
+			prices.lowPrice,
+			prices.openPrice,
+			prices.closePrice,
+			collectibleId,
+			day.toISOString()
+		)
+	}
+}

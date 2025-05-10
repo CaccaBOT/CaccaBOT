@@ -18,7 +18,7 @@ const getCollectibleEndpoint = async function (
 	server.get(
 		'/:id',
 		async (req: FastifyRequest<{ Params: Params }>, res: FastifyReply) => {
-            const id = parseInt(req.params['id'])
+			const id = parseInt(req.params['id'])
 			res.code(200).send(getCollectible(id))
 		},
 	)

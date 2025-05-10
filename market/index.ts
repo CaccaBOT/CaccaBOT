@@ -1,5 +1,4 @@
 import {
-    getLastLimitOrderExecuted,
     getSellActiveOrdersByCollectibleAndType,
     getBuyActiveOrdersByCollectibleAndType,
     getAllCollectibles,
@@ -10,9 +9,12 @@ import {
     setMoney,
     getSpecificCollectibleOwnershipsNotSelling,
     setCollectibleOwnershipUser,
-    db
+    db,
+    getMarketPriceHistory,
+    getLastOrderExecuted
 } from "../database"
 import { Order } from "../types/Order"
+import { compareDays } from "../utilities"
 
 const defaultMarketPrice = 1
 const taxationAmount = 0.1
@@ -20,9 +22,28 @@ const taxationAmount = 0.1
 type OrderType = 'LIMIT' | 'MARKET'
 
 const MarketLogic = {
-    getMarketPrice(collectibleId: number): number {
-        const lastLimitOrder = getLastLimitOrderExecuted(collectibleId)
-        return lastLimitOrder ? lastLimitOrder.price : defaultMarketPrice
+    getMarketPrice(collectibleId: number, day: Date): number {
+        if (compareDays(day, new Date()) < 0) {
+            return getMarketPriceHistory(collectibleId, day).close_price
+        }
+        
+        const lastOrder = getLastOrderExecuted(collectibleId)
+
+        if (!lastOrder) {
+            return defaultMarketPrice
+        }
+
+        return lastOrder.price
+    },
+
+    getDailyVariation(collectibleId: number, day: Date): number {
+        const yesterday = new Date(day)
+        yesterday.setDate(yesterday.getDate() - 1)
+
+        const currentMarketPrice = this.getMarketPrice(collectibleId, day)
+        const previousMarketPrice = this.getMarketPrice(collectibleId, yesterday)
+
+        return (currentMarketPrice / previousMarketPrice - 1) * 100
     },
 
     getTaxedPrice(price: number): number {
@@ -84,7 +105,7 @@ const MarketLogic = {
         for (const collectible of collectibles) {
             const collectibleId = collectible.id
             const sellOrders = getSellActiveOrdersByCollectibleAndType(collectibleId, orderType)
-            const marketPrice = this.getMarketPrice(collectibleId)
+            const marketPrice = this.getMarketPrice(collectibleId, new Date())
 
             for (const sellOrder of sellOrders) {
                 const buyOrder = this.findMatchingBuyOrder(sellOrder)

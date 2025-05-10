@@ -6,10 +6,7 @@ import {
 } from 'fastify'
 
 import { authenticate } from '../../../middleware/auth'
-import {
-	getOrder,
-	deactivateOrder,
-} from '../../../database/index'
+import { getOrder, deactivateOrder } from '../../../database/index'
 import MarketLogic from '../../../market'
 
 interface Params {
@@ -29,8 +26,6 @@ const deleteOrderEndpoint = async function (
 
 			const order = getOrder(orderId)
 
-			// Input validation
-
 			if (!order) {
 				res.code(404).send({
 					error: "The order doesn't exist.",
@@ -40,25 +35,23 @@ const deleteOrderEndpoint = async function (
 
 			if (order.user_id != user.id) {
 				res.code(403).send({
-					error: "The order is property of another user."
+					error: 'The order is property of another user.',
 				})
 				return
 			}
 
 			if (!order.active) {
 				res.code(403).send({
-					error: "The order is already inactive.",
+					error: 'The order is already inactive.',
 				})
 				return
 			}
 
-			// Logic
-			
 			const opResult = deactivateOrder(orderId)
 
 			if (opResult == false) {
 				res.code(403).send({
-					error: "The collectible ownership couldn't be synchronized."
+					error: "The collectible ownership couldn't be synchronized.",
 				})
 				return
 			}
@@ -66,7 +59,7 @@ const deleteOrderEndpoint = async function (
 			MarketLogic.updateAllOrders()
 			res.code(200).send({
 				success: true,
-				message: "Order successfully deactivated."
+				message: 'Order successfully deactivated.',
 			})
 		},
 	)

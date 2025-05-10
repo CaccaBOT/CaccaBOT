@@ -39,12 +39,10 @@ const insertOrderEndpoint = async function (
 
 			const user = await authenticate(req, res)
 
-			// Input validation
-
 			const existsCollectible = getAllCollectibles()
-				.map(collectible => collectible.id)
+				.map((collectible) => collectible.id)
 				.includes(collectibleId)
-			
+
 			if (!existsCollectible) {
 				res.code(404).send({
 					error: "The collectible doesn't exist.",
@@ -58,7 +56,7 @@ const insertOrderEndpoint = async function (
 
 			if (!existsSide) {
 				res.code(400).send({
-					error: "Illegal order side.",
+					error: 'Illegal order side.',
 				})
 				return
 			}
@@ -69,49 +67,49 @@ const insertOrderEndpoint = async function (
 
 			if (!existsType) {
 				res.code(400).send({
-					error: "Illegal order type.",
+					error: 'Illegal order type.',
 				})
 				return
 			}
 
 			if (price <= 0 && type != 'MARKET') {
 				res.code(400).send({
-					error: "The price must be positive.",
+					error: 'The price must be positive.',
 				})
 				return
 			}
 
 			if (quantity <= 0) {
 				res.code(400).send({
-					error: "The quantity must be positive.",
+					error: 'The quantity must be positive.',
 				})
 				return
 			}
 
-			// Logic
-
 			switch (side) {
-				case 'SELL': {
-					const userCollectibles = getSpecificCollectibleOwnershipsNotSelling(
-						user.id,
-						collectibleId,
-					)
+				case 'SELL':
+					{
+						const userCollectibles = getSpecificCollectibleOwnershipsNotSelling(
+							user.id,
+							collectibleId,
+						)
 
-					if (userCollectibles.length < quantity) {
-						res.code(403).send({
-							error: "You don't have enough cards of the chosen type.",
-						})
-						return
+						if (userCollectibles.length < quantity) {
+							res.code(403).send({
+								error: "You don't have enough cards of the chosen type.",
+							})
+							return
+						}
+
+						createOrder(user.id, collectibleId, type, side, price, quantity)
 					}
+					break
 
-					createOrder(user.id, collectibleId, type, side, price, quantity)
-				}
-				break
-
-				case 'BUY': {
-					createOrder(user.id, collectibleId, type, side, price, quantity)
-				}
-				break
+				case 'BUY':
+					{
+						createOrder(user.id, collectibleId, type, side, price, quantity)
+					}
+					break
 			}
 			MarketLogic.updateAllOrders()
 		},

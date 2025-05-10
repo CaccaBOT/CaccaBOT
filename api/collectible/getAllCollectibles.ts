@@ -11,12 +11,9 @@ const getAllCollectiblesEndpoint = async function (
 	server: FastifyInstance,
 	options: RouteOptions,
 ) {
-	server.get(
-		'/list',
-		async (req: FastifyRequest, res: FastifyReply) => {
-			res.code(200).send(getAllCollectibles())
-		},
-	)
+	server.get('/list', async (req: FastifyRequest, res: FastifyReply) => {
+		res.code(200).send(getAllCollectibles())
+	})
 }
 
 export default getAllCollectiblesEndpoint
