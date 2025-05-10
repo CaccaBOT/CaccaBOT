@@ -15,6 +15,7 @@ import {
 } from "../database"
 import { Order } from "../types/Order"
 import { compareDays } from "../utilities"
+import { server } from "../index"
 
 const defaultMarketPrice = 1
 const taxationAmount = 0.1
@@ -56,6 +57,7 @@ const MarketLogic = {
         const sellUser = getUserProfileById(sellOrder.user_id)
         const buyUser = getUserProfileById(buyOrder.user_id)
         const timestamp = new Date()
+        const collectibleId = sellOrder.collectible_id
 
         if (buyUser.money < price) {
             return
@@ -76,6 +78,10 @@ const MarketLogic = {
             setMoney(sellUser.id, sellUser.money + this.getTaxedPrice(price))
             setMoney(buyUser.id, buyUser.money - price)
         })()
+
+        server.io.emit('market', {
+            collectibleId
+        })
     },
 
     findMatchingBuyOrder(sellOrder: Order): Order | null {

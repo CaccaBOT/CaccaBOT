@@ -1,4 +1,4 @@
-const server = require('fastify')({
+export const server = require('fastify')({
 	bodyLimit: 8388608,
 	http2: process.env.ENVIRONMENT == 'production',
 })
@@ -128,6 +128,13 @@ loadConfig()
 		origin: '*',
 	})
 
+	server.register(import("@ericedouard/fastify-socket.io"), {
+		cors: {
+			origin: '*',
+			methods: ['GET', 'POST', 'PUT', 'DELETE']
+		},
+	})
+
 	server.addHook(
 		'onRequest',
 		(req: FastifyRequest, res: FastifyReply, done: () => void) =>
@@ -187,6 +194,7 @@ loadConfig()
 				log.error(err)
 				process.exit(1)
 			}
+			
 			initDatabase()
 			await initJobs()
 

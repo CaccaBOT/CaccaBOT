@@ -25,6 +25,7 @@
     "marked": "^13.0.0",
     "marked-katex-extension": "^5.0.2",
     "pinia": "^2.1.7",
+    "socket.io-client": "^4.8.1",
     "three": "^0.166.1",
     "vue": "^3.4.21",
     "vue-router": "^4.3.2",

@@ -16,7 +16,7 @@ export async function authenticate(req: FastifyRequest, res: FastifyReply): Prom
 		res.code(401).send({ error: 'Invalid token' })
 	}
 
-	log.info(`${new Date().toISOString()} | ${user.username} | ${req.method} | ${req.url}`)
+	log.info(`${user.username} | ${req.method} | ${req.url}`)
 
 	return user
 }

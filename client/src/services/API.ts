@@ -7,6 +7,19 @@ export const baseAPIURL = `${baseURL}/api`
 export default class API {
   sessionStore = useSessionStore()
 
+  async getMarketFeed() {
+    
+  }
+
+  async deleteOrder(orderId: number) {
+    return await fetch(`${baseAPIURL}/market/order/${orderId}`, {
+      method: "DELETE",
+      headers: {
+        "X-Auth-Token": this.sessionStore.session.token,
+      },
+    })
+  }
+
   async getMarketHistory(collectibleId: number) {
     return await fetch(`${baseAPIURL}/market/history/${collectibleId}`)
   }

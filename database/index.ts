@@ -1465,6 +1465,35 @@ export function getOrdersExecutedInDay(collectibleId: number, day: Date): Order[
 	return orders
 }
 
+export function getOrdersOfUserCreatedAtDay(userId: string, collectibleId: number, date: Date): Order[] {
+	const startOfDay = moment(date)
+		.startOf('day')
+		.clone()
+		.toISOString()
+	const endOfDay = moment(date)
+		.endOf('day')
+		.clone()
+		.toISOString()
+
+	const orders = db.prepare(
+		`SELECT * FROM 'order'
+		 WHERE user_id = ?
+		 AND collectible_id = ?
+		 AND creation_timestamp >= ?
+		 AND creation_timestamp <= ?
+		 ORDER by creation_timestamp`
+	).all(userId, collectibleId, startOfDay, endOfDay)
+
+	for(const order of orders) {
+		if(order) {
+			order.active = Boolean(order.active)
+			order.executed = Boolean(order.executed)
+		}
+	}
+
+	return orders
+}
+
 export function getOrdersOfUser(userId: string, collectibleId: number): Order[] {
 	const orders = db.prepare(
 		'SELECT * FROM `order` WHERE user_id = ? AND collectible_id = ?'
@@ -1500,8 +1529,8 @@ export function getLimitOrdersExecuted(collectibleId: number): Order[] {
 		'SELECT * FROM `order` WHERE type = `LIMIT` AND executed = 1'
 	).all(collectibleId)
 
-	for(const order of orders) {
-		if(order) {
+	for (const order of orders) {
+		if (order) {
 			order.active = Boolean(order.active)
 			order.executed = Boolean(order.executed)
 		}

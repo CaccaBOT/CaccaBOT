@@ -8,6 +8,7 @@ import {
 import { authenticate } from '../../../middleware/auth'
 import { getOrder, deactivateOrder } from '../../../database/index'
 import MarketLogic from '../../../market'
+import { server as serverInstance } from '../../../index'
 
 interface Params {
 	id: string
@@ -28,21 +29,21 @@ const deleteOrderEndpoint = async function (
 
 			if (!order) {
 				res.code(404).send({
-					error: "The order doesn't exist.",
+					error: "The order doesn't exist",
 				})
 				return
 			}
 
 			if (order.user_id != user.id) {
 				res.code(403).send({
-					error: 'The order is property of another user.',
+					error: 'The order is property of another user',
 				})
 				return
 			}
 
 			if (!order.active) {
 				res.code(403).send({
-					error: 'The order is already inactive.',
+					error: 'The order is already inactive',
 				})
 				return
 			}
@@ -51,15 +52,20 @@ const deleteOrderEndpoint = async function (
 
 			if (opResult == false) {
 				res.code(403).send({
-					error: "The collectible ownership couldn't be synchronized.",
+					error: "The collectible ownership couldn't be synchronized",
 				})
 				return
 			}
 
 			MarketLogic.updateAllOrders()
+			
+			serverInstance.io.emit('market', {
+				collectibleId: order.collectible_id
+			})
+
 			res.code(200).send({
 				success: true,
-				message: 'Order successfully deactivated.',
+				message: 'Order successfully deleted',
 			})
 		},
 	)

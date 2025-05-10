@@ -12,9 +12,11 @@ import {
 	getAllCollectibles,
 	getAllOrderSides,
 	getAllOrderTypes,
+	getOrdersOfUserCreatedAtDay,
 } from '../../../database/index'
 import { OrderSide, OrderType } from '../../../types/OrderEnums'
 import MarketLogic from '../../../market'
+import { server as serverInstance } from '../../../index'
 
 interface Params {
 	collectibleId: string
@@ -38,6 +40,17 @@ const insertOrderEndpoint = async function (
 			const quantity = req.body.quantity
 
 			const user = await authenticate(req, res)
+
+			const userOrdersToday = getOrdersOfUserCreatedAtDay(user.id, collectibleId, new Date())
+
+			console.log(userOrdersToday.length)
+
+			if (userOrdersToday.length >= 10) {
+				res.code(403).send({
+					error: 'You have reached the maximum number of orders for today',
+				})
+				return
+			}
 
 			const existsCollectible = getAllCollectibles()
 				.map((collectible) => collectible.id)
@@ -111,7 +124,12 @@ const insertOrderEndpoint = async function (
 					}
 					break
 			}
+
 			MarketLogic.updateAllOrders()
+
+			serverInstance.io.emit('market', {
+				collectibleId
+			})
 		},
 	)
 }
