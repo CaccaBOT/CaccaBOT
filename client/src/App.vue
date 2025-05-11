@@ -59,7 +59,6 @@ onMounted(async () => {
   window.umami.identify({ username: sessionStore.session.username })
 
   if (settingsStore.smoothScrolling) {
-    console.log('enabling smooth scrolling')
     new Lenis({
       autoRaf: true
     })
