@@ -114,7 +114,7 @@ const routes = [
     name: "discordLink",
   },
   {
-    path: "lore/origin",
+    path: "/lore/origin",
     component: () => import("../views/lore/Origin.vue"),
     name: "origin",
   },
