@@ -3,23 +3,23 @@ import { onMounted, ref } from "vue"
 import { marked } from "marked"
 import markedKatex from "marked-katex-extension"
 
-const manual = ref("")
+const lore = ref("")
 onMounted(async () => {
-  const manualRaw = await (
+  const loreRaw = await (
     await fetch(
-      "https://raw.githubusercontent.com/CaccaBOT/CaccaBOT-Manual/refs/heads/main/static/manual/output.md",
+      "https://raw.githubusercontent.com/CaccaBOT/CaccaBOT-Manual/refs/heads/main/static/origin/origin.md",
     )
   ).text()
   marked.use(
     markedKatex({ throwOnError: false, displayMode: true, output: "mathml" }),
   )
-  manual.value = await marked.parse(manualRaw)
-  document.querySelector(".manual-wrapper").innerHTML = manual.value
+  lore.value = await marked.parse(loreRaw)
+  document.querySelector(".lore-wrapper").innerHTML = lore.value
 })
 </script>
 
 <template>
-  <div class="manual-wrapper prose w-11/12 mx-auto">
+  <div class="lore-wrapper prose w-11/12 mx-auto">
     <div
       class="loader-wrapper flex h-[85vh] w-full items-center justify-center"
     >
@@ -62,7 +62,7 @@ onMounted(async () => {
   font-size: 0.882rem;
 }
 
-.manual-wrapper {
+.lore-wrapper {
   max-width: 100%;
 }
 </style>

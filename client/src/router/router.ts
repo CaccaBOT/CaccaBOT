@@ -114,6 +114,11 @@ const routes = [
     name: "discordLink",
   },
   {
+    path: "lore/origin",
+    component: () => import("../views/lore/Origin.vue"),
+    name: "origin",
+  },
+  {
     path: "/:pathMatch(.*)*",
     component: () => import("../views/NotFound.vue"),
     name: "notFound",
