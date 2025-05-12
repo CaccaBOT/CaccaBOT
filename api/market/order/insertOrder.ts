@@ -13,6 +13,9 @@ import {
 	getAllOrderSides,
 	getAllOrderTypes,
 	getOrdersOfUserCreatedAtDay,
+	getActiveOrdersByCollectible,
+	getBuyActiveOrdersByCollectible,
+	getSellActiveOrdersByCollectible,
 } from '../../../database/index'
 import { OrderSide, OrderType } from '../../../types/OrderEnums'
 import MarketLogic from '../../../market'
@@ -102,6 +105,13 @@ const insertOrderEndpoint = async function (
 			switch (side) {
 				case 'SELL':
 					{
+						if (type == 'MARKET' && getBuyActiveOrdersByCollectible(collectibleId).length == 0) {
+							res.code(400).send({
+								error: 'Market orders must have a matching order.',
+							})
+							return
+						}
+
 						const userCollectibles = getSpecificCollectibleOwnershipsNotSelling(
 							user.id,
 							collectibleId,
@@ -120,6 +130,13 @@ const insertOrderEndpoint = async function (
 
 				case 'BUY':
 					{
+						if (type == 'MARKET' && getSellActiveOrdersByCollectible(collectibleId).length == 0) {
+							res.code(400).send({
+								error: 'Market orders must have a matching order.',
+							})
+							return
+						}
+
 						createOrder(user.id, collectibleId, type, side, price, quantity)
 					}
 					break

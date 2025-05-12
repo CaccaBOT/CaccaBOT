@@ -1343,7 +1343,7 @@ export function getOrdersByType(type: OrderType): Order[] {
 	return orders
 }
 
-export function getActiveOrdersByCollectible(collectibleId: number) {
+export function getActiveOrdersByCollectible(collectibleId: number): Order[] {
 	const orders = db.prepare('SELECT * FROM `order` WHERE collectible_id = ?').all(collectibleId)
 
 	for(const order of orders) {
@@ -1386,6 +1386,36 @@ export function getBuyActiveOrdersByType(type: OrderType): Order[] {
 	const orders = db.prepare(
 		'SELECT * FROM `order` WHERE active = 1 AND type = ? AND side = \'BUY\''
 	).all(type)
+
+	for(const order of orders) {
+		if(order) {
+			order.active = Boolean(order.active)
+			order.executed = Boolean(order.executed)
+		}
+	}
+	
+	return orders
+}
+
+export function getSellActiveOrdersByCollectible(collectibleId: number): Order[] {
+	const orders = db.prepare(
+		'SELECT * FROM `order` WHERE active = 1 AND collectible_id = ? AND side = \'SELL\''
+	).all(collectibleId)
+
+	for(const order of orders) {
+		if(order) {
+			order.active = Boolean(order.active)
+			order.executed = Boolean(order.executed)
+		}
+	}
+	
+	return orders
+}
+
+export function getBuyActiveOrdersByCollectible(collectibleId: number): Order[] {
+	const orders = db.prepare(
+		'SELECT * FROM `order` WHERE active = 1 AND collectible_id = ? AND side = \'BUY\''
+	).all(collectibleId)
 
 	for(const order of orders) {
 		if(order) {
