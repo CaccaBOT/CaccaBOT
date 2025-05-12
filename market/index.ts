@@ -11,11 +11,15 @@ import {
     setCollectibleOwnershipUser,
     db,
     getMarketPriceHistory,
-    getLastOrderExecuted
+    getLastOrderExecuted,
+    getOrdersExecutedInDay,
+    addMarketPriceHistory
 } from "../database"
 import { Order } from "../types/Order"
 import { compareDays } from "../utilities"
 import { server } from "../index"
+import moment from "moment"
+import { config } from "../config/loader"
 
 const defaultMarketPrice = 1
 const taxationAmount = 0.1
@@ -79,9 +83,61 @@ const MarketLogic = {
             setMoney(buyUser.id, buyUser.money - price)
         })()
 
+        this.saveMarketHistory()
+
         server.io.emit('market', {
             collectibleId
         })
+    },
+
+    saveMarketHistory() {
+        const day = moment().tz(config.timezone).startOf('day').subtract(1, 'days').utc().toDate()
+        
+        const actualDay = new Date(day)
+        actualDay.setHours(actualDay.getHours() + 2)
+
+        const collectibles = getAllCollectibles()
+
+        for (const collectible of collectibles) {
+            const orders = getOrdersExecutedInDay(collectible.id, day)
+
+            if (!orders || orders.length == 0) {
+                const yesterday = moment().tz(config.timezone).startOf('day').subtract(2, 'days').utc().toDate()
+                yesterday.setDate(yesterday.getDate() - 1)
+
+                const previousMarketHistory = getMarketPriceHistory(collectible.id, yesterday)
+
+                if (!previousMarketHistory) {
+                    addMarketPriceHistory(collectible.id, day, {
+                        openPrice: null,
+                        closePrice: null,
+                        highPrice: null,
+                        lowPrice: null
+                    })
+                }
+                else {
+                    addMarketPriceHistory(collectible.id, day, {
+                        openPrice: previousMarketHistory.open_price,
+                        closePrice: previousMarketHistory.close_price,
+                        highPrice: previousMarketHistory.high_price,
+                        lowPrice: previousMarketHistory.low_price
+                    })
+                }
+            }
+            else {
+                const openPrice = orders[0].price
+                const closePrice = orders[orders.length - 1].price
+                const highPrice = Math.max(...orders.map(x => x.price))
+                const lowPrice = Math.min(...orders.map(x => x.price))
+
+                addMarketPriceHistory(collectible.id, day, {
+                    openPrice,
+                    closePrice,
+                     highPrice,
+                    lowPrice
+                })
+            }
+        }
     },
 
     findMatchingBuyOrder(sellOrder: Order): Order | null {
