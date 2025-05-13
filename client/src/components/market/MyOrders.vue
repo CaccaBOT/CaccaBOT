@@ -2,6 +2,7 @@
 import { ref, computed } from 'vue'
 import { Order } from '../../types/Order'
 import HeroiconsTrash from '~icons/heroicons/trash'
+import { formatDate } from '../../utils/dateFormatter'
 
 const props = defineProps<{
   ownOrders: Order[]
@@ -71,13 +72,13 @@ function getStatus(order: Order): string {
           <td>{{ getStatus(order) }}</td>
           <td>
             <span v-if="order.creation_timestamp">
-              {{ order.creation_timestamp }}
+              {{ formatDate(new Date(order.creation_timestamp).toISOString()) }}
             </span>
             <span v-else>-</span>
           </td>
           <td>
             <span v-if="order.executed && order.execution_timestamp">
-              {{ order.execution_timestamp }}
+              {{ formatDate(new Date(order.execution_timestamp).toISOString()) }}
             </span>
             <span v-else>-</span>
           </td>

@@ -46,8 +46,6 @@ const insertOrderEndpoint = async function (
 
 			const userOrdersToday = getOrdersOfUserCreatedAtDay(user.id, collectibleId, new Date())
 
-			console.log(userOrdersToday.length)
-
 			if (userOrdersToday.length >= 10) {
 				res.code(403).send({
 					error: 'You have reached the maximum number of orders for today',
@@ -107,7 +105,7 @@ const insertOrderEndpoint = async function (
 					{
 						if (type == 'MARKET' && getBuyActiveOrdersByCollectible(collectibleId).length == 0) {
 							res.code(400).send({
-								error: 'Market orders must have a matching order.',
+								error: 'You can\'t place a market sell order because there are no active buy orders',
 							})
 							return
 						}
@@ -132,7 +130,7 @@ const insertOrderEndpoint = async function (
 					{
 						if (type == 'MARKET' && getSellActiveOrdersByCollectible(collectibleId).length == 0) {
 							res.code(400).send({
-								error: 'Market orders must have a matching order.',
+								error: 'You can\'t place a market buy order because there are no active sell orders',
 							})
 							return
 						}

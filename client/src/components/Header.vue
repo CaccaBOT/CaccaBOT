@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue'
 import router from "../router/router"
 import HeroiconsTrophy from "~icons/heroicons/trophy"
 import HeroiconsBookOpen from "~icons/heroicons/book-open"
 import HeroiconsChartBar from "~icons/heroicons/chart-bar"
 import HeroiconsUsers from "~icons/heroicons/users"
-import Asset from '../types/Asset';
+import Asset from '../types/Asset'
 import { useSessionStore } from "../stores/session"
 import NavMenu from "../components/NavMenu.vue"
 import StreamlineCards from "~icons/streamline/cards"
@@ -20,7 +20,7 @@ import HeroiconsOutlineRefresh from '~icons/heroicons-outline/refresh'
 import RiAwardLine from '~icons/ri/award-line'
 import HeroiconsInformationCircle from '~icons/heroicons/information-circle'
 import { useModalStore } from '../stores/modal'
-import { ModalEnum } from '../types/ModalEnum';
+import { ModalEnum } from '../types/ModalEnum'
 
 const sessionStore = useSessionStore()
 const modalStore = useModalStore()
@@ -174,6 +174,14 @@ const menuItems = ref<MenuItem[]>([
   }
 ])
 
+const formattedMoney = computed(() =>
+  new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "EUR",
+    minimumFractionDigits: 0
+  }).format(sessionStore.session.money ?? 0).substring(1)
+)
+
 onMounted(() => {
   document.querySelector('body').addEventListener('click', (event) => {
     document.querySelectorAll('details').forEach(x => x.removeAttribute('open'))
@@ -190,9 +198,10 @@ onMounted(() => {
             <HugeiconsMenu02 class="text-xl" />
           </div>
           <ul class="menu dropdown-content z-20 mt-3 w-52 rounded-box bg-base-300 p-2 shadow-sm">
-            <li v-for="item in menuItems" :key="item.route" class="mx-2"
-              :class="{ [item.class]: isActive(item.route),
-                'hidden': !canAccess(item) }">
+            <li v-for="item in menuItems" :key="item.route" class="mx-2" :class="{
+              [item.class]: isActive(item.route),
+              'hidden': !canAccess(item)
+            }">
               <details v-if="item.subsections">
                 <summary>
                   <component :is="item.icon" class="text-xl" />
@@ -200,7 +209,7 @@ onMounted(() => {
                 </summary>
                 <ul class="p-2">
                   <li v-for="sub in item.subsections" :key="sub.route">
-                    <RouterLink :to="sub.route" :class="{'hidden': !canAccess(sub)}">
+                    <RouterLink :to="sub.route" :class="{ 'hidden': !canAccess(sub) }">
                       <component :is="sub.icon" class="text-xl" />
                       {{ sub.label }}
                     </RouterLink>
@@ -229,7 +238,7 @@ onMounted(() => {
               </summary>
               <ul class="p-2">
                 <li v-for="sub in item.subsections" :key="sub.route">
-                  <RouterLink :to="sub.route" :class="{'hidden': !canAccess(sub)}">
+                  <RouterLink :to="sub.route" :class="{ 'hidden': !canAccess(sub) }">
                     <component :is="sub.icon" class="text-xl" />
                     {{ sub.label }}
                   </RouterLink>
@@ -250,6 +259,9 @@ onMounted(() => {
           <div class="w-16 rounded-full bg-base-300 ring-3 ring-primary ring-offset-2 ring-offset-base-100">
             <img alt="CaccaBOT Logo" fetchpriority="high" :src="sessionStore.session.pfp ?? Asset.NO_PFP" />
           </div>
+        </div>
+        <div v-if="sessionStore.session.id != null" class="invisible lg:visible badge badge-success mr-20 font-bold">
+          {{ formattedMoney }} <img :src="Asset.MERDOLLAR" class="w-[18px]" />
         </div>
         <NavMenu />
       </div>

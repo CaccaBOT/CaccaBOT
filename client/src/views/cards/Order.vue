@@ -27,11 +27,20 @@ const ownOrders = ref<Order[]>([])
 const assetPrice = ref(0)
 const allOrders = ref<Order[]>([])
 const history = ref<MarketHistoryDay[]>([])
+const bidPrice = ref(0)
+const askPrice = ref(0)
 const isSocketConnected = ref(false)
 
 async function updateOrders() {
   await fetchOrders()
   await fetchOwnOrders()
+  calculatePrices()
+  updateBalance()
+}
+
+async function updateBalance() {
+  let profile = await (await client.getOwnProfile()).json()
+  sessionStore.session.money = profile.money
 }
 
 async function deleteOrder(orderId: number) {
@@ -78,6 +87,23 @@ async function createOrder(order: OrderRequest): Promise<boolean> {
   }
 
   await updateOrders()
+}
+
+function calculateBidPrice(): number {
+  let buyOrders = allOrders.value.filter((o) => o.side == OrderSide.BUY && o.type == 'LIMIT' && o.active)
+  let maxBuyOrder = buyOrders.reduce((max, order) => Math.max(max, order.price), 0)
+  return maxBuyOrder
+}
+
+function calculateAskPrice(): number {
+  let sellOrders = allOrders.value.filter((o) => o.side == OrderSide.SELL && o.type == 'LIMIT' && o.active)
+  let minSellOrder = sellOrders.reduce((min, order) => Math.min(min, order.price), Infinity)
+  return minSellOrder
+}
+
+function calculatePrices(): void {
+  bidPrice.value = calculateBidPrice()
+  askPrice.value = calculateAskPrice()
 }
 
 async function fetchHistory() {
@@ -140,8 +166,8 @@ onUnmounted(() => {
         <Terms />
       </div>
       <div class="lg:w-2/5 w-full rounded-xl bg-base-300 flex flex-row justify-center">
-        <OrderForm :collectible-id="collectibleId" :asset-price="assetPrice" :collectible="collectible"
-          @submit="createOrder" />
+        <OrderForm :collectible-id="collectibleId" :bid-price="bidPrice" :ask-price="askPrice" :asset-price="assetPrice"
+          :collectible="collectible" @submit="createOrder" />
       </div>
       <div class="lg:w-3/7 w-full rounded-xl bg-base-300 overflow-auto h-[30vh]">
         <MyOrders :own-orders="ownOrders" @delete="deleteOrder" />

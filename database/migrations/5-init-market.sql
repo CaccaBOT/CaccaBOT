@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS "order" (
 	side TEXT NOT NULL,
 	price INTEGER,
 	active INTEGER DEFAULT 1,
-	creation_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	creation_timestamp TIMESTAMP,
 	executed INTEGER DEFAULT 0,
 	execution_timestamp TIMESTAMP,
 	FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE CASCADE ON UPDATE CASCADE,

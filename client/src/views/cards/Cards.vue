@@ -77,7 +77,7 @@ async function reset() {
     </div>
     <button
       v-if="!sessionStore.session.id"
-      class="lg:w-1/8 btn btn-error mx-auto w-2/3 sm:w-2/3 md:w-1/5"
+      class="lg:w-1/6 btn btn-error mx-auto w-2/3 sm:w-2/3 md:w-1/5"
       @click="() => modalStore.open(ModalEnum.Login)"
     >
       Login required
@@ -86,7 +86,7 @@ async function reset() {
       v-if="sessionStore.session.money >= 5"
       id="openPack"
       :disabled="isOpening"
-      class="lg:w-1/8 btn btn-success mx-auto w-2/3 sm:w-2/3 md:w-1/5"
+      class="lg:w-1/6 btn btn-success mx-auto w-2/3 sm:w-2/3 md:w-1/5"
       @click="openPack"
     >
       Open Pack (5 <img class="merdollar h-[20px] w-[20px]" :src="Asset.MERDOLLAR" />)
@@ -94,7 +94,7 @@ async function reset() {
     <button
       id="notEnoughMoney"
       v-if="sessionStore.session.money < 5"
-      class="lg:w-1/8 btn btn-error mx-auto w-2/3 sm:w-2/3 md:w-1/5"
+      class="lg:w-1/6 btn btn-error mx-auto w-2/3 sm:w-2/3 md:w-1/5"
     >
       You can't buy this item (5
       <img

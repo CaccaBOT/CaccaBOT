@@ -4,7 +4,6 @@ import { useSettingsStore } from '../stores/settings'
 const settingsStore = useSettingsStore()
 
 watch(settingsStore.$state, () => {
-    console.log('calling save')
   settingsStore.save()
 }, { deep: true })
 </script>

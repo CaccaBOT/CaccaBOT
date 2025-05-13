@@ -1,5 +1,5 @@
 export type MarketDay = {
-    collectibleId: number,
-    price: number,
-    dailyVariation: number
+    collectibleId: number
+    price: number | null
+    dailyVariation: number | null
 }

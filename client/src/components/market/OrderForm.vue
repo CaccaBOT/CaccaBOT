@@ -6,11 +6,14 @@ import HeroiconsXMark20Solid from '~icons/heroicons/x-mark-20-solid'
 import HeroiconsEquals20Solid from '~icons/heroicons/equals-20-solid'
 import type { Card } from '../../types/Card'
 import type { OrderRequest } from '../../types/OrderRequest'
+import Asset from '../../types/Asset'
 
 const props = defineProps<{
   collectibleId: number
   collectible: Card | undefined
   assetPrice: number
+  bidPrice: number
+  askPrice: number
 }>()
 
 const emit = defineEmits<{
@@ -27,6 +30,28 @@ const selectedPrice = computed(() => {
     : manualPrice.value
 })
 
+const bidPrice = computed(() => {
+  if (
+    props.bidPrice === null ||
+    props.bidPrice === Infinity ||
+    props.bidPrice === -Infinity) {
+    return 0
+  }
+
+  return props.bidPrice
+})
+
+const askPrice = computed(() => {
+  if (
+    props.askPrice === null ||
+    props.askPrice === Infinity ||
+    props.askPrice === -Infinity) {
+    return 0
+  }
+
+  return props.askPrice
+})
+
 function handleSubmit(side: OrderSide) {
   const order: OrderRequest = {
     collectibleId: props.collectibleId,
@@ -40,7 +65,7 @@ function handleSubmit(side: OrderSide) {
 </script>
 
 <template>
-  <div class="order-form flex flex-col items-center p-5">
+  <div class="order-form flex flex-col items-center p-6">
     <fieldset class="fieldset">
       <legend class="fieldset-legend">Order type</legend>
       <select v-model="selectedOrderType" class="select w-80">
@@ -50,35 +75,40 @@ function handleSubmit(side: OrderSide) {
     </fieldset>
 
     <div class="flex flex-row space-x-2 items-center justify-center">
-      <fieldset class="fieldset w-20">
+      <fieldset :class="selectedOrderType === OrderType.LIMIT ? 'w-20' : 'w-80'" class="fieldset">
         <legend class="fieldset-legend">Amount</legend>
         <input v-model="selectedAmount" type="number" class="input" />
       </fieldset>
 
-      <HeroiconsXMark20Solid class="text-xl mt-6" />
+      <HeroiconsXMark20Solid v-if="selectedOrderType === OrderType.LIMIT" class="text-xl mt-6" />
 
-      <fieldset class="fieldset w-20">
+      <fieldset v-if="selectedOrderType === OrderType.LIMIT" class="fieldset w-20">
         <legend class="fieldset-legend">Price</legend>
-        <input v-show="selectedOrderType === OrderType.MARKET" :disabled="true" :value="selectedPrice" type="number" class="input" />
-        <input v-show="selectedOrderType === OrderType.LIMIT" v-model="manualPrice" type="number" class="input" />
+        <input v-model="manualPrice" type="number" class="input" />
       </fieldset>
 
-      <HeroiconsEquals20Solid class="text-xl mt-6" />
+      <HeroiconsEquals20Solid v-if="selectedOrderType === OrderType.LIMIT" class="text-xl mt-6" />
 
-      <fieldset class="fieldset w-20">
+      <fieldset v-if="selectedOrderType === OrderType.LIMIT" class="fieldset w-20">
         <legend class="fieldset-legend">Total</legend>
-        <input readonly :value="selectedOrderType === OrderType.MARKET ? selectedPrice * selectedAmount : manualPrice * selectedAmount" type="number" class="input" />
+        <input readonly :value="manualPrice * selectedAmount" type="text" class="input" />
       </fieldset>
     </div>
 
     <div class="flex flex-row justify-center mt-6 space-x-8">
-      <button @click="handleSubmit(OrderSide.BUY)" :disabled="selectedAmount === 0"
-        class="btn btn-success w-full">Buy</button>
-      <button @click="handleSubmit(OrderSide.SELL)" :disabled="selectedAmount === 0"
-        class="btn btn-error w-full">Sell</button>
+      <button v-if="selectedOrderType === OrderType.MARKET" @click="handleSubmit(OrderSide.BUY)"
+        :disabled="selectedAmount === 0" class="btn btn-success w-40">Buy ({{ selectedAmount * askPrice }} <img
+          :src="Asset.MERDOLLAR" class="w-[18px]">)</button>
+      <button v-if="selectedOrderType === OrderType.MARKET" @click="handleSubmit(OrderSide.SELL)"
+        :disabled="selectedAmount === 0" class="btn btn-error w-40">Sell ({{ selectedAmount * bidPrice }} <img
+          :src="Asset.MERDOLLAR" class="w-[18px]">)</button>
+
+      <button v-if="selectedOrderType === OrderType.LIMIT" @click="handleSubmit(OrderSide.BUY)"
+        :disabled="selectedAmount === 0" class="btn btn-success w-40">Buy</button>
+      <button v-if="selectedOrderType === OrderType.LIMIT" @click="handleSubmit(OrderSide.SELL)"
+        :disabled="selectedAmount === 0" class="btn btn-error w-40">Sell</button>
     </div>
   </div>
 </template>
 
-<style scoped>
-</style>
+<style scoped></style>

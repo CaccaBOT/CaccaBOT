@@ -21,13 +21,12 @@ import { server } from "../index"
 import moment from "moment"
 import { config } from "../config/loader"
 
-const defaultMarketPrice = 1
 const taxationAmount = 0.1
 
 type OrderType = 'LIMIT' | 'MARKET'
 
 const MarketLogic = {
-    getMarketPrice(collectibleId: number, day: Date): number {
+    getMarketPrice(collectibleId: number, day: Date): number | null {
         if (compareDays(day, new Date()) < 0) {
             return getMarketPriceHistory(collectibleId, day)?.close_price
         }
@@ -35,18 +34,22 @@ const MarketLogic = {
         const lastOrder = getLastOrderExecuted(collectibleId)
 
         if (!lastOrder) {
-            return defaultMarketPrice
+            return null
         }
 
         return lastOrder.price
     },
 
-    getDailyVariation(collectibleId: number, day: Date): number {
+    getDailyVariation(collectibleId: number, day: Date): number | null{
         const yesterday = new Date(day)
         yesterday.setDate(yesterday.getDate() - 1)
 
         const currentMarketPrice = this.getMarketPrice(collectibleId, day)
         const previousMarketPrice = this.getMarketPrice(collectibleId, yesterday)
+
+        if (!currentMarketPrice || !previousMarketPrice) {
+            return null
+        }
 
         return (currentMarketPrice / previousMarketPrice - 1) * 100
     },
@@ -174,6 +177,11 @@ const MarketLogic = {
 
                 if (buyOrder) {
                     const priceToUse = orderType === 'MARKET' ? marketPrice : sellOrder.price
+
+                    if (priceToUse === null) {
+                        continue
+                    }
+
                     this.executeTransaction(sellOrder.id, buyOrder.id, priceToUse)
                 }
             }

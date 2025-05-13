@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, Ref, watch, ref } from 'vue'
+import { watch, ref } from 'vue'
 import { Order } from '../../types/Order'
 import { OrderSide } from '../../enums/OrderSideEnum'
 import { OrderType } from '../../enums/OrderTypeEnum'
@@ -15,7 +15,7 @@ const orderBookSellEntries = ref<OrderBookEntry[]>([])
 
 function aggregateOrders(orderSide: OrderSide): OrderBookEntry[] {
   return props.orders
-    .filter(order => order.side === orderSide && order.type === OrderType.LIMIT)
+    .filter(order => order.side === orderSide && order.type === OrderType.LIMIT && order.active)
     .reduce((acc: OrderBookEntry[], order) => {
       const entry = acc.find(e => e.price === order.price)
       if (entry) {

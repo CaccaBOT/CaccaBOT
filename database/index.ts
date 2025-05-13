@@ -1230,16 +1230,16 @@ export function createOrder(userId: string, collectibleId: number, type: OrderTy
 			case 'MARKET': {
 				for (let i = 0; i < quantity; i++)
 					db.prepare(
-						'INSERT INTO `order` (user_id, collectible_id, `type`, side) VALUES (?, ?, ?, ?)',
-					).run(userId, collectibleId, type, side)
+						'INSERT INTO `order` (user_id, collectible_id, `type`, side, creation_timestamp) VALUES (?, ?, ?, ?, ?)',
+					).run(userId, collectibleId, type, side, new Date().toISOString())
 			}
 			break
 	
 			default: {
 				for (let i = 0; i < quantity; i++)
 					db.prepare(
-						'INSERT INTO `order` (user_id, collectible_id, `type`, side, price) VALUES (?, ?, ?, ?, ?)',
-					).run(userId, collectibleId, type, side, price)
+						'INSERT INTO `order` (user_id, collectible_id, `type`, side, price, creation_timestamp) VALUES (?, ?, ?, ?, ?, ?)',
+					).run(userId, collectibleId, type, side, price, new Date().toISOString())
 			}
 			break
 		}
