@@ -143,46 +143,52 @@ const MarketLogic = {
         }
     },
 
-    findMatchingBuyOrder(sellOrder: Order): Order | null {
-        const buyOrdersMarket = getBuyActiveOrdersByCollectibleAndType(sellOrder.collectible_id, 'MARKET')
-            .filter(order => order.user_id !== sellOrder.user_id)
-        const buyOrdersLimit = getBuyActiveOrdersByCollectibleAndType(sellOrder.collectible_id, 'LIMIT')
-            .filter(order => order.user_id !== sellOrder.user_id)
-
-        if (buyOrdersMarket.length > 0) {
-            return buyOrdersMarket[0]
+    findMatchingSellOrder(buyOrder: Order): Order | null {
+        const marketPrice = this.getMarketPrice(buyOrder.collectible_id, new Date());
+        if (marketPrice === null) return null;
+    
+        const sellOrders = [
+            ...getSellActiveOrdersByCollectibleAndType(buyOrder.collectible_id, 'MARKET')
+                .filter(order => order.user_id !== buyOrder.user_id)
+                .map(order => ({ ...order, effectivePrice: marketPrice })),
+    
+            ...getSellActiveOrdersByCollectibleAndType(buyOrder.collectible_id, 'LIMIT')
+                .filter(order => order.user_id !== buyOrder.user_id)
+                .map(order => ({ ...order, effectivePrice: order.price }))
+        ];
+    
+        // MARKET buyOrder (wants best price)
+        if (buyOrder.price === null) {
+            sellOrders.sort((a, b) => a.effectivePrice - b.effectivePrice); // Lower is better
+            return sellOrders.length > 0 ? sellOrders[0] : null;
         }
-
-        buyOrdersLimit.sort((a, b) => b.price - a.price)
-
-        for (const buyOrder of buyOrdersLimit) {
-            if (buyOrder.price >= sellOrder.price) {
-                return buyOrder
-            }
-        }
-
-        return null
+    
+        // LIMIT buyOrder: must find a seller asking <= buy price
+        const matchingSellOrders = sellOrders.filter(order => order.effectivePrice <= buyOrder.price);
+        matchingSellOrders.sort((a, b) => a.effectivePrice - b.effectivePrice); // Cheapest first
+    
+        return matchingSellOrders.length > 0 ? matchingSellOrders[0] : null;
     },
 
     updateOrdersForType(orderType: OrderType) {
-        const collectibles = getAllCollectibles()
-
+        const collectibles = getAllCollectibles();
+    
         for (const collectible of collectibles) {
-            const collectibleId = collectible.id
-            const sellOrders = getSellActiveOrdersByCollectibleAndType(collectibleId, orderType)
-            const marketPrice = this.getMarketPrice(collectibleId, new Date())
-
-            for (const sellOrder of sellOrders) {
-                const buyOrder = this.findMatchingBuyOrder(sellOrder)
-
-                if (buyOrder) {
-                    const priceToUse = orderType === 'MARKET' ? marketPrice : sellOrder.price
-
+            const collectibleId = collectible.id;
+            const buyOrders = getBuyActiveOrdersByCollectibleAndType(collectibleId, orderType);
+            const marketPrice = this.getMarketPrice(collectibleId, new Date());
+    
+            for (const buyOrder of buyOrders) {
+                const sellOrder = this.findMatchingSellOrder(buyOrder);
+    
+                if (sellOrder) {
+                    const priceToUse = orderType === 'MARKET' ? marketPrice : sellOrder.price;
+    
                     if (priceToUse === null) {
-                        continue
+                        continue;
                     }
-
-                    this.executeTransaction(sellOrder.id, buyOrder.id, priceToUse)
+    
+                    this.executeTransaction(sellOrder.id, buyOrder.id, priceToUse);
                 }
             }
         }
