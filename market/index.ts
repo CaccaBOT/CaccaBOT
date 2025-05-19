@@ -144,18 +144,19 @@ const MarketLogic = {
     },
 
     findMatchingSellOrder(buyOrder: Order): Order | null {
-        const marketPrice = this.getMarketPrice(buyOrder.collectible_id, new Date());
-        if (marketPrice === null) return null;
-    
         const sellOrders = [
-            ...getSellActiveOrdersByCollectibleAndType(buyOrder.collectible_id, 'MARKET')
-                .filter(order => order.user_id !== buyOrder.user_id)
-                .map(order => ({ ...order, effectivePrice: marketPrice })),
-    
             ...getSellActiveOrdersByCollectibleAndType(buyOrder.collectible_id, 'LIMIT')
                 .filter(order => order.user_id !== buyOrder.user_id)
                 .map(order => ({ ...order, effectivePrice: order.price }))
-        ];
+        ]
+
+        if (buyOrder.type !== 'MARKET') {
+            sellOrders.push(
+                ...getSellActiveOrdersByCollectibleAndType(buyOrder.collectible_id, 'MARKET')
+                    .filter(order => order.user_id !== buyOrder.user_id)
+                    .map(order => ({ ...order, effectivePrice: buyOrder.price }))
+            )
+        }
     
         // MARKET buyOrder (wants best price)
         if (buyOrder.price === null) {
@@ -182,7 +183,14 @@ const MarketLogic = {
                 const sellOrder = this.findMatchingSellOrder(buyOrder);
     
                 if (sellOrder) {
-                    const priceToUse = orderType === 'MARKET' ? marketPrice : sellOrder.price;
+                    let priceToUse = null
+
+                    if (sellOrder.price !== null) {
+                        priceToUse = sellOrder.price
+                    }
+                    else if (buyOrder.price !== null) {
+                        priceToUse = buyOrder.price
+                    }
     
                     if (priceToUse === null) {
                         continue;
