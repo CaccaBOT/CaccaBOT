@@ -94,7 +94,7 @@ const MarketLogic = {
     },
 
     saveMarketHistory() {
-        const day = moment().tz(config.timezone).startOf('day').subtract(1, 'days').utc().toDate()
+        const day = moment().tz(config.timezone).startOf('day').utc().toDate()
         
         const actualDay = new Date(day)
         actualDay.setHours(actualDay.getHours() + 2)
@@ -136,7 +136,7 @@ const MarketLogic = {
                 addMarketPriceHistory(collectible.id, day, {
                     openPrice,
                     closePrice,
-                     highPrice,
+                    highPrice,
                     lowPrice
                 })
             }

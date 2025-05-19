@@ -1473,11 +1473,17 @@ export function getOrdersExecuted(collectibleId: number): Order[] {
 }
 
 export function getOrdersExecutedInDay(collectibleId: number, day: Date): Order[] {
-	const startOfDay = moment(day).tz(timezone).startOf('day').utc().toISOString()
-	const endOfDay = moment(day).tz(timezone).endOf('day').utc().toISOString()
+	const startOfDay = moment(day)
+		.startOf('day')
+		.clone()
+		.toISOString()
+	const endOfDay = moment(day)
+		.endOf('day')
+		.clone()
+		.toISOString()
 
 	const orders = db.prepare(
-		`SELECT * FROM \`order\` 
+		`SELECT * FROM 'order' 
 		 WHERE executed = 1 
 		 AND collectible_id = ? 
 		 AND execution_timestamp >= ? 
