@@ -2,7 +2,7 @@
 import { onMounted, onUnmounted, ref } from 'vue'
 import { useAPIStore } from '../../stores/api'
 import Asset from '../../types/Asset'
-import { formatDate } from '../../utils/dateFormatter'
+import { formatDate } from '../../utils/formatter'
 import { User } from '../../types/User'
 import HeroiconsTrash from '~icons/heroicons/trash'
 import { Poop } from '../../types/Profile'

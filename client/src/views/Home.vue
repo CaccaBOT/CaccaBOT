@@ -10,8 +10,11 @@ import HeroiconsUserGroup from "~icons/heroicons/user-group"
 import { useSessionStore } from "../stores/session"
 import IcBaselineDiscord from '~icons/ic/baseline-discord'
 import router from "../router/router"
+import { useModalStore } from "../stores/modal"
+import { ModalEnum } from "../types/ModalEnum"
 const globalStore = useGlobalStore()
 const sessionStore = useSessionStore()
+const modalStore = useModalStore()
 
 let installPrompt = ref(null)
 

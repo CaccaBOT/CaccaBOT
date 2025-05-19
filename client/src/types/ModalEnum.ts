@@ -4,4 +4,5 @@ export enum ModalEnum {
     ChangeUsername = 'changeUsername',
     ChangePfp = 'changePfp',
     ChangeTheme = 'changeTheme',
+    MigrationNotice = 'migrationNotice'
 }

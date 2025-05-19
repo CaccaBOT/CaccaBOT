@@ -21,6 +21,8 @@ import RiAwardLine from '~icons/ri/award-line'
 import HeroiconsInformationCircle from '~icons/heroicons/information-circle'
 import { useModalStore } from '../stores/modal'
 import { ModalEnum } from '../types/ModalEnum'
+import { formatMoney } from '../utils/formatter'
+import { MenuItem } from '../types/MenuItem'
 
 const sessionStore = useSessionStore()
 const modalStore = useModalStore()
@@ -49,16 +51,6 @@ function isAdmin() {
 
 function canAccess(menuItem: MenuItem): boolean {
   return (!menuItem.requiresAdmin || isAdmin()) && (!menuItem.requiresAuth || sessionStore.session.id != null)
-}
-
-interface MenuItem {
-  label: string;
-  icon: any;
-  route: string;
-  class?: string;
-  requiresAdmin: boolean;
-  requiresAuth?: boolean;
-  subsections?: MenuItem[];
 }
 
 const menuItems = ref<MenuItem[]>([
@@ -175,11 +167,7 @@ const menuItems = ref<MenuItem[]>([
 ])
 
 const formattedMoney = computed(() =>
-  new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "EUR",
-    minimumFractionDigits: 0
-  }).format(sessionStore.session.money ?? 0).substring(1)
+  formatMoney(sessionStore.session.money)
 )
 
 onMounted(() => {

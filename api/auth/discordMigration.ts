@@ -8,19 +8,23 @@ import {
 import { client } from '../../discord/client'
 import { config } from '../../config/loader'
 import { authenticate } from '../../middleware/auth'
-import { getUserByDiscordId, setDiscordId } from '../../database'
+import { setDiscordId } from '../../database'
 
 interface Params {
 	code: string
 }
 
-const discordLoginEndpoint = async function (
+const VERIFIED_ROLE_ID = '1229787263332909066'
+
+const discordMigrationEndpoint = async function (
 	server: FastifyInstance,
 	options: RouteOptions,
 ) {
 	server.get(
-		'/discord',
+		'/discord/migration',
 		async (req: FastifyRequest<{ Querystring: Params }>, res: FastifyReply) => {
+			const user = await authenticate(req, res)
+
 			const { code } = req.query
 
 			if (!code) {
@@ -66,15 +70,27 @@ const discordLoginEndpoint = async function (
 
 			const userData = await userInfoResponse.json()
 
-			const user = await getUserByDiscordId(userData.id)
+			setDiscordId(user.id, userData.id)
 
-			if (!user) {
-				return res.code(404).send({ error: 'User not found' })
-			}
+			await fetch(
+				`https://discord.com/api/v10/guilds/1229739123770785792/members/${userData.id}`,
+				{
+					method: 'PUT',
+					headers: {
+						'Content-Type': 'application/json',
+						Authorization: `Bot ${process.env.DISCORD_BOT_TOKEN}`,
+					},
+					body: JSON.stringify({
+						access_token: oauthData.access_token,
+						roles: [VERIFIED_ROLE_ID],
+						nick: user.username,
+					}),
+				},
+			)
 
-			res.code(200).send(user)
+			res.code(200).send(userData)
 		},
 	)
 }
 
-export default discordLoginEndpoint
+export default discordMigrationEndpoint

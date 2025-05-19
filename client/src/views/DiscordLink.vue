@@ -40,13 +40,35 @@ onMounted(async () => {
     }
 
     loading.value = true
-    const response = await client.linkDiscord(code.value)
+    let response
+
+    if (sessionStore.session.id) {
+        response = await client.linkDiscord(code.value)
+    } else {
+        response = await client.discordLogin(code.value)
+    }
+
     loading.value = false
 
     if (response.ok) {
+
+        if (!sessionStore.session.id) {
+            sessionStore.session = await response.json()
+            toast.success("Logged in successfully")
+            router.push('/')
+            return
+        }
+
         discordUser.value = await response.json()
         sessionStore.session.discordId = discordUser.value.id
     } else {
+
+        if (!sessionStore.session.id) {
+            toast.error("Failed to login")
+            router.push('/')
+            return
+        }
+
         toast.error("Failed to link Discord account")
     }
 })

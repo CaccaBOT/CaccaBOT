@@ -2,7 +2,7 @@
 import { ref, computed } from 'vue'
 import { Order } from '../../types/Order'
 import HeroiconsTrash from '~icons/heroicons/trash'
-import { formatDate } from '../../utils/dateFormatter'
+import { formatDate } from '../../utils/formatter'
 
 const props = defineProps<{
   ownOrders: Order[]

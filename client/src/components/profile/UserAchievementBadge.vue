@@ -4,7 +4,7 @@ import { Achievement } from "../../types/Achievement"
 import { UserAchievement } from "../../types/UserAchievement"
 import HeroiconsTrophy from "~icons/heroicons/trophy"
 import { computed } from "vue"
-import { formatDate } from "../../utils/dateFormatter"
+import { formatDate } from "../../utils/formatter"
 
 const achievementStore = useAchievementStore()
 const props = defineProps<{ achievement: UserAchievement }>()

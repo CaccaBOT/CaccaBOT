@@ -7,6 +7,14 @@ export const baseAPIURL = `${baseURL}/api`
 export default class API {
   sessionStore = useSessionStore()
 
+  async discordLogin(code: string) {
+    return await fetch(`${baseAPIURL}/auth/discord?code=${code}`, {
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    })
+  }
+
   async getMarketFeed() {
     
   }
@@ -41,7 +49,7 @@ export default class API {
   }
 
   async linkDiscord(code: string) {
-    return await fetch(`${import.meta.env.VITE_API_URL}/api/auth/discord?code=${code}`, {
+    return await fetch(`${import.meta.env.VITE_API_URL}/api/auth/discord/migration?code=${code}`, {
       headers: {
         'Content-Type': 'application/json',
         'X-Auth-Token': this.sessionStore.session.token
