@@ -32,8 +32,11 @@ const askPrice = ref(0)
 const isSocketConnected = ref(false)
 
 async function updateOrders() {
-  await fetchOrders()
-  await fetchOwnOrders()
+  await Promise.all([
+    fetchOrders(),
+    fetchOwnOrders(),
+    fetchHistory()
+  ])
   calculatePrices()
   updateBalance()
 }
@@ -54,11 +57,6 @@ async function deleteOrder(orderId: number) {
 }
 
 async function createOrder(order: OrderRequest): Promise<boolean> {
-  if (window.location.hostname != 'localhost') {
-    toast.error('This feature is not available yet')
-    return
-  }
-
   if (order.side == OrderSide.BUY && sessionStore.session.money < order.price) {
     toast.error("You don't have enough liquidity to complete this order")
     return
