@@ -54,7 +54,8 @@ onMounted(async () => {
 
         if (!sessionStore.session.id) {
             sessionStore.session = await response.json()
-            toast.success("Logged in successfully")
+            toast.success(`Logged in as ${sessionStore.session.username}`)
+            sessionStore.save()
             router.push('/')
             return
         }
