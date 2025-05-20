@@ -7,4 +7,5 @@ export type Card = {
   asset_url: string
   quantity: number
   rarity_id: CollectibleRarity
+  selling: number
 }

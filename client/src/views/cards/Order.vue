@@ -52,8 +52,6 @@ async function deleteOrder(orderId: number) {
     toast.error((await response.json()).error || 'Failed to delete order')
     return
   }
-
-  await updateOrders()
 }
 
 async function createOrder(order: OrderRequest): Promise<boolean> {
@@ -83,8 +81,6 @@ async function createOrder(order: OrderRequest): Promise<boolean> {
     toast.error((await response.json()).error)
     return
   }
-
-  await updateOrders()
 }
 
 function calculateBidPrice(): number {

@@ -114,9 +114,8 @@ async function fetchCollectibles() {
   let userCollectibles = await ((await client.getUserCollectibles(sessionStore.session.id)).json())
   collectibles.value = userCollectibles
   .filter((c: Card) => c.rarity_id !== CollectibleRarity.Caccasmagorico)
-  .map((c: Card) => ({ ...c, quantity: c.quantity - 1 }))
-  .filter((c: Card) => c.quantity > 0);
-
+  .map((c: Card) => ({ ...c, quantity: c.quantity - c.selling - 1 }))
+  .filter((c: Card) => c.quantity > 0)
 }
 
 onMounted(async () => {

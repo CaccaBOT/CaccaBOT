@@ -633,13 +633,20 @@ export function getUserCollectibles(userId: string) {
 	return db
 		.prepare(
 		`
-			SELECT c.id, c.name, c.description, c.asset_url, c.rarity_id, COUNT(uc.collectible_id) AS quantity
-			FROM collectible c
-			JOIN user_collectible uc ON uc.collectible_id = c.id
-			JOIN user u ON uc.user_id = u.id
-			WHERE u.id = ?
-			GROUP BY c.id, c.rarity_id
-			ORDER BY c.rarity_id DESC
+		SELECT 
+			c.id, 
+			c.name, 
+			c.description, 
+			c.asset_url, 
+			c.rarity_id, 
+			COUNT(uc.collectible_id) AS quantity, 
+			SUM(CASE WHEN uc.selling = 1 THEN 1 ELSE 0 END) AS selling
+		FROM collectible c
+		JOIN user_collectible uc ON uc.collectible_id = c.id
+		JOIN user u ON uc.user_id = u.id
+		WHERE u.id = ?
+		GROUP BY c.id, c.rarity_id
+		ORDER BY c.rarity_id DESC
     	`,
 		)
 		.all(userId)

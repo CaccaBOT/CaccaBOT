@@ -7,6 +7,14 @@ export const baseAPIURL = `${baseURL}/api`
 export default class API {
   sessionStore = useSessionStore()
 
+  async getUserCollectiblesNotSelling() {
+    return await fetch(`${baseAPIURL}/collectible/inventory?selling=false`, {
+      headers: {
+        "X-Auth-Token": this.sessionStore.session.token,
+      },
+    })
+  }
+
   async discordLogin(code: string) {
     return await fetch(`${baseAPIURL}/auth/discord?code=${code}`, {
       headers: {
