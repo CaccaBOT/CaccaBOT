@@ -20,6 +20,7 @@ import { compareDays } from "../utilities"
 import { server } from "../index"
 import moment from "moment"
 import { config } from "../config/loader"
+import log from 'loglevel'
 
 const taxationAmount = 0.1
 
@@ -94,23 +95,30 @@ const MarketLogic = {
     },
 
     saveMarketHistory() {
+        log.trace('Saving market history')
         const day = moment().tz(config.timezone).startOf('day').utc().toDate()
-        
+        log.trace('Day is set to ' + day.toISOString())
         const actualDay = new Date(day)
         actualDay.setHours(actualDay.getHours() + 2)
-
+        log.trace('actualDay is set to ' + actualDay.toISOString())
         const collectibles = getAllCollectibles()
+        log.trace('collectibles found ' + collectibles.length)
 
         for (const collectible of collectibles) {
             const orders = getOrdersExecutedInDay(collectible.id, day)
+            log.trace('Orders found for collectible ' + collectible.id + ': ' + orders.length)
 
             if (!orders || orders.length == 0) {
+                log.trace('No orders found for collectible ' + collectible.id)
                 const yesterday = moment().tz(config.timezone).startOf('day').subtract(2, 'days').utc().toDate()
                 yesterday.setDate(yesterday.getDate() - 1)
-
+                log.trace('Yesterday is set to ' + yesterday.toISOString())
                 const previousMarketHistory = getMarketPriceHistory(collectible.id, yesterday)
+                log.trace(previousMarketHistory)
 
                 if (!previousMarketHistory) {
+                    log.trace('No previous market history found for collectible ' + collectible.id)
+                    log.trace('Adding empty market history for collectible ' + collectible.id)
                     addMarketPriceHistory(collectible.id, day, {
                         openPrice: null,
                         closePrice: null,
@@ -119,6 +127,7 @@ const MarketLogic = {
                     })
                 }
                 else {
+                    log.trace('found previous market history for collectible ' + collectible.id)
                     addMarketPriceHistory(collectible.id, day, {
                         openPrice: previousMarketHistory.open_price,
                         closePrice: previousMarketHistory.close_price,
@@ -128,10 +137,20 @@ const MarketLogic = {
                 }
             }
             else {
+                log.trace("Orders found, adding market history")
+
                 const openPrice = orders[0].price
                 const closePrice = orders[orders.length - 1].price
                 const highPrice = Math.max(...orders.map(x => x.price))
                 const lowPrice = Math.min(...orders.map(x => x.price))
+
+                log.trace("collectible " + collectible.id + " date: " + day.toISOString())
+                log.trace({
+                    openPrice,
+                    closePrice,
+                    highPrice,
+                    lowPrice
+                })
 
                 addMarketPriceHistory(collectible.id, day, {
                     openPrice,
