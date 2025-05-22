@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import Asset from "../../types/Asset"
-import { Frequency } from "../../types/Frequency"
-import { User } from "../../types/User"
+import Asset from '../../types/Asset'
+import { Frequency } from '../../types/Frequency'
+import { User } from '../../types/User'
 
 const props = defineProps<{
   frequency: Frequency
@@ -10,10 +10,10 @@ const props = defineProps<{
 }>()
 
 function getWord(frequency: Frequency) {
-  if (frequency == "weekly" || frequency == "monthly") {
+  if (frequency == 'weekly' || frequency == 'monthly') {
     return `this ${frequency.substring(0, frequency.length - 2)}`
-  } else if (frequency == "daily") {
-    return "today"
+  } else if (frequency == 'daily') {
+    return 'today'
   } else {
     return frequency
   }

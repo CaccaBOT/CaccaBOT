@@ -1,1 +1,1 @@
-export type Frequency = "daily" | "weekly" | "monthly" | "total"
+export type Frequency = 'daily' | 'weekly' | 'monthly' | 'total'

@@ -1,26 +1,26 @@
 <script setup lang="ts">
-import { ref } from "vue"
-import { useSessionStore } from "../../stores/session"
-import { useAPIStore } from "../../stores/api"
-import { useModalStore } from "../../stores/modal"
+import { ref } from 'vue'
+import { useSessionStore } from '../../stores/session'
+import { useAPIStore } from '../../stores/api'
+import { useModalStore } from '../../stores/modal'
 
 const modalStore = useModalStore()
 const sessionStore = useSessionStore()
 const { client } = useAPIStore()
 
-const newUsername = ref("")
-const usernameError = ref("")
+const newUsername = ref('')
+const usernameError = ref('')
 
 const validation = /^[a-zA-Z0-9_.]{3,12}$/
 
 async function change() {
-  usernameError.value = ""
+  usernameError.value = ''
 
   if (!validate()) {
-    newUsername.value = ""
+    newUsername.value = ''
     document
-      .querySelectorAll("input")
-      .forEach((x) => x.classList.add("input-error"))
+      .querySelectorAll('input')
+      .forEach((x) => x.classList.add('input-error'))
     return
   }
 
@@ -29,10 +29,10 @@ async function change() {
   const response = await client.changeUsername(newUsername.value)
 
   if (!response.ok) {
-    newUsername.value = ""
+    newUsername.value = ''
     document
-      .querySelectorAll("input")
-      .forEach((x) => x.classList.add("input-error"))
+      .querySelectorAll('input')
+      .forEach((x) => x.classList.add('input-error'))
   } else {
     modalStore.close()
     sessionStore.session.username = username
@@ -40,17 +40,16 @@ async function change() {
 }
 
 function dismissModal(event) {
-  if (event.target.classList.contains("custom-modal")) {
+  if (event.target.classList.contains('custom-modal')) {
     modalStore.close()
   }
-  newUsername.value = ""
-  usernameError.value = ""
+  newUsername.value = ''
+  usernameError.value = ''
 }
 
 function validate() {
   return validation.test(newUsername.value)
 }
-
 </script>
 
 <template>

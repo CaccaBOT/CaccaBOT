@@ -69,52 +69,63 @@ const chartOptions = ref({
     candlestick: {
       colors: {
         upward: 'oklch(76% 0.177 163.223)',
-        downward: 'oklch(71% 0.194 13.428)',
-      },
-    },
+        downward: 'oklch(71% 0.194 13.428)'
+      }
+    }
   },
   tooltip: {
-    x: { format: 'dd MMM yyyy' },
-  },
+    x: { format: 'dd MMM yyyy' }
+  }
 })
 
-watch(() => props.history, (newHistory) => {
-  if (chartType.value === 'candlestick') {
-    series.value = [
-      {
-        name: 'Price',
-        data: newHistory.map((entry: MarketHistoryDay) => ({
-          x: new Date(entry.timestamp),
-          y: [
-            entry.open_price,
-            entry.high_price,
-            entry.low_price,
-            entry.close_price,
-          ],
-        })),
-      },
-    ]
-  } else {
-    series.value = [
-      {
-        name: 'Price',
-        data: newHistory.map((entry: MarketHistoryDay) => ({
-          x: new Date(entry.timestamp),
-          y: entry.close_price,
-        }))
-      },
-    ]
-  }
+watch(
+  () => props.history,
+  (newHistory) => {
+    if (chartType.value === 'candlestick') {
+      series.value = [
+        {
+          name: 'Price',
+          data: newHistory.map((entry: MarketHistoryDay) => ({
+            x: new Date(entry.timestamp),
+            y: [
+              entry.open_price,
+              entry.high_price,
+              entry.low_price,
+              entry.close_price
+            ]
+          }))
+        }
+      ]
+    } else {
+      series.value = [
+        {
+          name: 'Price',
+          data: newHistory.map((entry: MarketHistoryDay) => ({
+            x: new Date(entry.timestamp),
+            y: entry.close_price
+          }))
+        }
+      ]
+    }
 
-  prices.value = props.history.flatMap(entry => [entry.high_price, entry.low_price])
-  minPrice.value = Math.floor(Math.min(...prices.value) / 5) * 5
-  maxPrice.value = Math.ceil(Math.max(...prices.value) / 5) * 5
-
-}, { immediate: true })
+    prices.value = props.history.flatMap((entry) => [
+      entry.high_price,
+      entry.low_price
+    ])
+    minPrice.value = Math.floor(Math.min(...prices.value) / 5) * 5
+    maxPrice.value = Math.ceil(Math.max(...prices.value) / 5) * 5
+  },
+  { immediate: true }
+)
 
 watch(chartType, (newType) => {
   chartOptions.value.chart.type = newType
-  props.history && watch(() => props.history, () => { }, { immediate: true })
+  props.history &&
+    watch(
+      () => props.history,
+      () => {},
+      { immediate: true }
+    )
 })
 </script>
 

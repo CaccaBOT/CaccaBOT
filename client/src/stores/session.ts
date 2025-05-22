@@ -1,21 +1,21 @@
-import { defineStore } from "pinia"
-import { Session } from "../types/Session"
-import { useAPIStore } from "./api"
+import { defineStore } from 'pinia'
+import { Session } from '../types/Session'
+import { useAPIStore } from './api'
 
-export const useSessionStore = defineStore("session", {
+export const useSessionStore = defineStore('session', {
   state: () => ({
     session: {} as Session,
     showNavMenu: false,
     showMobileNavbar: false,
-    updateRequired: false,
+    updateRequired: false
   }),
   getters: {},
   actions: {
     save() {
-      localStorage.setItem("token", this.session.token)
+      localStorage.setItem('token', this.session.token)
     },
     async load() {
-      const token = localStorage.getItem("token") ?? null
+      const token = localStorage.getItem('token') ?? null
       if (!token) {
         return
       }
@@ -28,7 +28,7 @@ export const useSessionStore = defineStore("session", {
       const { client } = useAPIStore()
       await client.logout(this.session.token)
       this.session = {}
-      localStorage.removeItem("token")
-    },
-  },
+      localStorage.removeItem('token')
+    }
+  }
 })

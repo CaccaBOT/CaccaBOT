@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import Asset from '../types/Asset';
+import Asset from '../types/Asset'
 </script>
 
 <template>

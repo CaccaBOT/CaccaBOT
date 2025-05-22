@@ -15,11 +15,11 @@ const emit = defineEmits<{
 const selectedTab = ref<'active' | 'inactive'>('active')
 
 const activeOrders = computed(() =>
-  props.ownOrders.filter(order => order.active)
+  props.ownOrders.filter((order) => order.active)
 )
 
 const inactiveOrders = computed(() =>
-  props.ownOrders.filter(order => !order.active)
+  props.ownOrders.filter((order) => !order.active)
 )
 
 function getStatus(order: Order): string {

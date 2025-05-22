@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import router from "../../router/router"
-import Asset from "../../types/Asset"
-import { ref } from "vue";
-import { useSessionStore } from "../../stores/session"
-import { useAPIStore } from "../../stores/api"
-import { useToast } from "vue-toastification"
+import router from '../../router/router'
+import Asset from '../../types/Asset'
+import { ref } from 'vue'
+import { useSessionStore } from '../../stores/session'
+import { useAPIStore } from '../../stores/api'
+import { useToast } from 'vue-toastification'
 import LineMdLoadingLoop from '~icons/line-md/loading-loop'
-import { useModalStore } from "../../stores/modal"
+import { useModalStore } from '../../stores/modal'
 import IcBaselineDiscord from '~icons/ic/baseline-discord'
 const sessionStore = useSessionStore()
 const { client } = useAPIStore()
@@ -14,23 +14,25 @@ const toast = useToast()
 const modalStore = useModalStore()
 
 const isLoading = ref(false)
-const username = ref("")
-const password = ref("")
+const username = ref('')
+const password = ref('')
 
 const discordRedirectUrl = import.meta.env.VITE_DISCORD_REDIRECT_URL
 
 async function login() {
   try {
     isLoading.value = true
-    const response = await client.login(username.value, password.value);
-    const body = await response.json();
+    const response = await client.login(username.value, password.value)
+    const body = await response.json()
     isLoading.value = false
-    username.value = "";
-    password.value = "";
+    username.value = ''
+    password.value = ''
     if (!response.ok) {
-      document.querySelectorAll("input").forEach((x) => x.classList.add("input-error"))
+      document
+        .querySelectorAll('input')
+        .forEach((x) => x.classList.add('input-error'))
       toast.error(body.error)
-      return;
+      return
     }
 
     sessionStore.session = body
@@ -38,7 +40,7 @@ async function login() {
     sessionStore.save()
     modalStore.close()
   } catch (e) {
-    toast.error("Failed to login")
+    toast.error('Failed to login')
   }
 }
 
@@ -47,7 +49,7 @@ async function discordLogin() {
 }
 
 function dismissModal(event) {
-  if (event.target.classList.contains("custom-modal")) {
+  if (event.target.classList.contains('custom-modal')) {
     modalStore.close()
   }
 }

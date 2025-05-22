@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import Asset from "../../types/Asset"
-import { User } from "../../types/User"
+import Asset from '../../types/Asset'
+import { User } from '../../types/User'
 
 const props = defineProps<{
   user: User

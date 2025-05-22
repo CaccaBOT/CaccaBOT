@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Ref, ref } from "vue"
+import { Ref, ref } from 'vue'
 
 type TimeUntilNewMonth = {
   days: number
@@ -9,7 +9,7 @@ type TimeUntilNewMonth = {
 }
 
 const newMonth = ref(
-  new Date(new Date().getFullYear(), new Date().getMonth() + 1, 1),
+  new Date(new Date().getFullYear(), new Date().getMonth() + 1, 1)
 )
 
 const timeUntilNewMonth: Ref = ref(setTime())

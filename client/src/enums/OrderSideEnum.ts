@@ -1,4 +1,4 @@
 export enum OrderSide {
-    BUY = 'BUY',
-    SELL = 'SELL',
+  BUY = 'BUY',
+  SELL = 'SELL'
 }

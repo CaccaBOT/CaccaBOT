@@ -1,5 +1,5 @@
 export type Job = {
-	name: string
-	interval: string
-	execute: () => void
+  name: string
+  interval: string
+  execute: () => void
 }

@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import { Card } from "../../types/Card"
-import Asset from "../../types/Asset";
-import router from "../../router/router";
+import { Card } from '../../types/Card'
+import Asset from '../../types/Asset'
+import router from '../../router/router'
 
 const props = defineProps<{
-    collectible: Card
-    price: number
-    change: number
+  collectible: Card
+  price: number
+  change: number
 }>()
 </script>
 

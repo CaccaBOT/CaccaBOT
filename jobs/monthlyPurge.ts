@@ -8,35 +8,35 @@ import { config } from '../config/loader'
 import log from 'loglevel'
 
 const monthlyPurge: Job = {
-	name: 'Monthly Purge',
-	interval: '0 0 1 * *',
-	execute: async () => {
-		if (config.monthlyPurge && config.whatsappModuleEnabled) {
-			log.info(
-				'[PURGE] Running Monthly Purge for ' +
-					moment().subtract(1, 'month').format('MMMM YYYY'),
-			)
+  name: 'Monthly Purge',
+  interval: '0 0 1 * *',
+  execute: async () => {
+    if (config.monthlyPurge && config.whatsappModuleEnabled) {
+      log.info(
+        '[PURGE] Running Monthly Purge for ' +
+          moment().subtract(1, 'month').format('MMMM YYYY')
+      )
 
-			let purgeMsg = '*Running Monthly Purge*\n'
-			const chat = await whatsappClient.getChatById(config.groupId)
-			if (chat.isGroup) {
-				const inactiveUsers = getInactiveUsers(
-					moment().subtract(1, 'month').toDate(),
-				)
-				purgeMsg += inactiveUsers.map((u: RawUser) => u.username).join('\n')
-				for (const user of inactiveUsers) {
-					deleteUser(user.id)
-					if (
-						inactiveUsers.map((u: RawUser) => u.phone).includes(user.id.user)
-					) {
-						await (chat as GroupChat).removeParticipants([user.id._serialized])
-					}
-				}
-			}
+      let purgeMsg = '*Running Monthly Purge*\n'
+      const chat = await whatsappClient.getChatById(config.groupId)
+      if (chat.isGroup) {
+        const inactiveUsers = getInactiveUsers(
+          moment().subtract(1, 'month').toDate()
+        )
+        purgeMsg += inactiveUsers.map((u: RawUser) => u.username).join('\n')
+        for (const user of inactiveUsers) {
+          deleteUser(user.id)
+          if (
+            inactiveUsers.map((u: RawUser) => u.phone).includes(user.id.user)
+          ) {
+            await (chat as GroupChat).removeParticipants([user.id._serialized])
+          }
+        }
+      }
 
-			chat.sendMessage(purgeMsg)
-		}
-	},
+      chat.sendMessage(purgeMsg)
+    }
+  }
 }
 
 export default monthlyPurge

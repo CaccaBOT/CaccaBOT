@@ -1,8 +1,8 @@
-import { defineStore } from "pinia"
-import API from "../services/API"
-import { io, Socket } from "socket.io-client"
+import { defineStore } from 'pinia'
+import API from '../services/API'
+import { io, Socket } from 'socket.io-client'
 
-export const useAPIStore = defineStore("api", {
+export const useAPIStore = defineStore('api', {
   state: () => ({
     client: new API(),
     socket: null as Socket | null

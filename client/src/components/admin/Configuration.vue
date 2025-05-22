@@ -1,20 +1,20 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref } from 'vue'
 
 //@ts-ignore
-const timezones = Intl.supportedValuesOf("timeZone");
+const timezones = Intl.supportedValuesOf('timeZone')
 const config = ref({
   prefix: null,
   serverUrl: null,
   groupId: null,
   whatsappModuleEnabled: false,
   monthlyPurge: false,
-  timezone: null,
-});
+  timezone: null
+})
 
 function autoDetect() {
-  config.value.serverUrl = `${window.location.protocol}//${window.location.href.split("/").slice(1, 3).join("")}`;
-  config.value.timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  config.value.serverUrl = `${window.location.protocol}//${window.location.href.split('/').slice(1, 3).join('')}`
+  config.value.timezone = Intl.DateTimeFormat().resolvedOptions().timeZone
 }
 
 function save() {

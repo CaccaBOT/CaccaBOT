@@ -16,19 +16,26 @@ const formattedDate = ref('')
 const formattedTime = ref('')
 
 onMounted(async () => {
-    let response = await client.getPoop(poopId)
+  let response = await client.getPoop(poopId)
 
-    if (!response.ok) {
-        toast.error("Poop not found")
-        return
-    }
+  if (!response.ok) {
+    toast.error('Poop not found')
+    return
+  }
 
-    poop.value = await response.json()
-    user.value = await (await client.getProfile(poop.value.user_id)).json()
+  poop.value = await response.json()
+  user.value = await (await client.getProfile(poop.value.user_id)).json()
 
-    const date = new Date(poop.value.timestamp)
-    formattedDate.value = date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
-    formattedTime.value = date.toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' })
+  const date = new Date(poop.value.timestamp)
+  formattedDate.value = date.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  })
+  formattedTime.value = date.toLocaleTimeString('it-IT', {
+    hour: '2-digit',
+    minute: '2-digit'
+  })
 })
 </script>
 

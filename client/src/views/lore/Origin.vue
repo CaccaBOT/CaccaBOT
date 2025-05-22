@@ -1,20 +1,20 @@
 <script setup lang="ts">
-import { onMounted, ref } from "vue"
-import { marked } from "marked"
-import markedKatex from "marked-katex-extension"
+import { onMounted, ref } from 'vue'
+import { marked } from 'marked'
+import markedKatex from 'marked-katex-extension'
 
-const lore = ref("")
+const lore = ref('')
 onMounted(async () => {
   const loreRaw = await (
     await fetch(
-      "https://raw.githubusercontent.com/CaccaBOT/CaccaBOT-Manual/refs/heads/main/static/origin/origin.md",
+      'https://raw.githubusercontent.com/CaccaBOT/CaccaBOT-Manual/refs/heads/main/static/origin/origin.md'
     )
   ).text()
   marked.use(
-    markedKatex({ throwOnError: false, displayMode: true, output: "mathml" }),
+    markedKatex({ throwOnError: false, displayMode: true, output: 'mathml' })
   )
   lore.value = await marked.parse(loreRaw)
-  document.querySelector(".lore-wrapper").innerHTML = lore.value
+  document.querySelector('.lore-wrapper').innerHTML = lore.value
 })
 </script>
 

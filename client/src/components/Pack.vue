@@ -1,19 +1,19 @@
 <script setup lang="ts">
-import { ref, onMounted, onBeforeUnmount } from "vue"
+import { ref, onMounted, onBeforeUnmount } from 'vue'
 import {
   WebGLRenderer,
   PerspectiveCamera,
   Scene,
   DirectionalLight,
-  Clock,
-} from "three"
+  Clock
+} from 'three'
 //@ts-expect-error
-import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader"
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
 //@ts-expect-error
-import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader"
+import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader'
 //@ts-expect-error
-import { OrbitControls } from "three/examples/jsm/controls/OrbitControls"
-import JSConfetti from "js-confetti"
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
+import JSConfetti from 'js-confetti'
 
 const canvas = ref<HTMLDivElement | null>(null)
 let camera: PerspectiveCamera
@@ -86,10 +86,10 @@ function createLights(scene: Scene) {
 function loadModel(scene: Scene) {
   const loader = new GLTFLoader()
   const dracoLoader = new DRACOLoader()
-  dracoLoader.setDecoderPath("draco/")
+  dracoLoader.setDecoderPath('draco/')
   loader.setDRACOLoader(dracoLoader)
 
-  loader.load("../card-pack.glb", (gltf) => {
+  loader.load('../card-pack.glb', (gltf) => {
     model = gltf.scene
     model.scale.set(1, 1, 1)
 
@@ -111,10 +111,10 @@ function loadModel(scene: Scene) {
         if (model.scale.x < 0.001) {
           scene.remove(model)
           stopAnimation()
-          document.querySelector(".card-pack")?.classList.add("hidden")
-          document.querySelector(".card-wrapper")?.classList.remove("hidden")
-          document.querySelector(".card-wrapper")?.classList.add("zoom-in")
-          document.querySelector(".card-info")?.classList.remove("hidden")
+          document.querySelector('.card-pack')?.classList.add('hidden')
+          document.querySelector('.card-wrapper')?.classList.remove('hidden')
+          document.querySelector('.card-wrapper')?.classList.add('zoom-in')
+          document.querySelector('.card-info')?.classList.remove('hidden')
           showConfetti()
 
           rotationSpeed = 1
@@ -131,7 +131,7 @@ let animationId: number
 
 function animate() {
   const delta = clock.getDelta()
-  if (model && typeof model.tick === "function") {
+  if (model && typeof model.tick === 'function') {
     model.tick(delta)
   }
   renderer.render(scene, camera)
@@ -154,32 +154,32 @@ function open() {
 }
 
 async function reset() {
-  document.querySelector(".card-info")?.classList.add("hidden")
-  document.querySelector("body").style.overflowY = "hidden"
-  document.querySelector(".card")?.classList.add("slide-down")
+  document.querySelector('.card-info')?.classList.add('hidden')
+  document.querySelector('body').style.overflowY = 'hidden'
+  document.querySelector('.card')?.classList.add('slide-down')
   await new Promise((resolve) => setTimeout(resolve, 1000))
-  document.querySelector(".card")?.classList.remove("slide-down")
-  document.querySelector("body").style.overflowY = "auto"
-  document.querySelector(".card-pack")?.classList.remove("hidden")
-  document.querySelector(".card-wrapper")?.classList.add("hidden")
-  document.querySelector(".card-wrapper")?.classList.remove("zoom-in")
-  document.querySelector("#openPack")?.classList.remove("fade-out")
-  document.querySelector("#notEnoughMoney")?.classList.remove("fade-out")
+  document.querySelector('.card')?.classList.remove('slide-down')
+  document.querySelector('body').style.overflowY = 'auto'
+  document.querySelector('.card-pack')?.classList.remove('hidden')
+  document.querySelector('.card-wrapper')?.classList.add('hidden')
+  document.querySelector('.card-wrapper')?.classList.remove('zoom-in')
+  document.querySelector('#openPack')?.classList.remove('fade-out')
+  document.querySelector('#notEnoughMoney')?.classList.remove('fade-out')
   document
-    .querySelector(".card")
+    .querySelector('.card')
     ?.classList.remove(
-      "rarity-common",
-      "rarity-rare",
-      "rarity-epic",
-      "rarity-legendary",
+      'rarity-common',
+      'rarity-rare',
+      'rarity-epic',
+      'rarity-legendary'
     )
 }
 
 function showConfetti() {
   confetti.addConfetti({
-    emojis: ["💩", "🚽", "🧻"],
+    emojis: ['💩', '🚽', '🧻'],
     emojiSize: confettiSize,
-    confettiNumber,
+    confettiNumber
   })
 }
 
@@ -194,11 +194,11 @@ onMounted(() => {
   controls = new OrbitControls(camera, renderer.domElement)
   controls.enableZoom = false
 
-  controls.addEventListener("start", () => {
+  controls.addEventListener('start', () => {
     userInteracting = true
   })
 
-  controls.addEventListener("end", () => {
+  controls.addEventListener('end', () => {
     userInteracting = false
   })
 
@@ -208,17 +208,17 @@ onMounted(() => {
   loadModel(scene)
   animate()
 
-  window.addEventListener("resize", onWindowResize)
+  window.addEventListener('resize', onWindowResize)
 })
 
 onBeforeUnmount(() => {
   stopAnimation()
-  window.removeEventListener("resize", onWindowResize)
+  window.removeEventListener('resize', onWindowResize)
 })
 
 defineExpose({
   open,
-  reset,
+  reset
 })
 </script>
 

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import Asset from '../../types/Asset';
+import Asset from '../../types/Asset'
 const props = defineProps<{
   value: number
   includesAssets: boolean

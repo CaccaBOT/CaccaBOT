@@ -1,21 +1,21 @@
 <script setup lang="ts">
-import { onMounted, ref } from "vue"
+import { onMounted, ref } from 'vue'
 
 const loadingPhrases = [
-  "Unclogging the toilet",
-  "Refilling the TP dispenser",
-  "Flushing out bugs",
-  "Synchronizing with the septic tank",
-  "Setting up poop sensors",
-  "Scrubbing the porcelain",
-  "Turbo-charging the flush",
-  "Sanitizing the seat",
-  "Counting toilet paper sheets",
-  "Mapping the sewer network",
-  "Calling the poop squad",
+  'Unclogging the toilet',
+  'Refilling the TP dispenser',
+  'Flushing out bugs',
+  'Synchronizing with the septic tank',
+  'Setting up poop sensors',
+  'Scrubbing the porcelain',
+  'Turbo-charging the flush',
+  'Sanitizing the seat',
+  'Counting toilet paper sheets',
+  'Mapping the sewer network',
+  'Calling the poop squad'
 ]
 
-const phrase = ref("")
+const phrase = ref('')
 
 setInterval(() => [changePhrase()], 1000)
 

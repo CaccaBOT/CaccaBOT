@@ -1,5 +1,5 @@
-import { useSessionStore } from "../stores/session"
-import { OrderRequest } from "../types/OrderRequest"
+import { useSessionStore } from '../stores/session'
+import { OrderRequest } from '../types/OrderRequest'
 
 export const baseURL = import.meta.env.VITE_API_URL
 export const baseAPIURL = `${baseURL}/api`
@@ -10,29 +10,27 @@ export default class API {
   async getUserCollectiblesNotSelling() {
     return await fetch(`${baseAPIURL}/collectible/inventory?selling=false`, {
       headers: {
-        "X-Auth-Token": this.sessionStore.session.token,
-      },
+        'X-Auth-Token': this.sessionStore.session.token
+      }
     })
   }
 
   async discordLogin(code: string) {
     return await fetch(`${baseAPIURL}/auth/discord?code=${code}`, {
       headers: {
-        'Content-Type': 'application/json',
+        'Content-Type': 'application/json'
       }
     })
   }
 
-  async getMarketFeed() {
-    
-  }
+  async getMarketFeed() {}
 
   async deleteOrder(orderId: number) {
     return await fetch(`${baseAPIURL}/market/order/${orderId}`, {
-      method: "DELETE",
+      method: 'DELETE',
       headers: {
-        "X-Auth-Token": this.sessionStore.session.token,
-      },
+        'X-Auth-Token': this.sessionStore.session.token
+      }
     })
   }
 
@@ -43,7 +41,7 @@ export default class API {
   async getOwnOrdersForCollectible(collectibleId: number) {
     return await fetch(`${baseAPIURL}/market/order/${collectibleId}`, {
       headers: {
-        "X-Auth-Token": this.sessionStore.session.token,
+        'X-Auth-Token': this.sessionStore.session.token
       }
     })
   }
@@ -57,12 +55,15 @@ export default class API {
   }
 
   async linkDiscord(code: string) {
-    return await fetch(`${import.meta.env.VITE_API_URL}/api/auth/discord/migration?code=${code}`, {
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Auth-Token': this.sessionStore.session.token
+    return await fetch(
+      `${import.meta.env.VITE_API_URL}/api/auth/discord/migration?code=${code}`,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Auth-Token': this.sessionStore.session.token
+        }
       }
-    })
+    )
   }
 
   async getAssetPrice(collectibleId: number) {
@@ -71,10 +72,10 @@ export default class API {
 
   async createOrder(order: OrderRequest) {
     return await fetch(`${baseAPIURL}/market/order`, {
-      method: "POST",
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
-        "X-Auth-Token": this.sessionStore.session.token,
+        'Content-Type': 'application/json',
+        'X-Auth-Token': this.sessionStore.session.token
       },
       body: JSON.stringify(order)
     })
@@ -86,10 +87,10 @@ export default class API {
 
   async deletePoop(id: number) {
     return await fetch(`${baseAPIURL}/admin/poop/${id}`, {
-      method: "DELETE",
+      method: 'DELETE',
       headers: {
-        "X-Auth-Token": this.sessionStore.session.token,
-      },
+        'X-Auth-Token': this.sessionStore.session.token
+      }
     })
   }
 
@@ -103,30 +104,30 @@ export default class API {
 
   async convertCollectibles(collectibles: number[]) {
     return await fetch(`${baseAPIURL}/collectible/convert`, {
-      method: "POST",
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
-        "X-Auth-Token": this.sessionStore.session.token,
+        'Content-Type': 'application/json',
+        'X-Auth-Token': this.sessionStore.session.token
       },
       body: JSON.stringify({
-        collectibles,
-      }),
+        collectibles
+      })
     })
   }
 
   async getAllUsers() {
     return await fetch(`${baseAPIURL}/instance/users`, {
       headers: {
-        "X-Auth-Token": this.sessionStore.session.token,
-      },
+        'X-Auth-Token': this.sessionStore.session.token
+      }
     })
   }
 
   async getPoops(offset: Number) {
     return await fetch(`${baseAPIURL}/admin/poops?offset=${offset}`, {
       headers: {
-        "X-Auth-Token": this.sessionStore.session.token,
-      },
+        'X-Auth-Token': this.sessionStore.session.token
+      }
     })
   }
 
@@ -144,80 +145,80 @@ export default class API {
 
   async login(username: string, password: string) {
     return await fetch(`${baseAPIURL}/auth/login`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         username,
-        password,
-      }),
+        password
+      })
     })
   }
 
   async logout(token: string) {
     return await fetch(`${baseAPIURL}/auth/logout`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        token,
-      }),
+        token
+      })
     })
   }
 
   async changeUsername(username: string) {
     return await fetch(`${baseAPIURL}/profile/username`, {
-      method: "PATCH",
+      method: 'PATCH',
       headers: {
-        "Content-Type": "application/json",
-        "X-Auth-Token": this.sessionStore.session.token,
+        'Content-Type': 'application/json',
+        'X-Auth-Token': this.sessionStore.session.token
       },
       body: JSON.stringify({
-        username,
-      }),
+        username
+      })
     })
   }
 
   async changePassword(password: string) {
     return await fetch(`${baseAPIURL}/auth/password`, {
-      method: "PATCH",
+      method: 'PATCH',
       headers: {
-        "Content-Type": "application/json",
-        "X-Auth-Token": this.sessionStore.session.token,
+        'Content-Type': 'application/json',
+        'X-Auth-Token': this.sessionStore.session.token
       },
       body: JSON.stringify({
-        password,
-      }),
+        password
+      })
     })
   }
 
   async changePfp(base64Pfp: string) {
     return await fetch(`${baseAPIURL}/profile/pfp`, {
-      method: "POST",
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
-        "X-Auth-Token": this.sessionStore.session.token,
+        'Content-Type': 'application/json',
+        'X-Auth-Token': this.sessionStore.session.token
       },
       body: JSON.stringify({
-        image: base64Pfp,
-      }),
+        image: base64Pfp
+      })
     })
   }
 
   async openPack() {
     return await fetch(`${baseAPIURL}/collectible/open`, {
       headers: {
-        "X-Auth-Token": this.sessionStore.session.token,
-      },
+        'X-Auth-Token': this.sessionStore.session.token
+      }
     })
   }
 
   async removePfp() {
     return await fetch(`${baseAPIURL}/profile/pfp`, {
-      method: "DELETE",
+      method: 'DELETE',
       headers: {
-        "Content-Type": "application/json",
-        "X-Auth-Token": this.sessionStore.session.token,
+        'Content-Type': 'application/json',
+        'X-Auth-Token': this.sessionStore.session.token
       },
-      body: JSON.stringify({}),
+      body: JSON.stringify({})
     })
   }
 
@@ -236,8 +237,8 @@ export default class API {
   async getOwnProfile() {
     return await fetch(`${baseAPIURL}/profile`, {
       headers: {
-        "X-Auth-Token": this.sessionStore.session.token,
-      },
+        'X-Auth-Token': this.sessionStore.session.token
+      }
     })
   }
 
@@ -271,7 +272,7 @@ export default class API {
 
   async getMonthlyPoops(date = new Date()) {
     return await fetch(
-      `${baseAPIURL}/poop/all/${date.getFullYear()}/${date.getMonth()}`,
+      `${baseAPIURL}/poop/all/${date.getFullYear()}/${date.getMonth()}`
     )
   }
 }

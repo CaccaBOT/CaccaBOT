@@ -1,20 +1,20 @@
-import { defineStore } from "pinia"
-import { useAPIStore } from "./api"
-import { useGlobalStore } from "./global"
-import { Achievement } from "../types/Achievement"
+import { defineStore } from 'pinia'
+import { useAPIStore } from './api'
+import { useGlobalStore } from './global'
+import { Achievement } from '../types/Achievement'
 
-export const useAchievementStore = defineStore("achievements", {
+export const useAchievementStore = defineStore('achievements', {
   state: () => ({
     version: null,
-    achievements: [] as Achievement[],
+    achievements: [] as Achievement[]
   }),
   actions: {
     async loadAchievements() {
       const { client } = useAPIStore()
       const globalStore = useGlobalStore()
-      if (localStorage.getItem("achievements") != null) {
+      if (localStorage.getItem('achievements') != null) {
         const { version, achievements } = JSON.parse(
-          localStorage.getItem("achievements"),
+          localStorage.getItem('achievements')
         )
         if (globalStore.instance.version === version) {
           this.achievements = achievements
@@ -28,12 +28,12 @@ export const useAchievementStore = defineStore("achievements", {
     },
     saveAchievements() {
       localStorage.setItem(
-        "achievements",
+        'achievements',
         JSON.stringify({
           version: this.version,
-          achievements: this.achievements,
-        }),
+          achievements: this.achievements
+        })
       )
-    },
-  },
+    }
+  }
 })

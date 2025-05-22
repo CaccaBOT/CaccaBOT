@@ -1,17 +1,17 @@
 <script setup lang="ts">
-import Asset from "../types/Asset"
-import HeroiconsDownload from "~icons/heroicons/arrow-down-tray"
-import { onMounted, ref } from "vue"
+import Asset from '../types/Asset'
+import HeroiconsDownload from '~icons/heroicons/arrow-down-tray'
+import { onMounted, ref } from 'vue'
 import MdiGithub from '~icons/mdi/github'
 import AntDesignTikTokOutlined from '~icons/ant-design/tik-tok-outlined'
 import SimpleIconsInstagram from '~icons/simple-icons/instagram'
-import { useGlobalStore } from "../stores/global"
-import HeroiconsUserGroup from "~icons/heroicons/user-group"
-import { useSessionStore } from "../stores/session"
+import { useGlobalStore } from '../stores/global'
+import HeroiconsUserGroup from '~icons/heroicons/user-group'
+import { useSessionStore } from '../stores/session'
 import IcBaselineDiscord from '~icons/ic/baseline-discord'
-import router from "../router/router"
-import { useModalStore } from "../stores/modal"
-import { ModalEnum } from "../types/ModalEnum"
+import router from '../router/router'
+import { useModalStore } from '../stores/modal'
+import { ModalEnum } from '../types/ModalEnum'
 const globalStore = useGlobalStore()
 const sessionStore = useSessionStore()
 const modalStore = useModalStore()
@@ -23,11 +23,11 @@ async function install() {
 }
 
 function discordLogin() {
-  router.push("/auth/discord")
+  router.push('/auth/discord')
 }
 
 onMounted(async () => {
-  window.addEventListener("beforeinstallprompt", (event) => {
+  window.addEventListener('beforeinstallprompt', (event) => {
     event.preventDefault()
     installPrompt.value = event
   })

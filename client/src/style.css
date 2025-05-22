@@ -1,9 +1,10 @@
-@import 'https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&display=swap'
+@import "https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&display=swap"
   layer(base);
-@import 'tailwindcss';
+@import "tailwindcss";
 @plugin "@tailwindcss/typography";
 @plugin "daisyui" {
-  themes: dark --default, light, synthwave, cyberpunk, valentine, halloween, forest, aqua, luxury, dracula, night, dim, sunset;
+  themes:
+    dark --default, light, synthwave, cyberpunk, valentine, halloween, forest, aqua, luxury, dracula, night, dim, sunset;
 }
 @layer base {
   *,

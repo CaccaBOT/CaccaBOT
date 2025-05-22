@@ -3,7 +3,9 @@ import AchievementBadge from '../../components/AchievementBadge.vue'
 import { useAchievementStore } from '../../stores/achievement'
 
 const achievementStore = useAchievementStore()
-const sortedAchievements = achievementStore.achievements.sort((a, b) => b.difficulty_id - a.difficulty_id)
+const sortedAchievements = achievementStore.achievements.sort(
+  (a, b) => b.difficulty_id - a.difficulty_id
+)
 </script>
 
 <template>

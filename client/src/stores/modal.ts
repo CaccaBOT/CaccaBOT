@@ -7,32 +7,32 @@ import ChangeThemeModal from '../components/modals/ChangeThemeModal.vue'
 import { ModalEnum } from '../types/ModalEnum'
 import MigrationNoticeModal from '../components/modals/MigrationNoticeModal.vue'
 
-export const useModalStore = defineStore("modal", {
-    state: () => ({
-      activeModal: null as ModalEnum | null,
-      modalProps: {} as Record<string, any>,
-    }),
-    actions: {
-      open(modalName: ModalEnum, props: Record<string, any> = {}) {
-        this.activeModal = modalName
-        this.modalProps = props
-      },
-      close() {
-        this.activeModal = null
-        this.modalProps = {}
-      },
+export const useModalStore = defineStore('modal', {
+  state: () => ({
+    activeModal: null as ModalEnum | null,
+    modalProps: {} as Record<string, any>
+  }),
+  actions: {
+    open(modalName: ModalEnum, props: Record<string, any> = {}) {
+      this.activeModal = modalName
+      this.modalProps = props
     },
-    getters: {
-      modalComponent(state) {
-        const modalMapping: Record<ModalEnum, any> = {
-          [ModalEnum.Login]: LoginModal,
-          [ModalEnum.ChangePassword]: ChangePasswordModal,
-          [ModalEnum.ChangeUsername]: ChangeUsernameModal,
-          [ModalEnum.ChangePfp]: ChangePfpModal,
-          [ModalEnum.ChangeTheme]: ChangeThemeModal,
-          [ModalEnum.MigrationNotice]: MigrationNoticeModal
-        }
-        return state.activeModal ? modalMapping[state.activeModal] : null
-      },
-    },
-  })
+    close() {
+      this.activeModal = null
+      this.modalProps = {}
+    }
+  },
+  getters: {
+    modalComponent(state) {
+      const modalMapping: Record<ModalEnum, any> = {
+        [ModalEnum.Login]: LoginModal,
+        [ModalEnum.ChangePassword]: ChangePasswordModal,
+        [ModalEnum.ChangeUsername]: ChangeUsernameModal,
+        [ModalEnum.ChangePfp]: ChangePfpModal,
+        [ModalEnum.ChangeTheme]: ChangeThemeModal,
+        [ModalEnum.MigrationNotice]: MigrationNoticeModal
+      }
+      return state.activeModal ? modalMapping[state.activeModal] : null
+    }
+  }
+})

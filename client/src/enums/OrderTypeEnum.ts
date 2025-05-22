@@ -1,4 +1,4 @@
 export enum OrderType {
-    MARKET = 'MARKET',
-    LIMIT = 'LIMIT',
+  MARKET = 'MARKET',
+  LIMIT = 'LIMIT'
 }

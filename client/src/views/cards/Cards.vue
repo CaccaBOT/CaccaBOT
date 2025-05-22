@@ -1,14 +1,17 @@
 <script setup lang="ts">
-import { ref } from "vue"
-import { useAPIStore } from "../../stores/api"
-import { useSessionStore } from "../../stores/session"
-import { Card } from "../../types/Card"
-import Pack from "../../components/Pack.vue"
-import Asset from "../../types/Asset"
-import { CollectibleRarity } from "../../enums/CollectibleRarity"
-import { getTextRarityClass, getCardRarityClass } from "../../services/collectibleService"
-import { useModalStore } from "../../stores/modal"
-import { ModalEnum } from "../../types/ModalEnum"
+import { ref } from 'vue'
+import { useAPIStore } from '../../stores/api'
+import { useSessionStore } from '../../stores/session'
+import { Card } from '../../types/Card'
+import Pack from '../../components/Pack.vue'
+import Asset from '../../types/Asset'
+import { CollectibleRarity } from '../../enums/CollectibleRarity'
+import {
+  getTextRarityClass,
+  getCardRarityClass
+} from '../../services/collectibleService'
+import { useModalStore } from '../../stores/modal'
+import { ModalEnum } from '../../types/ModalEnum'
 const { client } = useAPIStore()
 const sessionStore = useSessionStore()
 const modalStore = useModalStore()
@@ -26,13 +29,13 @@ async function openPack() {
   packRef.value.open()
   sessionStore.session.money = sessionStore.session.money - 5
   foundCard.value = await response.json()
-  document.querySelector("#openPack")?.classList.add("fade-out")
-  document.querySelector("#notEnoughMoney")?.classList.add("fade-out")
+  document.querySelector('#openPack')?.classList.add('fade-out')
+  document.querySelector('#notEnoughMoney')?.classList.add('fade-out')
   document
-    .querySelector(".card")
+    .querySelector('.card')
     .classList.add(getCardRarityClass(foundCard.value.rarity_id))
   document
-    .querySelector(".card-info > h2")
+    .querySelector('.card-info > h2')
     .classList.add(getTextRarityClass(foundCard.value.rarity_id))
 }
 
@@ -41,13 +44,12 @@ async function reset() {
   await packRef.value.reset()
   updater.value++
   document
-    .querySelector(".card")
+    .querySelector('.card')
     .classList.remove(getCardRarityClass(foundCard.value.rarity_id))
   document
-    .querySelector(".card-info > h2")
+    .querySelector('.card-info > h2')
     .classList.remove(getTextRarityClass(foundCard.value.rarity_id))
 }
-
 </script>
 
 <template>

@@ -1,27 +1,27 @@
 import {
-	FastifyInstance,
-	FastifyReply,
-	FastifyRequest,
-	RouteOptions,
+  FastifyInstance,
+  FastifyReply,
+  FastifyRequest,
+  RouteOptions
 } from 'fastify'
 
 import { poopStatsFromUser } from '../../database/index'
 
 interface Params {
-	id: string
+  id: string
 }
 
 const statsUser = async function (
-	server: FastifyInstance,
-	options: RouteOptions,
+  server: FastifyInstance,
+  options: RouteOptions
 ) {
-	server.get(
-		'/stats/:id',
-		async (req: FastifyRequest<{ Params: Params }>, res: FastifyReply) => {
-			const { id } = req.params
-			res.code(200).send(poopStatsFromUser(id))
-		},
-	)
+  server.get(
+    '/stats/:id',
+    async (req: FastifyRequest<{ Params: Params }>, res: FastifyReply) => {
+      const { id } = req.params
+      res.code(200).send(poopStatsFromUser(id))
+    }
+  )
 }
 
 export default statsUser

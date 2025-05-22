@@ -1,133 +1,133 @@
-import { createRouter, createWebHistory } from "vue-router"
-import { useGlobalStore } from "../stores/global"
-import { useSessionStore } from "../stores/session"
+import { createRouter, createWebHistory } from 'vue-router'
+import { useGlobalStore } from '../stores/global'
+import { useSessionStore } from '../stores/session'
 
 const routes = [
   {
-    path: "/",
-    component: () => import("../views/Home.vue"),
-    name: "home",
+    path: '/',
+    component: () => import('../views/Home.vue'),
+    name: 'home'
   },
   {
-    path: "/stats",
-    component: () => import("../views/Stats.vue"),
-    name: "stats",
+    path: '/stats',
+    component: () => import('../views/Stats.vue'),
+    name: 'stats'
   },
   {
-    path: "/leaderboard",
-    component: () => import("../views/Leaderboard.vue"),
-    name: "leaderboard",
+    path: '/leaderboard',
+    component: () => import('../views/Leaderboard.vue'),
+    name: 'leaderboard'
   },
   {
-    path: "/leaderboard/:year/:month",
-    component: () => import("../views/Leaderboard.vue"),
-    name: "monthlyLeaderboard",
+    path: '/leaderboard/:year/:month',
+    component: () => import('../views/Leaderboard.vue'),
+    name: 'monthlyLeaderboard'
   },
   {
-    path: "/profile/:id",
-    component: () => import("../views/Profile.vue"),
-    name: "profile",
+    path: '/profile/:id',
+    component: () => import('../views/Profile.vue'),
+    name: 'profile'
   },
   {
-    path: "/profile/:id/:year/:month",
-    component: () => import("../views/Profile.vue"),
-    name: "monthlyProfile",
+    path: '/profile/:id/:year/:month',
+    component: () => import('../views/Profile.vue'),
+    name: 'monthlyProfile'
   },
   {
-    path: "/profile/own",
-    component: () => import("../views/Profile.vue"),
-    name: "ownProfile",
+    path: '/profile/own',
+    component: () => import('../views/Profile.vue'),
+    name: 'ownProfile'
   },
   {
-    path: "/settings",
-    component: () => import("../views/Settings.vue"),
-    name: "settings",
+    path: '/settings',
+    component: () => import('../views/Settings.vue'),
+    name: 'settings'
   },
   {
-    path: "/users",
-    component: () => import("../views/Users.vue"),
-    name: "users",
+    path: '/users',
+    component: () => import('../views/Users.vue'),
+    name: 'users'
   },
   {
-    path: "/info/manual",
-    component: () => import("../views/info/Manual.vue"),
-    name: "manualInfo",
+    path: '/info/manual',
+    component: () => import('../views/info/Manual.vue'),
+    name: 'manualInfo'
   },
   {
-    path: "/info/achievements",
-    component: () => import("../views/info/AchievementsInfo.vue"),
-    name: "achievementsInfo",
+    path: '/info/achievements',
+    component: () => import('../views/info/AchievementsInfo.vue'),
+    name: 'achievementsInfo'
   },
   {
-    path: "/cards/pack",
-    component: () => import("../views/cards/Cards.vue"),
-    name: "cards",
+    path: '/cards/pack',
+    component: () => import('../views/cards/Cards.vue'),
+    name: 'cards'
   },
   {
-    path: "/cards/market",
-    component: () => import("../views/cards/Market.vue"),
-    name: "market",
+    path: '/cards/market',
+    component: () => import('../views/cards/Market.vue'),
+    name: 'market'
   },
   {
-    path: "/cards/market/order/:id",
-    component: () => import("../views/cards/Order.vue"),
-    name: "order",
+    path: '/cards/market/order/:id',
+    component: () => import('../views/cards/Order.vue'),
+    name: 'order'
   },
   {
-    path: "/cards/convert",
-    component: () => import("../views/cards/Convert.vue"),
-    name: "convert",
+    path: '/cards/convert',
+    component: () => import('../views/cards/Convert.vue'),
+    name: 'convert'
   },
   {
-    path: "/admin/configuration",
-    component: () => import("../views/admin/Dashboard.vue"),
-    name: "configuration",
+    path: '/admin/configuration',
+    component: () => import('../views/admin/Dashboard.vue'),
+    name: 'configuration'
   },
   {
-    path: "/admin/console",
-    component: () => import("../views/admin/Console.vue"),
-    name: "console",
+    path: '/admin/console',
+    component: () => import('../views/admin/Console.vue'),
+    name: 'console'
   },
   {
-    path: "/admin/poop-table",
-    component: () => import("../views/admin/PoopTable.vue"),
-    name: "poopTable",
+    path: '/admin/poop-table',
+    component: () => import('../views/admin/PoopTable.vue'),
+    name: 'poopTable'
   },
   {
-    path: "/settings",
-    component: () => import("../views/Settings.vue"),
-    name: "userSettings",
+    path: '/settings',
+    component: () => import('../views/Settings.vue'),
+    name: 'userSettings'
   },
   {
-    path: "/update",
-    component: () => import("../views/Updater.vue"),
-    name: "update",
+    path: '/update',
+    component: () => import('../views/Updater.vue'),
+    name: 'update'
   },
   {
-    path: "/poop/:id",
-    component: () => import("../views/PoopCertificate.vue"),
-    name: "poopCertificate"
+    path: '/poop/:id',
+    component: () => import('../views/PoopCertificate.vue'),
+    name: 'poopCertificate'
   },
   {
-    path: "/auth/discord",
-    component: () => import("../views/DiscordLink.vue"),
-    name: "discordLink",
+    path: '/auth/discord',
+    component: () => import('../views/DiscordLink.vue'),
+    name: 'discordLink'
   },
   {
-    path: "/lore/origin",
-    component: () => import("../views/lore/Origin.vue"),
-    name: "origin",
+    path: '/lore/origin',
+    component: () => import('../views/lore/Origin.vue'),
+    name: 'origin'
   },
   {
-    path: "/:pathMatch(.*)*",
-    component: () => import("../views/NotFound.vue"),
-    name: "notFound",
-  },
+    path: '/:pathMatch(.*)*',
+    component: () => import('../views/NotFound.vue'),
+    name: 'notFound'
+  }
 ]
 
 const router = createRouter({
   history: createWebHistory(),
-  routes,
+  routes
 })
 
 router.afterEach(async (to, from) => {
@@ -135,40 +135,40 @@ router.afterEach(async (to, from) => {
   const sessionStore = useSessionStore()
   sessionStore.showMobileNavbar = false
   switch (to.name) {
-    case "monthlyLeaderboard":
+    case 'monthlyLeaderboard':
       await globalStore.fetchLeaderboard(
         parseInt(to.params.year as string),
-        parseInt(to.params.month as string),
+        parseInt(to.params.month as string)
       )
       break
-    case "monthlyProfile":
+    case 'monthlyProfile':
       globalStore.selectedDate = new Date(
         parseInt(to.params.year as string),
-        parseInt(to.params.month as string) - 1,
+        parseInt(to.params.month as string) - 1
       )
       await globalStore.fetchProfile(to.params.id as string)
       break
-    case "profile":
+    case 'profile':
       globalStore.selectedDate = new Date(
         new Date().getFullYear(),
-        new Date().getMonth(),
+        new Date().getMonth()
       )
       await globalStore.fetchProfile(to.params.id as string)
       break
-    case "ownProfile":
+    case 'ownProfile':
       if (!sessionStore.session.id) {
-        router.push("/")
+        router.push('/')
         return
       }
       globalStore.selectedDate = new Date(
         new Date().getFullYear(),
-        new Date().getMonth(),
+        new Date().getMonth()
       )
       await globalStore.fetchProfile(sessionStore.session.id as string)
       break
-    case "update":
+    case 'update':
       if (!sessionStore.updateRequired) {
-        router.push("/")
+        router.push('/')
         return
       }
   }

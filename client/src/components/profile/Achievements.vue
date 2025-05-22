@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { useAchievementStore } from "../../stores/achievement"
-import { UserAchievement } from "../../types/UserAchievement"
-import { computed, ref, watch, nextTick, onMounted } from "vue"
-import HeroiconsChevronDown16Solid from "~icons/heroicons/chevron-down-16-solid"
-import { gsap } from "gsap"
-import AchievementBadge from "./UserAchievementBadge.vue"
+import { useAchievementStore } from '../../stores/achievement'
+import { UserAchievement } from '../../types/UserAchievement'
+import { computed, ref, watch, nextTick, onMounted } from 'vue'
+import HeroiconsChevronDown16Solid from '~icons/heroicons/chevron-down-16-solid'
+import { gsap } from 'gsap'
+import AchievementBadge from './UserAchievementBadge.vue'
 
 const achievementStore = useAchievementStore()
 const props = defineProps<{ userAchievements: UserAchievement[] }>()
@@ -19,11 +19,11 @@ function toggleAchievements() {
 
 function animateAchievements(expanded: boolean) {
   nextTick(() => {
-    gsap.to(".achievements-container", {
-      height: expanded ? "auto" : "140px",
+    gsap.to('.achievements-container', {
+      height: expanded ? 'auto' : '140px',
       duration: 0.5,
-      ease: "power2.inOut",
-      overflow: "hidden",
+      ease: 'power2.inOut',
+      overflow: 'hidden'
     })
   })
 }

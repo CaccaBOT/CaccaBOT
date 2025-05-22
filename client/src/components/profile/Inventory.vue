@@ -1,35 +1,35 @@
 <script setup lang="ts">
-import { ref, onMounted, watch, nextTick } from "vue";
-import { gsap } from "gsap";
-import { Card } from "../../types/Card";
-import { getCardRarityClass } from "../../services/collectibleService";
-import HeroiconsChevronDown16Solid from "~icons/heroicons/chevron-down-16-solid";
+import { ref, onMounted, watch, nextTick } from 'vue'
+import { gsap } from 'gsap'
+import { Card } from '../../types/Card'
+import { getCardRarityClass } from '../../services/collectibleService'
+import HeroiconsChevronDown16Solid from '~icons/heroicons/chevron-down-16-solid'
 
-const props = defineProps<{ userCollectibles: Card[] }>();
-const inventoryExpanded = ref(false);
+const props = defineProps<{ userCollectibles: Card[] }>()
+const inventoryExpanded = ref(false)
 
 function toggleInventory() {
-  inventoryExpanded.value = !inventoryExpanded.value;
+  inventoryExpanded.value = !inventoryExpanded.value
 }
 
 function animateInventory(expanded: boolean) {
   nextTick(() => {
-    gsap.to(".inventory", {
-      height: expanded ? "auto" : "240px",
+    gsap.to('.inventory', {
+      height: expanded ? 'auto' : '240px',
       duration: 0.5,
-      ease: "power2.inOut",
-      overflow: "hidden",
-    });
-  });
+      ease: 'power2.inOut',
+      overflow: 'hidden'
+    })
+  })
 }
 
 watch(inventoryExpanded, (newVal) => {
-  animateInventory(newVal);
-});
+  animateInventory(newVal)
+})
 
 onMounted(() => {
-  animateInventory(inventoryExpanded.value);
-});
+  animateInventory(inventoryExpanded.value)
+})
 </script>
 
 <template>

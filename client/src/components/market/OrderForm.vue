@@ -34,7 +34,8 @@ const bidPrice = computed(() => {
   if (
     props.bidPrice === null ||
     props.bidPrice === Infinity ||
-    props.bidPrice === -Infinity) {
+    props.bidPrice === -Infinity
+  ) {
     return 0
   }
 
@@ -45,7 +46,8 @@ const askPrice = computed(() => {
   if (
     props.askPrice === null ||
     props.askPrice === Infinity ||
-    props.askPrice === -Infinity) {
+    props.askPrice === -Infinity
+  ) {
     return 0
   }
 
@@ -58,7 +60,7 @@ function handleSubmit(side: OrderSide) {
     price: selectedPrice.value,
     quantity: selectedAmount.value,
     side,
-    type: OrderType[selectedOrderType.value],
+    type: OrderType[selectedOrderType.value]
   }
   emit('submit', order)
 }

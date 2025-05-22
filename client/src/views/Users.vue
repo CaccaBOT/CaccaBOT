@@ -1,27 +1,27 @@
 <script setup lang="ts">
-import { onMounted, ref, watch } from "vue"
-import { useAPIStore } from "../stores/api"
-import Asset from "../types/Asset.ts"
-import { User } from "../types/User.ts"
-import { useToast } from "vue-toastification"
-import router from "../router/router.ts"
-import UserStatsBadge from "../components/UserStatsBadge.vue"
+import { onMounted, ref, watch } from 'vue'
+import { useAPIStore } from '../stores/api'
+import Asset from '../types/Asset.ts'
+import { User } from '../types/User.ts'
+import { useToast } from 'vue-toastification'
+import router from '../router/router.ts'
+import UserStatsBadge from '../components/UserStatsBadge.vue'
 import HeroiconsMagnifyingGlass16Solid from '~icons/heroicons/magnifying-glass-16-solid'
 
 const toast = useToast()
 const { client } = useAPIStore()
 const users = ref(null)
-const search = ref("")
+const search = ref('')
 const filteredUsers = ref([])
 
 function goToProfile(id: string) {
   router.push(
-    `/profile/${id}/${new Date().getFullYear()}/${new Date().getMonth() + 1}`,
+    `/profile/${id}/${new Date().getFullYear()}/${new Date().getMonth() + 1}`
   )
 }
 
 watch(search, (newSearch: string) => {
-  if (newSearch === "") {
+  if (newSearch === '') {
     filteredUsers.value = users.value
     return
   }
@@ -36,7 +36,7 @@ onMounted(async () => {
     users.value = usersResponse.sort((a: User, b: User) => b.poops - a.poops)
     filteredUsers.value = users.value
   } catch (e) {
-    toast.error("Failed to retrieve users")
+    toast.error('Failed to retrieve users')
   }
 })
 </script>

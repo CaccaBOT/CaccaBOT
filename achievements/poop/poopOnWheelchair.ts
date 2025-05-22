@@ -9,18 +9,18 @@ import { config } from '../../config/loader'
 const timezone = config.timezone || 'UTC'
 
 const poopOnWheelchair: Achievement = {
-	id: 'POOP_ON_WHEELCHAIR',
-	check: function (poop: Poop, user: RawUser, message: Message) {
-		const hour = moment.tz(poop.timestamp, timezone).hour()
-		const minute = moment.tz(poop.timestamp, timezone).minute()
-		if (hour == 1 && minute == 4) {
-			addAchievementToUser(user.id, this.id)
-			const achievement = getAchievement(this.id)
-			message.reply(
-				`*[ACHIEVEMENT] ${user.username}* unlocked *${achievement.name}*`,
-			)
-		}
-	},
+  id: 'POOP_ON_WHEELCHAIR',
+  check: function (poop: Poop, user: RawUser, message: Message) {
+    const hour = moment.tz(poop.timestamp, timezone).hour()
+    const minute = moment.tz(poop.timestamp, timezone).minute()
+    if (hour == 1 && minute == 4) {
+      addAchievementToUser(user.id, this.id)
+      const achievement = getAchievement(this.id)
+      message.reply(
+        `*[ACHIEVEMENT] ${user.username}* unlocked *${achievement.name}*`
+      )
+    }
+  }
 }
 
 export default poopOnWheelchair

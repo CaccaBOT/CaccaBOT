@@ -1,6 +1,6 @@
 export const server = require('fastify')({
-	bodyLimit: 8388608,
-	http2: process.env.ENVIRONMENT == 'production',
+  bodyLimit: 8388608,
+  http2: process.env.ENVIRONMENT == 'production'
 })
 import { FastifyRequest, FastifyReply } from 'fastify'
 import { whatsappClient } from './whatsapp/index'
@@ -16,199 +16,214 @@ import { client } from './discord/client'
 
 loadConfig()
 
-	log.info('')
-	log.info('	▄████▄   ▄▄▄       ▄████▄   ▄████▄   ▄▄▄       ▄▄▄▄    ▒█████  ▄▄▄█████▓')
-	log.info('	▒██▀ ▀█  ▒████▄    ▒██▀ ▀█  ▒██▀ ▀█  ▒████▄    ▓█████▄ ▒██▒  ██▒▓  ██▒ ▓▒')
-	log.info('	▒▓█    ▄ ▒██  ▀█▄  ▒▓█    ▄ ▒▓█    ▄ ▒██  ▀█▄  ▒██▒ ▄██▒██░  ██▒▒ ▓██░ ▒░')
-	log.info('	▒▓▓▄ ▄██▒░██▄▄▄▄██ ▒▓▓▄ ▄██▒▒▓▓▄ ▄██▒░██▄▄▄▄██ ▒██░█▀  ▒██   ██░░ ▓██▓ ░ ')
-	log.info('	▒ ▓███▀ ░ ▓█   ▓██▒▒ ▓███▀ ░▒ ▓███▀ ░ ▓█   ▓██▒░▓█  ▀█▓░ ████▓▒░  ▒██▒ ░ ')
-	log.info('	░ ░▒ ▒  ░ ▒▒   ▓▒█░░ ░▒ ▒  ░░ ░▒ ▒  ░ ▒▒   ▓▒█░░▒▓███▀▒░ ▒░▒░▒░   ▒ ░░   ')
-	log.info('	  ░  ▒     ▒   ▒▒ ░  ░  ▒     ░  ▒     ▒   ▒▒ ░▒░▒   ░   ░ ▒ ▒░     ░    ')
-	log.info('	░          ░   ▒   ░        ░          ░   ▒    ░    ░ ░ ░ ░ ▒    ░      ')
-	log.info('	░ ░            ░  ░░ ░      ░ ░            ░  ░ ░          ░ ░           ')
-	log.info('	░                  ░        ░                        ░                   ')
-	log.info('')
-	
-	log.info(
-		`Loaded the following configuration for environment ${process.env.ENVIRONMENT}`,
-	)
-	log.info(config)
+log.info('')
+log.info(
+  '	▄████▄   ▄▄▄       ▄████▄   ▄████▄   ▄▄▄       ▄▄▄▄    ▒█████  ▄▄▄█████▓'
+)
+log.info(
+  '	▒██▀ ▀█  ▒████▄    ▒██▀ ▀█  ▒██▀ ▀█  ▒████▄    ▓█████▄ ▒██▒  ██▒▓  ██▒ ▓▒'
+)
+log.info(
+  '	▒▓█    ▄ ▒██  ▀█▄  ▒▓█    ▄ ▒▓█    ▄ ▒██  ▀█▄  ▒██▒ ▄██▒██░  ██▒▒ ▓██░ ▒░'
+)
+log.info(
+  '	▒▓▓▄ ▄██▒░██▄▄▄▄██ ▒▓▓▄ ▄██▒▒▓▓▄ ▄██▒░██▄▄▄▄██ ▒██░█▀  ▒██   ██░░ ▓██▓ ░ '
+)
+log.info(
+  '	▒ ▓███▀ ░ ▓█   ▓██▒▒ ▓███▀ ░▒ ▓███▀ ░ ▓█   ▓██▒░▓█  ▀█▓░ ████▓▒░  ▒██▒ ░ '
+)
+log.info(
+  '	░ ░▒ ▒  ░ ▒▒   ▓▒█░░ ░▒ ▒  ░░ ░▒ ▒  ░ ▒▒   ▓▒█░░▒▓███▀▒░ ▒░▒░▒░   ▒ ░░   '
+)
+log.info(
+  '	  ░  ▒     ▒   ▒▒ ░  ░  ▒     ░  ▒     ▒   ▒▒ ░▒░▒   ░   ░ ▒ ▒░     ░    '
+)
+log.info(
+  '	░          ░   ▒   ░        ░          ░   ▒    ░    ░ ░ ░ ░ ▒    ░      '
+)
+log.info(
+  '	░ ░            ░  ░░ ░      ░ ░            ░  ░ ░          ░ ░           '
+)
+log.info(
+  '	░                  ░        ░                        ░                   '
+)
+log.info('')
 
-	server.register(require('@fastify/swagger'), {
-		swagger: {
-			info: {
-				title: 'CaccaBOT API',
-				description: 'CaccaBOT API Documentation',
-				version,
-			},
-			host: `caccabot.duckdns.org`,
-			schemes: ['https'],
-			consumes: ['application/json'],
-			produces: ['application/json'],
-		},
-	})
+log.info(
+  `Loaded the following configuration for environment ${process.env.ENVIRONMENT}`
+)
+log.info(config)
 
-	server.register(require('@fastify/swagger-ui'), {
-		routePrefix: '/docs',
-		uiConfig: {
-			deepLinking: false,
-			syntaxHighlight: {
-				activate: true,
-				theme: 'nord',
-			},
-		},
-		uiHooks: {
-			onRequest: function (
-				request: FastifyRequest,
-				reply: FastifyReply,
-				next: () => void,
-			)
-			{
-				next()
-			},
-			preHandler: function (
-				request: FastifyRequest,
-				reply: FastifyReply,
-				next: () => void,
-			)
-			{
-				next()
-			},
-		},
-	})
+server.register(require('@fastify/swagger'), {
+  swagger: {
+    info: {
+      title: 'CaccaBOT API',
+      description: 'CaccaBOT API Documentation',
+      version
+    },
+    host: `caccabot.duckdns.org`,
+    schemes: ['https'],
+    consumes: ['application/json'],
+    produces: ['application/json']
+  }
+})
 
-	server.register(import('@fastify/autoload'), {
-		dir: `${__dirname}/api`,
-		dirNameRoutePrefix: true,
-		options: { prefix: '/api' },
-	})
+server.register(require('@fastify/swagger-ui'), {
+  routePrefix: '/docs',
+  uiConfig: {
+    deepLinking: false,
+    syntaxHighlight: {
+      activate: true,
+      theme: 'nord'
+    }
+  },
+  uiHooks: {
+    onRequest: function (
+      request: FastifyRequest,
+      reply: FastifyReply,
+      next: () => void
+    ) {
+      next()
+    },
+    preHandler: function (
+      request: FastifyRequest,
+      reply: FastifyReply,
+      next: () => void
+    ) {
+      next()
+    }
+  }
+})
 
-	server.addHook('onRoute', (routeOptions: { url: string; method: string }) =>
-	{
-		if (routeOptions.url.startsWith('/api') && routeOptions.method != 'HEAD')
-		{
-			log.info(`[ENDPOINT] ${routeOptions.method} ${routeOptions.url}`)
-		}
-	})
+server.register(import('@fastify/autoload'), {
+  dir: `${__dirname}/api`,
+  dirNameRoutePrefix: true,
+  options: { prefix: '/api' }
+})
 
-	server.register(import('@fastify/compress'))
+server.addHook('onRoute', (routeOptions: { url: string; method: string }) => {
+  if (routeOptions.url.startsWith('/api') && routeOptions.method != 'HEAD') {
+    log.info(`[ENDPOINT] ${routeOptions.method} ${routeOptions.url}`)
+  }
+})
 
-	server.register(fastifyStatic, {
-		root: path.join(__dirname, 'public'),
-		prefix: '/public',
-	})
+server.register(import('@fastify/compress'))
 
-	server.register(fastifyStatic, {
-		root: path.join(__dirname, '/public/client'),
-		prefix: '/',
-		decorateReply: false,
-	})
+server.register(fastifyStatic, {
+  root: path.join(__dirname, 'public'),
+  prefix: '/public'
+})
 
-	server.register(fastifyStatic, {
-		root: path.join(__dirname, '/public/client/assets'),
-		prefix: '/assets/',
-		decorateReply: false,
-	})
+server.register(fastifyStatic, {
+  root: path.join(__dirname, '/public/client'),
+  prefix: '/',
+  decorateReply: false
+})
 
-	server.register(fastifyStatic, {
-		root: path.join(__dirname, '/public/collectibles'),
-		prefix: '/collectibles/',
-		decorateReply: false,
-		maxAge: '1d',
-		immutable: true,
-	})
+server.register(fastifyStatic, {
+  root: path.join(__dirname, '/public/client/assets'),
+  prefix: '/assets/',
+  decorateReply: false
+})
 
-	server.register(fastifyStatic, {
-		root: path.join(__dirname, '/public/pfp'),
-		prefix: '/pfp/',
-		decorateReply: false,
-	})
+server.register(fastifyStatic, {
+  root: path.join(__dirname, '/public/collectibles'),
+  prefix: '/collectibles/',
+  decorateReply: false,
+  maxAge: '1d',
+  immutable: true
+})
 
-	server.register(import('@fastify/cors'), {
-		origin: '*',
-	})
+server.register(fastifyStatic, {
+  root: path.join(__dirname, '/public/pfp'),
+  prefix: '/pfp/',
+  decorateReply: false
+})
 
-	server.register(import("@ericedouard/fastify-socket.io"), {
-		cors: {
-			origin: '*',
-			methods: ['GET', 'POST', 'PUT', 'DELETE']
-		},
-	})
+server.register(import('@fastify/cors'), {
+  origin: '*'
+})
 
-	server.addHook(
-		'onRequest',
-		(req: FastifyRequest, res: FastifyReply, done: () => void) =>
-		{
-			if (!req.headers['x-auth-token']) {
-				log.info(`${req.method} | ${req.url}`)
-			}
-			done()
-		},
-	)
+server.register(import('@ericedouard/fastify-socket.io'), {
+  cors: {
+    origin: '*',
+    methods: ['GET', 'POST', 'PUT', 'DELETE']
+  }
+})
 
-	server.decorate('NotFound', (req: FastifyRequest, res: FastifyReply) =>
-	{
-		if (req.url.toLowerCase().startsWith('/api'))
-		{
-			res.code(404).send({ error: 'This endpoint does not exist' })
-			return
-		}
+server.addHook(
+  'onRequest',
+  (req: FastifyRequest, res: FastifyReply, done: () => void) => {
+    if (!req.headers['x-auth-token']) {
+      log.info(`${req.method} | ${req.url}`)
+    }
+    done()
+  }
+)
 
-		const stream = fs.createReadStream(`${__dirname}/public/client/index.html`)
-		res.type('text/html').send(stream)
-	})
+server.decorate('NotFound', (req: FastifyRequest, res: FastifyReply) => {
+  if (req.url.toLowerCase().startsWith('/api')) {
+    res.code(404).send({ error: 'This endpoint does not exist' })
+    return
+  }
 
-	server.setNotFoundHandler(server.NotFound)
+  const stream = fs.createReadStream(`${__dirname}/public/client/index.html`)
+  res.type('text/html').send(stream)
+})
 
-	if (config.whatsappModuleEnabled)
-	{
-		const sessionLockFile = path.join(
-			'/app', '.wwebjs_auth', 'session', 'SingletonLock'
-		)
+server.setNotFoundHandler(server.NotFound)
 
-		try { fs.unlinkSync(sessionLockFile) } catch (_) {}
+if (config.whatsappModuleEnabled) {
+  const sessionLockFile = path.join(
+    '/app',
+    '.wwebjs_auth',
+    'session',
+    'SingletonLock'
+  )
 
-		whatsappClient.initialize()
-	}
+  try {
+    fs.unlinkSync(sessionLockFile)
+  } catch (_) {}
 
-	async function initJobs()
-	{
-		const jobsDir = fs
-			.readdirSync(`${path.resolve('./jobs')}`)
-			.filter((file) => file.endsWith('.ts') || file.endsWith('.js'))
+  whatsappClient.initialize()
+}
 
-		for (const jobFile of jobsDir)
-		{
-			const job = await import(`${path.resolve('./jobs')}/${jobFile}`)
-			schedule.scheduleJob({rule: job.default.interval, tz: config.timezone || "UTC"}, job.default.execute)
-			log.info(`[JOB] ${job.default.interval} => ${job.default.name}`)
-		}
-	}
+async function initJobs() {
+  const jobsDir = fs
+    .readdirSync(`${path.resolve('./jobs')}`)
+    .filter((file) => file.endsWith('.ts') || file.endsWith('.js'))
 
-	server.listen(
-		{ host: '0.0.0.0', port: process.env.SERVER_PORT ?? 3000 },
-		async (err: any, address: string) =>
-		{
-			if (err)
-			{
-				log.error(err)
-				process.exit(1)
-			}
-			
-			initDatabase()
-			await initJobs()
+  for (const jobFile of jobsDir) {
+    const job = await import(`${path.resolve('./jobs')}/${jobFile}`)
+    schedule.scheduleJob(
+      { rule: job.default.interval, tz: config.timezone || 'UTC' },
+      job.default.execute
+    )
+    log.info(`[JOB] ${job.default.interval} => ${job.default.name}`)
+  }
+}
 
-			if (config.discordModuleEnabled) {
-				await client.login(process.env.DISCORD_BOT_TOKEN)
-			}
+server.listen(
+  { host: '0.0.0.0', port: process.env.SERVER_PORT ?? 3000 },
+  async (err: any, address: string) => {
+    if (err) {
+      log.error(err)
+      process.exit(1)
+    }
 
-			if (config.monthlyPurge)
-			{
-				log.warn(
-					'[WARNING] Monthly Purge is enabled, users who have been ' +
-					'inactive for more than a month will be deleted at month reset!',
-				)
-			}
-			log.info('[WEBSERVER] Ready on ' + address)
-		},
-	)
+    initDatabase()
+    await initJobs()
+
+    if (config.discordModuleEnabled) {
+      await client.login(process.env.DISCORD_BOT_TOKEN)
+    }
+
+    if (config.monthlyPurge) {
+      log.warn(
+        '[WARNING] Monthly Purge is enabled, users who have been ' +
+          'inactive for more than a month will be deleted at month reset!'
+      )
+    }
+    log.info('[WEBSERVER] Ready on ' + address)
+  }
+)

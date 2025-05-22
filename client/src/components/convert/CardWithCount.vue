@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { Card } from "../../types/Card"
-import { getCardRarityClass } from "../../services/collectibleService"
+import { Card } from '../../types/Card'
+import { getCardRarityClass } from '../../services/collectibleService'
 
 const props = defineProps<{
   collectible: Card

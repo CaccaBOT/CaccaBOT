@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import router from "../../router/router"
-import { onMounted, ref } from "vue"
-import Asset from "../../types/Asset"
-import { useSessionStore } from "../../stores/session"
-import { useAPIStore } from "../../stores/api"
-import { useGlobalStore } from "../../stores/global"
-import { useModalStore } from "../../stores/modal"
+import router from '../../router/router'
+import { onMounted, ref } from 'vue'
+import Asset from '../../types/Asset'
+import { useSessionStore } from '../../stores/session'
+import { useAPIStore } from '../../stores/api'
+import { useGlobalStore } from '../../stores/global'
+import { useModalStore } from '../../stores/modal'
 
 const sessionStore = useSessionStore()
 const modalStore = useModalStore()
@@ -37,11 +37,11 @@ async function clearPfp() {
 }
 
 function selectPfp() {
-  (document.querySelector("#pfpSelector") as HTMLElement).click()
+  ;(document.querySelector('#pfpSelector') as HTMLElement).click()
 }
 
 function dismissModal(event) {
-  if (event.target.classList.contains("custom-modal")) {
+  if (event.target.classList.contains('custom-modal')) {
     modalStore.close()
   }
 }

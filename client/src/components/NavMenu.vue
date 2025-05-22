@@ -1,16 +1,16 @@
 <script setup lang="ts">
-import router from "../router/router"
-import HeroiconsLogout from "~icons/heroicons/arrow-left-end-on-rectangle"
-import HeroiconsUser from "~icons/heroicons/user"
-import MaterialSymbolsPassword from "~icons/material-symbols/password"
-import { useSessionStore } from "../stores/session"
-import HeroiconsPaintBrush from "~icons/heroicons/paint-brush"
-import { ref, watch, nextTick } from "vue"
-import gsap from "gsap"
-import { useModalStore } from "../stores/modal"
-import { ModalEnum } from "../types/ModalEnum"
+import router from '../router/router'
+import HeroiconsLogout from '~icons/heroicons/arrow-left-end-on-rectangle'
+import HeroiconsUser from '~icons/heroicons/user'
+import MaterialSymbolsPassword from '~icons/material-symbols/password'
+import { useSessionStore } from '../stores/session'
+import HeroiconsPaintBrush from '~icons/heroicons/paint-brush'
+import { ref, watch, nextTick } from 'vue'
+import gsap from 'gsap'
+import { useModalStore } from '../stores/modal'
+import { ModalEnum } from '../types/ModalEnum'
 import AkarIconsGear from '~icons/akar-icons/gear'
-import { useToast } from "vue-toastification"
+import { useToast } from 'vue-toastification'
 
 const toast = useToast()
 const sessionStore = useSessionStore()
@@ -28,14 +28,14 @@ function showChangeThemeModal() {
 }
 
 function goToSettings() {
-  router.push("/settings")
+  router.push('/settings')
 }
 
 function logout() {
   sessionStore.logout()
   modalStore.close()
-  router.push("/leaderboard")
-  toast.success("Logged out successfully")
+  router.push('/leaderboard')
+  toast.success('Logged out successfully')
 }
 
 watch(
@@ -47,7 +47,7 @@ watch(
       gsap.fromTo(
         navMenu.value,
         { opacity: 0, y: -30, x: 10, scale: 0.75 },
-        { opacity: 1, y: 0, x: 0, scale: 1, duration: 0.3, ease: "power2.out" }
+        { opacity: 1, y: 0, x: 0, scale: 1, duration: 0.3, ease: 'power2.out' }
       )
     } else if (navMenu.value) {
       gsap.to(navMenu.value, {
@@ -55,10 +55,10 @@ watch(
         y: -10,
         scale: 0.95,
         duration: 0.2,
-        ease: "power2.in",
+        ease: 'power2.in',
         onComplete: () => {
           sessionStore.showNavMenu = false
-        },
+        }
       })
     }
   }

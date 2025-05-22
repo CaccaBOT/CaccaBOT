@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
-import { useSessionStore } from '../../stores/session';
+import { useSessionStore } from '../../stores/session'
 const sessionStore = useSessionStore()
 
 const username = ref(sessionStore.session.username)
@@ -47,7 +47,7 @@ function execute() {
 }
 
 onMounted(() => {
-  (document.querySelector('#prompt') as HTMLInputElement)?.focus()
+  ;(document.querySelector('#prompt') as HTMLInputElement)?.focus()
   printBanner()
 })
 </script>

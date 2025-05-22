@@ -1,19 +1,19 @@
 <script setup lang="ts">
-import Header from "./components/Header.vue"
-import { useSessionStore } from "./stores/session"
-import { useHead } from "@unhead/vue"
-import { baseURL } from "./services/API.ts"
-import { useAchievementStore } from "./stores/achievement.ts"
-import { computed, onMounted } from "vue"
-import { useAPIStore } from "./stores/api.ts"
-import { useGlobalStore } from "./stores/global.ts"
-import { useToast } from "vue-toastification"
-import Lenis from "lenis"
+import Header from './components/Header.vue'
+import { useSessionStore } from './stores/session'
+import { useHead } from '@unhead/vue'
+import { baseURL } from './services/API.ts'
+import { useAchievementStore } from './stores/achievement.ts'
+import { computed, onMounted } from 'vue'
+import { useAPIStore } from './stores/api.ts'
+import { useGlobalStore } from './stores/global.ts'
+import { useToast } from 'vue-toastification'
+import Lenis from 'lenis'
 import 'lenis/dist/lenis.css'
-import { useModalStore } from "./stores/modal.ts"
-import { useSettingsStore } from "./stores/settings.ts"
-import { ModalEnum } from "./types/ModalEnum.ts"
-import router from "./router/router.ts"
+import { useModalStore } from './stores/modal.ts'
+import { useSettingsStore } from './stores/settings.ts'
+import { ModalEnum } from './types/ModalEnum.ts'
+import router from './router/router.ts'
 
 const toast = useToast()
 const globalStore = useGlobalStore()
@@ -31,29 +31,29 @@ sessionStore.load()
 useHead({
   link: [
     {
-      rel: "preconnect",
+      rel: 'preconnect',
       href: baseURL,
-      crossorigin: "anonymous",
-    },
-  ],
+      crossorigin: 'anonymous'
+    }
+  ]
 })
 
 onMounted(async () => {
   settingsStore.load()
-  
+
   try {
     const instanceInfo = await (await client.getInstanceInfo()).json()
     globalStore.instance.name = instanceInfo.name
     globalStore.instance.description = instanceInfo.description
     globalStore.instance.version = instanceInfo.version
   } catch (e) {
-    toast.error("Failed to retrieve server version")
+    toast.error('Failed to retrieve server version')
   }
 
-  const theme = localStorage.getItem("theme")
+  const theme = localStorage.getItem('theme')
 
   if (theme != null) {
-    document.querySelector("html").setAttribute("data-theme", theme)
+    document.querySelector('html').setAttribute('data-theme', theme)
   }
 
   await achievementStore.loadAchievements()
@@ -67,7 +67,11 @@ onMounted(async () => {
   }
 
   setTimeout(() => {
-    if (sessionStore.session.id && !sessionStore.session.discordId && router.currentRoute.value.path === "/") {
+    if (
+      sessionStore.session.id &&
+      !sessionStore.session.discordId &&
+      router.currentRoute.value.path === '/'
+    ) {
       modalStore.open(ModalEnum.MigrationNotice)
     }
   }, 1000)

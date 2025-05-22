@@ -1,14 +1,14 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
-import router from "../router/router"
-import HeroiconsTrophy from "~icons/heroicons/trophy"
-import HeroiconsBookOpen from "~icons/heroicons/book-open"
-import HeroiconsChartBar from "~icons/heroicons/chart-bar"
-import HeroiconsUsers from "~icons/heroicons/users"
+import router from '../router/router'
+import HeroiconsTrophy from '~icons/heroicons/trophy'
+import HeroiconsBookOpen from '~icons/heroicons/book-open'
+import HeroiconsChartBar from '~icons/heroicons/chart-bar'
+import HeroiconsUsers from '~icons/heroicons/users'
 import Asset from '../types/Asset'
-import { useSessionStore } from "../stores/session"
-import NavMenu from "../components/NavMenu.vue"
-import StreamlineCards from "~icons/streamline/cards"
+import { useSessionStore } from '../stores/session'
+import NavMenu from '../components/NavMenu.vue'
+import StreamlineCards from '~icons/streamline/cards'
 import HeroiconsWrench from '~icons/heroicons/wrench'
 import AkarIconsGear from '~icons/akar-icons/gear'
 import SiTerminalDuotone from '~icons/si/terminal-duotone'
@@ -50,129 +50,132 @@ function isAdmin() {
 }
 
 function canAccess(menuItem: MenuItem): boolean {
-  return (!menuItem.requiresAdmin || isAdmin()) && (!menuItem.requiresAuth || sessionStore.session.id != null)
+  return (
+    (!menuItem.requiresAdmin || isAdmin()) &&
+    (!menuItem.requiresAuth || sessionStore.session.id != null)
+  )
 }
 
 const menuItems = ref<MenuItem[]>([
   {
-    label: "Ranks",
+    label: 'Ranks',
     icon: HeroiconsTrophy,
-    route: "/leaderboard",
-    class: "text-primary",
+    route: '/leaderboard',
+    class: 'text-primary',
     requiresAdmin: false,
     requiresAuth: false
   },
   {
-    label: "Info",
+    label: 'Info',
     icon: HeroiconsInformationCircle,
-    route: "/info",
-    class: "text-secondary",
+    route: '/info',
+    class: 'text-secondary',
     requiresAdmin: false,
     requiresAuth: false,
     subsections: [
       {
-        label: "Manual",
+        label: 'Manual',
         icon: HeroiconsBookOpen,
-        route: "/info/manual",
+        route: '/info/manual',
         requiresAdmin: false,
         requiresAuth: false
       },
       {
-        label: "Achievements",
+        label: 'Achievements',
         icon: RiAwardLine,
-        route: "/info/achievements",
+        route: '/info/achievements',
         requiresAdmin: false,
         requiresAuth: false
       }
     ]
   },
   {
-    label: "Stats",
+    label: 'Stats',
     icon: HeroiconsChartBar,
-    route: "/stats",
-    class: "text-accent",
+    route: '/stats',
+    class: 'text-accent',
     requiresAdmin: false,
     requiresAuth: false
   },
   {
-    label: "Cards",
+    label: 'Cards',
     icon: StreamlineCards,
-    route: "/cards",
-    class: "text-success",
+    route: '/cards',
+    class: 'text-success',
     requiresAdmin: false,
     requiresAuth: false,
     subsections: [
       {
-        label: "Packs",
+        label: 'Packs',
         icon: IconoirBoxIso,
-        route: "/cards/pack",
+        route: '/cards/pack',
         requiresAdmin: false,
         requiresAuth: false
       },
       {
-        label: "Market",
+        label: 'Market',
         icon: WeuiShopOutlined,
-        route: "/cards/market",
+        route: '/cards/market',
         requiresAdmin: false,
         requiresAuth: false
       },
       {
-        label: "Convert",
+        label: 'Convert',
         icon: HeroiconsOutlineRefresh,
-        route: "/cards/convert",
+        route: '/cards/convert',
         requiresAdmin: false,
         requiresAuth: true
       }
-    ],
+    ]
   },
   {
-    label: "Users",
+    label: 'Users',
     icon: HeroiconsUsers,
-    route: "/users",
-    class: "text-info",
+    route: '/users',
+    class: 'text-info',
     requiresAdmin: false,
     requiresAuth: false
   },
   {
-    label: "Admin",
+    label: 'Admin',
     icon: HeroiconsWrench,
-    route: "/admin",
-    class: "text-error",
+    route: '/admin',
+    class: 'text-error',
     requiresAdmin: true,
     requiresAuth: true,
     subsections: [
       {
-        label: "Configuration",
+        label: 'Configuration',
         icon: AkarIconsGear,
-        route: "/admin/configuration",
+        route: '/admin/configuration',
         requiresAdmin: true,
         requiresAuth: true
       },
       {
-        label: "Console",
+        label: 'Console',
         icon: SiTerminalDuotone,
-        route: "/admin/console",
+        route: '/admin/console',
         requiresAdmin: true,
         requiresAuth: true
       },
       {
-        label: "Poop Table",
+        label: 'Poop Table',
         icon: FluentAppsList24Regular,
-        route: "/admin/poop-table",
+        route: '/admin/poop-table',
         requiresAdmin: true,
         requiresAuth: true
-      },
+      }
     ]
   }
 ])
 
-const formattedMoney = computed(() =>
-  formatMoney(sessionStore.session.money)
-)
+const formattedMoney = computed(() => formatMoney(sessionStore.session.money))
 
 onMounted(() => {
   document.querySelector('body').addEventListener('click', (event) => {
-    document.querySelectorAll('details').forEach(x => x.removeAttribute('open'))
+    document
+      .querySelectorAll('details')
+      .forEach((x) => x.removeAttribute('open'))
   })
 })
 </script>

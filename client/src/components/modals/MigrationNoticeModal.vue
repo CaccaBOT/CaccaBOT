@@ -1,20 +1,20 @@
 <script setup lang="ts">
-import router from "../../router/router"
-import Asset from "../../types/Asset"
-import { useModalStore } from "../../stores/modal"
+import router from '../../router/router'
+import Asset from '../../types/Asset'
+import { useModalStore } from '../../stores/modal'
 import IcBaselineDiscord from '~icons/ic/baseline-discord'
 
 const modalStore = useModalStore()
 
 async function discordLogin() {
-    modalStore.close()
-    router.push("/auth/discord")
+  modalStore.close()
+  router.push('/auth/discord')
 }
 
 function dismissModal(event) {
-    if (event.target.classList.contains("custom-modal")) {
-        modalStore.close()
-    }
+  if (event.target.classList.contains('custom-modal')) {
+    modalStore.close()
+  }
 }
 </script>
 

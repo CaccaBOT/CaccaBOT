@@ -1,7 +1,6 @@
-import { OrderType } from "./OrderEnums"
+import { OrderType } from './OrderEnums'
 
-export type OrderLogic =
-    {
-        id: OrderType,
-        updateAll: () => void
-    }
+export type OrderLogic = {
+  id: OrderType
+  updateAll: () => void
+}

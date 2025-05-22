@@ -1,45 +1,45 @@
 <script setup lang="ts">
-import router from "../router/router"
-import Asset from "../types/Asset"
-import { useGlobalStore } from "../stores/global"
-import { onBeforeUnmount, ref, watch } from "vue"
-import HeroiconsChevronLeft from "~icons/heroicons/chevron-left?width=24px&height=24px"
-import HeroiconsChevronRight from "~icons/heroicons/chevron-right?width=24px&height=24px"
+import router from '../router/router'
+import Asset from '../types/Asset'
+import { useGlobalStore } from '../stores/global'
+import { onBeforeUnmount, ref, watch } from 'vue'
+import HeroiconsChevronLeft from '~icons/heroicons/chevron-left?width=24px&height=24px'
+import HeroiconsChevronRight from '~icons/heroicons/chevron-right?width=24px&height=24px'
 const globalStore = useGlobalStore()
-import type { Ref } from "vue"
-import { TimeUntilNewMonth } from "../types/TimeUntilNewMonth"
+import type { Ref } from 'vue'
+import { TimeUntilNewMonth } from '../types/TimeUntilNewMonth'
 
 const { year, month } = router.currentRoute.value.params
 
 if (year && month) {
   globalStore.selectedDate = new Date(
     parseInt(year as string),
-    parseInt(month as string) - 1,
+    parseInt(month as string) - 1
   )
 } else {
   globalStore.selectedDate = new Date()
   router.replace(
-    `/leaderboard/${globalStore.selectedDate.getFullYear()}/${globalStore.selectedDate.getMonth() + 1}`,
+    `/leaderboard/${globalStore.selectedDate.getFullYear()}/${globalStore.selectedDate.getMonth() + 1}`
   )
 }
 
 function goToProfile(id: string) {
   router.push(
-    `/profile/${id}/${globalStore.selectedDate.getFullYear()}/${globalStore.selectedDate.getMonth() + 1}`,
+    `/profile/${id}/${globalStore.selectedDate.getFullYear()}/${globalStore.selectedDate.getMonth() + 1}`
   )
 }
 
 function prevMonth() {
   globalStore.prevMonth()
   router.push(
-    `/leaderboard/${globalStore.selectedDate.getFullYear()}/${globalStore.selectedDate.getMonth() + 1}`,
+    `/leaderboard/${globalStore.selectedDate.getFullYear()}/${globalStore.selectedDate.getMonth() + 1}`
   )
 }
 
 function nextMonth() {
   globalStore.nextMonth()
   router.push(
-    `/leaderboard/${globalStore.selectedDate.getFullYear()}/${globalStore.selectedDate.getMonth() + 1}`,
+    `/leaderboard/${globalStore.selectedDate.getFullYear()}/${globalStore.selectedDate.getMonth() + 1}`
   )
 }
 
@@ -47,8 +47,8 @@ const newMonth = ref(
   new Date(
     globalStore.selectedDate.getFullYear(),
     globalStore.selectedDate.getMonth() + 1,
-    1,
-  ),
+    1
+  )
 )
 
 const timeUntilNewMonth: Ref = ref(setTime())
@@ -90,18 +90,21 @@ function updateNewMonth() {
   newMonth.value = new Date(
     globalStore.selectedDate.getFullYear(),
     globalStore.selectedDate.getMonth() + 1,
-    1,
+    1
   )
 }
 
-watch(() => globalStore.selectedDate, () => {
-  updateNewMonth()
-  timeUntilNewMonth.value = setTime()
-  clearInterval(interval)
-  interval = setInterval(() => {
+watch(
+  () => globalStore.selectedDate,
+  () => {
+    updateNewMonth()
     timeUntilNewMonth.value = setTime()
-  }, 1000)
-})
+    clearInterval(interval)
+    interval = setInterval(() => {
+      timeUntilNewMonth.value = setTime()
+    }, 1000)
+  }
+)
 
 onBeforeUnmount(() => {
   clearInterval(interval)

@@ -6,7 +6,7 @@ import { formatDate } from '../../utils/formatter'
 import { User } from '../../types/User'
 import HeroiconsTrash from '~icons/heroicons/trash'
 import { Poop } from '../../types/Profile'
-import { useToast } from "vue-toastification"
+import { useToast } from 'vue-toastification'
 
 const { client } = useAPIStore()
 const toast = useToast()
@@ -16,46 +16,47 @@ let users = ref([])
 let page = ref(0)
 
 const loadPoops = async (pageNumber: number) => {
-    const response = await client.getPoops(pageNumber * 50)
-    const newPoops = await response.json()
-    poops.value = [...poops.value, ...newPoops]
+  const response = await client.getPoops(pageNumber * 50)
+  const newPoops = await response.json()
+  poops.value = [...poops.value, ...newPoops]
 }
 
 const loadUsers = async () => {
-    const response = await client.getAllUsers()
-    users.value = await response.json()
+  const response = await client.getAllUsers()
+  users.value = await response.json()
 }
 
 function getUser(id: string): User {
-    return users.value.find((u) => u.id === id)
+  return users.value.find((u) => u.id === id)
 }
 
 async function deletePoop(poop: Poop) {
-    const response = await client.deletePoop(poop.id)
-    if (!response.ok) {
-        toast.error("Failed to delete poop")
-        return
-    }
-    poops.value = poops.value.filter((p) => p.id !== poop.id)
+  const response = await client.deletePoop(poop.id)
+  if (!response.ok) {
+    toast.error('Failed to delete poop')
+    return
+  }
+  poops.value = poops.value.filter((p) => p.id !== poop.id)
 }
 
 const handleScroll = () => {
-    const bottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight
-    if (bottom) {
-        page.value += 1
-        loadPoops(page.value)
-    }
+  const bottom =
+    window.innerHeight + window.scrollY >= document.documentElement.scrollHeight
+  if (bottom) {
+    page.value += 1
+    loadPoops(page.value)
+  }
 }
 
 onMounted(() => {
-    loadPoops(page.value)
-    loadUsers()
+  loadPoops(page.value)
+  loadUsers()
 
-    window.addEventListener('scroll', handleScroll)
+  window.addEventListener('scroll', handleScroll)
 })
 
 onUnmounted(() => {
-    window.removeEventListener('scroll', handleScroll)
+  window.removeEventListener('scroll', handleScroll)
 })
 </script>
 

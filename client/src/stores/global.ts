@@ -1,27 +1,27 @@
-import { defineStore } from "pinia"
-import { useAPIStore } from "./api"
-import { Leaderboard } from "../types/Leaderboard"
-import { Profile } from "../types/Profile"
-import { useToast } from "vue-toastification"
+import { defineStore } from 'pinia'
+import { useAPIStore } from './api'
+import { Leaderboard } from '../types/Leaderboard'
+import { Profile } from '../types/Profile'
+import { useToast } from 'vue-toastification'
 
-export const useGlobalStore = defineStore("global", {
+export const useGlobalStore = defineStore('global', {
   state: () => ({
     instance: {
       name: null,
       description: null,
-      version: null,
+      version: null
     },
     leaderboard: [] as Leaderboard,
     profile: {} as Profile,
     isFetching: false,
-    selectedDate: new Date(),
+    selectedDate: new Date()
   }),
   getters: {
     displayDate: (state) =>
       new Date(
         state.selectedDate.getFullYear(),
-        state.selectedDate.getMonth(),
-      ).toLocaleDateString("default", { year: "numeric", month: "long" }),
+        state.selectedDate.getMonth()
+      ).toLocaleDateString('default', { year: 'numeric', month: 'long' })
   },
   actions: {
     async fetchLeaderboard(year: number, month: number) {
@@ -30,7 +30,7 @@ export const useGlobalStore = defineStore("global", {
         const apiStore = useAPIStore()
         let leaderboardResponse = await apiStore.client.getMonthlyLeaderboard(
           year,
-          month,
+          month
         )
         this.isFetching = false
         if (leaderboardResponse.ok) {
@@ -38,7 +38,7 @@ export const useGlobalStore = defineStore("global", {
         }
       } catch (e) {
         const toast = useToast()
-        toast.error("Failed to retrieve leaderboard")
+        toast.error('Failed to retrieve leaderboard')
       }
     },
     async fetchProfile(id: string) {
@@ -53,7 +53,7 @@ export const useGlobalStore = defineStore("global", {
         }
       } catch (e) {
         const toast = useToast()
-        toast.error("Failed to retrieve user profile")
+        toast.error('Failed to retrieve user profile')
       }
     },
     nextMonth() {
@@ -81,6 +81,6 @@ export const useGlobalStore = defineStore("global", {
       }
 
       this.selectedDate = new Date(year, month)
-    },
-  },
+    }
+  }
 })

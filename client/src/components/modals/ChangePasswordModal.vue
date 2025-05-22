@@ -1,41 +1,43 @@
 <script setup lang="ts">
-import router from "../../router/router"
-import { ref } from "vue";
-import { useSessionStore } from "../../stores/session"
-import { useAPIStore } from "../../stores/api"
-import { useToast } from "vue-toastification"
-import { useModalStore } from "../../stores/modal";
+import router from '../../router/router'
+import { ref } from 'vue'
+import { useSessionStore } from '../../stores/session'
+import { useAPIStore } from '../../stores/api'
+import { useToast } from 'vue-toastification'
+import { useModalStore } from '../../stores/modal'
 
-const sessionStore = useSessionStore();
-const modalStore = useModalStore();
-const { client } = useAPIStore();
-const toast = useToast();
+const sessionStore = useSessionStore()
+const modalStore = useModalStore()
+const { client } = useAPIStore()
+const toast = useToast()
 
-const newPassword = ref("");
+const newPassword = ref('')
 
 async function change() {
   try {
-    const response = await client.changePassword(newPassword.value);
+    const response = await client.changePassword(newPassword.value)
     if (!response.ok) {
-      newPassword.value = "";
-      document.querySelectorAll("input").forEach((x) => x.classList.add("input-error"));
-      const body = await response.json();
-      toast.error(body.error);
+      newPassword.value = ''
+      document
+        .querySelectorAll('input')
+        .forEach((x) => x.classList.add('input-error'))
+      const body = await response.json()
+      toast.error(body.error)
     }
 
     modalStore.close()
-    sessionStore.logout();
-    router.push("/");
+    sessionStore.logout()
+    router.push('/')
   } catch (e) {
-    toast.error("Failed to change password");
+    toast.error('Failed to change password')
   }
 }
 
 function dismissModal(event) {
-  if (event.target.classList.contains("custom-modal")) {
+  if (event.target.classList.contains('custom-modal')) {
     modalStore.close()
   }
-  newPassword.value = "";
+  newPassword.value = ''
 }
 </script>
 

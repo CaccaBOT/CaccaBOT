@@ -1,27 +1,27 @@
 <script setup lang="ts">
-import { useAchievementStore } from "../../stores/achievement"
-import { Achievement } from "../../types/Achievement"
-import { UserAchievement } from "../../types/UserAchievement"
-import HeroiconsTrophy from "~icons/heroicons/trophy"
-import { computed } from "vue"
-import { formatDate } from "../../utils/formatter"
+import { useAchievementStore } from '../../stores/achievement'
+import { Achievement } from '../../types/Achievement'
+import { UserAchievement } from '../../types/UserAchievement'
+import HeroiconsTrophy from '~icons/heroicons/trophy'
+import { computed } from 'vue'
+import { formatDate } from '../../utils/formatter'
 
 const achievementStore = useAchievementStore()
 const props = defineProps<{ achievement: UserAchievement }>()
 const achievements = computed(() => achievementStore.achievements)
 
 function getAchievement(id: string) {
-    return achievements.value.find((a) => a.id === id)
+  return achievements.value.find((a) => a.id === id)
 }
 
 function getDifficultyClass(achievement?: Achievement) {
-    const difficultyMap = {
-        1: "text-rarity-common",
-        2: "text-rarity-rare",
-        3: "text-rarity-epic",
-        4: "text-rarity-legendary",
-    }
-    return difficultyMap[achievement?.difficulty_id] || ""
+  const difficultyMap = {
+    1: 'text-rarity-common',
+    2: 'text-rarity-rare',
+    3: 'text-rarity-epic',
+    4: 'text-rarity-legendary'
+  }
+  return difficultyMap[achievement?.difficulty_id] || ''
 }
 </script>
 

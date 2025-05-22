@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import ApexCharts from "vue3-apexcharts"
-import { ref, watch } from "vue"
-import { color } from "../../main.ts"
+import ApexCharts from 'vue3-apexcharts'
+import { ref, watch } from 'vue'
+import { color } from '../../main.ts'
 
 const props = defineProps<{
   users
@@ -10,30 +10,30 @@ const props = defineProps<{
 const options = ref({
   series: [
     {
-      data: [],
-    },
+      data: []
+    }
   ],
   chart: {
-    type: "treemap",
+    type: 'treemap',
     toolbar: {
-      show: false,
+      show: false
     },
-    background: "transparent",
+    background: 'transparent'
   },
   legend: {
-    show: false,
+    show: false
   },
   colors: [
-    "#4CAF50",
-    "#FF9800",
-    "#2196F3",
-    "#FF5722",
-    "#9C27B0",
-    "#03A9F4",
-    "#E91E63",
-    "#8BC34A",
-    "#FFC107",
-    "#00BCD4",
+    '#4CAF50',
+    '#FF9800',
+    '#2196F3',
+    '#FF5722',
+    '#9C27B0',
+    '#03A9F4',
+    '#E91E63',
+    '#8BC34A',
+    '#FFC107',
+    '#00BCD4'
   ],
   dataLabels: {
     enabled: true,
@@ -41,28 +41,28 @@ const options = ref({
       return `${val} (${Math.round(opts.value)}%)`
     },
     style: {
-      colors: ["#000"],
+      colors: ['#000']
     },
     offsetX: 0,
     offsetY: 0,
-    textAnchor: "middle",
+    textAnchor: 'middle'
   },
   tooltip: {
     y: {
       formatter: (val: number) => {
-        return val.toString() + "%"
-      },
-    },
+        return val.toString() + '%'
+      }
+    }
   },
   theme: {
-    mode: color,
+    mode: color
   },
   plotOptions: {
     treemap: {
       distributed: true,
-      enableShades: false,
-    },
-  },
+      enableShades: false
+    }
+  }
 })
 
 watch(
@@ -71,11 +71,11 @@ watch(
     if (newUsers) {
       options.value.series[0].data = newUsers.map((user) => ({
         x: user.username,
-        y: user.percentage,
+        y: user.percentage
       }))
     }
   },
-  { immediate: true },
+  { immediate: true }
 )
 </script>
 

@@ -6,7 +6,7 @@ import { OrderType } from '../../enums/OrderTypeEnum'
 import { OrderBookEntry } from '../../types/OrderBookEntry'
 
 const props = defineProps<{
-  orders: Order[],
+  orders: Order[]
   assetPrice: number
 }>()
 
@@ -15,9 +15,14 @@ const orderBookSellEntries = ref<OrderBookEntry[]>([])
 
 function aggregateOrders(orderSide: OrderSide): OrderBookEntry[] {
   return props.orders
-    .filter(order => order.side === orderSide && order.type === OrderType.LIMIT && order.active)
+    .filter(
+      (order) =>
+        order.side === orderSide &&
+        order.type === OrderType.LIMIT &&
+        order.active
+    )
     .reduce((acc: OrderBookEntry[], order) => {
-      const entry = acc.find(e => e.price === order.price)
+      const entry = acc.find((e) => e.price === order.price)
       if (entry) {
         entry.quantity += 1
       } else {

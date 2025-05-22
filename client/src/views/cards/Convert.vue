@@ -3,12 +3,16 @@ import { onMounted, ref } from 'vue'
 import { useAPIStore } from '../../stores/api'
 import { useSessionStore } from '../../stores/session'
 import { Card } from '../../types/Card'
-import { getCardRarityClass, getRarityName, getTextRarityClass } from '../../services/collectibleService'
+import {
+  getCardRarityClass,
+  getRarityName,
+  getTextRarityClass
+} from '../../services/collectibleService'
 import { CollectibleRarity } from '../../enums/CollectibleRarity'
 import HeroiconsOutlineRefresh from '~icons/heroicons-outline/refresh'
 import UilCancel from '~icons/uil/cancel'
 import CardWithCount from '../../components/convert/CardWithCount.vue'
-import JSConfetti from "js-confetti"
+import JSConfetti from 'js-confetti'
 import Asset from '../../types/Asset'
 
 const { client } = useAPIStore()
@@ -37,7 +41,9 @@ function updateConfettiConfig() {
 function select(collectible: Card) {
   document.querySelectorAll('.collectible > img').forEach((element) => {
     selectedRarity.value = collectible.rarity_id
-    if (!element.classList.contains(getCardRarityClass(collectible.rarity_id))) {
+    if (
+      !element.classList.contains(getCardRarityClass(collectible.rarity_id))
+    ) {
       element.parentElement.classList.add('disabled')
     }
   })
@@ -48,7 +54,6 @@ function select(collectible: Card) {
     }
     selections.value.push(collectible)
   }
-
 }
 
 function reset() {
@@ -64,7 +69,9 @@ function getSelectedCount(collectible: Card) {
 
 async function convert() {
   const collectibleIds = selections.value.map((x) => x.id)
-  foundCollectible.value = await (await client.convertCollectibles(collectibleIds)).json()
+  foundCollectible.value = await (
+    await client.convertCollectibles(collectibleIds)
+  ).json()
   animateConversion()
 }
 
@@ -73,23 +80,29 @@ function animateConversion() {
   const overlay = document.createElement('div')
   overlay.classList.add('black-overlay')
   document.body.appendChild(overlay)
-  const foundCollectibleWrapper = document.querySelector('.found-collectible') as HTMLElement
-  const foundCollectibleImage = document.querySelector('#foundCollectibleImage') as HTMLImageElement
+  const foundCollectibleWrapper = document.querySelector(
+    '.found-collectible'
+  ) as HTMLElement
+  const foundCollectibleImage = document.querySelector(
+    '#foundCollectibleImage'
+  ) as HTMLImageElement
   foundCollectibleWrapper.classList.remove('hidden')
   document.querySelector('body').style.overflowY = 'hidden'
   window.scrollTo(0, 0)
-  foundCollectibleWrapper.style.animation = 'spin-up 3s cubic-bezier(.17,.67,.35,1.03) forwards'
+  foundCollectibleWrapper.style.animation =
+    'spin-up 3s cubic-bezier(.17,.67,.35,1.03) forwards'
   setTimeout(() => {
-      foundCollectibleWrapper.style.animation = 'final-turn 0.5s ease-in-out forwards'
-    }, 3000)
+    foundCollectibleWrapper.style.animation =
+      'final-turn 0.5s ease-in-out forwards'
+  }, 3000)
   setTimeout(() => {
     animationDone.value = true
     foundCollectibleImage.src = foundCollectible.value.asset_url
     const confetti = new JSConfetti()
     confetti.addConfetti({
-    emojis: ["💩", "🚽", "🧻"],
-    emojiSize: confettiSize,
-    confettiNumber,
+      emojis: ['💩', '🚽', '🧻'],
+      emojiSize: confettiSize,
+      confettiNumber
     })
   }, 3300)
   foundCollectibleWrapper.onclick = () => {
@@ -97,7 +110,8 @@ function animateConversion() {
       return
     }
     animationDone.value = false
-    foundCollectibleWrapper.style.animation = 'bring-down 0.75s ease-in-out forwards'
+    foundCollectibleWrapper.style.animation =
+      'bring-down 0.75s ease-in-out forwards'
     setTimeout(async () => {
       animationDone.value = true
       foundCollectibleWrapper.classList.add('hidden')
@@ -111,11 +125,13 @@ function animateConversion() {
 }
 
 async function fetchCollectibles() {
-  let userCollectibles = await ((await client.getUserCollectibles(sessionStore.session.id)).json())
+  let userCollectibles = await (
+    await client.getUserCollectibles(sessionStore.session.id)
+  ).json()
   collectibles.value = userCollectibles
-  .filter((c: Card) => c.rarity_id !== CollectibleRarity.Caccasmagorico)
-  .map((c: Card) => ({ ...c, quantity: c.quantity - c.selling - 1 }))
-  .filter((c: Card) => c.quantity > 0)
+    .filter((c: Card) => c.rarity_id !== CollectibleRarity.Caccasmagorico)
+    .map((c: Card) => ({ ...c, quantity: c.quantity - c.selling - 1 }))
+    .filter((c: Card) => c.quantity > 0)
 }
 
 onMounted(async () => {

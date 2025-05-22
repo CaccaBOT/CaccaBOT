@@ -1,20 +1,20 @@
 <script setup lang="ts">
-import { onMounted, ref } from "vue"
-import { marked } from "marked"
-import markedKatex from "marked-katex-extension"
+import { onMounted, ref } from 'vue'
+import { marked } from 'marked'
+import markedKatex from 'marked-katex-extension'
 
-const manual = ref("")
+const manual = ref('')
 onMounted(async () => {
   const manualRaw = await (
     await fetch(
-      "https://raw.githubusercontent.com/CaccaBOT/CaccaBOT-Manual/refs/heads/main/static/manual/output.md",
+      'https://raw.githubusercontent.com/CaccaBOT/CaccaBOT-Manual/refs/heads/main/static/manual/output.md'
     )
   ).text()
   marked.use(
-    markedKatex({ throwOnError: false, displayMode: true, output: "mathml" }),
+    markedKatex({ throwOnError: false, displayMode: true, output: 'mathml' })
   )
   manual.value = await marked.parse(manualRaw)
-  document.querySelector(".manual-wrapper").innerHTML = manual.value
+  document.querySelector('.manual-wrapper').innerHTML = manual.value
 })
 </script>
 

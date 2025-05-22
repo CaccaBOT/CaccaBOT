@@ -32,11 +32,7 @@ const askPrice = ref(0)
 const isSocketConnected = ref(false)
 
 async function updateOrders() {
-  await Promise.all([
-    fetchOrders(),
-    fetchOwnOrders(),
-    fetchHistory()
-  ])
+  await Promise.all([fetchOrders(), fetchOwnOrders(), fetchHistory()])
   calculatePrices()
   updateBalance()
 }
@@ -61,8 +57,10 @@ async function createOrder(order: OrderRequest): Promise<boolean> {
   }
 
   if (order.side == OrderSide.SELL) {
-    let foundCollectible = userCollectibles.value.find((c) => c.id == collectibleId)
-    let isCollectibleOwned = (foundCollectible != null)
+    let foundCollectible = userCollectibles.value.find(
+      (c) => c.id == collectibleId
+    )
+    let isCollectibleOwned = foundCollectible != null
     if (!isCollectibleOwned) {
       toast.error("You don't own this collectible")
       return
@@ -84,14 +82,24 @@ async function createOrder(order: OrderRequest): Promise<boolean> {
 }
 
 function calculateBidPrice(): number {
-  let buyOrders = allOrders.value.filter((o) => o.side == OrderSide.BUY && o.type == 'LIMIT' && o.active)
-  let maxBuyOrder = buyOrders.reduce((max, order) => Math.max(max, order.price), 0)
+  let buyOrders = allOrders.value.filter(
+    (o) => o.side == OrderSide.BUY && o.type == 'LIMIT' && o.active
+  )
+  let maxBuyOrder = buyOrders.reduce(
+    (max, order) => Math.max(max, order.price),
+    0
+  )
   return maxBuyOrder
 }
 
 function calculateAskPrice(): number {
-  let sellOrders = allOrders.value.filter((o) => o.side == OrderSide.SELL && o.type == 'LIMIT' && o.active)
-  let minSellOrder = sellOrders.reduce((min, order) => Math.min(min, order.price), Infinity)
+  let sellOrders = allOrders.value.filter(
+    (o) => o.side == OrderSide.SELL && o.type == 'LIMIT' && o.active
+  )
+  let minSellOrder = sellOrders.reduce(
+    (min, order) => Math.min(min, order.price),
+    Infinity
+  )
   return minSellOrder
 }
 
@@ -105,25 +113,39 @@ async function fetchHistory() {
 }
 
 async function fetchOrders() {
-  let orders = await (await client.getOrdersForCollectible(collectibleId)).json()
+  let orders = await (
+    await client.getOrdersForCollectible(collectibleId)
+  ).json()
   allOrders.value = orders
 }
 
 async function fetchOwnOrders() {
-  ownOrders.value = await (await client.getOwnOrdersForCollectible(collectibleId)).json()
+  ownOrders.value = await (
+    await client.getOwnOrdersForCollectible(collectibleId)
+  ).json()
 }
 
-watch(() => api.socket?.active, (newVal) => {
-  isSocketConnected.value = newVal
-}, { immediate: true })
+watch(
+  () => api.socket?.active,
+  (newVal) => {
+    isSocketConnected.value = newVal
+  },
+  { immediate: true }
+)
 
 onMounted(async () => {
   api.initSocket()
 
-  assetPrice.value = (await (await client.getAssetPrice(collectibleId)).json()).marketPrice
-  let collectibleResponse = await (await client.getCollectible(collectibleId)).json()
+  assetPrice.value = (
+    await (await client.getAssetPrice(collectibleId)).json()
+  ).marketPrice
+  let collectibleResponse = await (
+    await client.getCollectible(collectibleId)
+  ).json()
   collectible.value = collectibleResponse
-  userCollectibles.value = await (await client.getUserCollectibles(sessionStore.session.id)).json()
+  userCollectibles.value = await (
+    await client.getUserCollectibles(sessionStore.session.id)
+  ).json()
   await updateOrders()
   fetchHistory()
 

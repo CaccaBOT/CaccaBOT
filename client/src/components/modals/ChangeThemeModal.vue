@@ -1,36 +1,36 @@
 <script setup lang="ts">
-import { ref, watch } from "vue"
-import { useSessionStore } from "../../stores/session"
-import { useModalStore } from "../../stores/modal"
+import { ref, watch } from 'vue'
+import { useSessionStore } from '../../stores/session'
+import { useModalStore } from '../../stores/modal'
 
 const modalStore = useModalStore()
 
 const themes = [
-  "dark",
-  "light",
-  "synthwave",
-  "cyberpunk",
-  "valentine",
-  "halloween",
-  "forest",
-  "aqua",
-  "luxury",
-  "dracula",
-  "night",
-  "dim",
-  "sunset",
+  'dark',
+  'light',
+  'synthwave',
+  'cyberpunk',
+  'valentine',
+  'halloween',
+  'forest',
+  'aqua',
+  'luxury',
+  'dracula',
+  'night',
+  'dim',
+  'sunset'
 ]
 
-const theme = ref("")
+const theme = ref('')
 
 watch(theme, () => {
   const themeId = theme.value?.toLowerCase()
-  document.querySelector("html").setAttribute("data-theme", themeId)
-  localStorage.setItem("theme", themeId)
+  document.querySelector('html').setAttribute('data-theme', themeId)
+  localStorage.setItem('theme', themeId)
 })
 
 function dismissModal(event) {
-  if (event.target.classList.contains("custom-modal")) {
+  if (event.target.classList.contains('custom-modal')) {
     modalStore.close()
   }
 }
@@ -41,7 +41,7 @@ function capitalizeFirstLetter(string: string) {
   )
 }
 
-theme.value = localStorage.getItem("theme")
+theme.value = localStorage.getItem('theme')
 </script>
 
 <template>

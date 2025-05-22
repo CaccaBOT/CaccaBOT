@@ -10,18 +10,22 @@ const collectibles = ref<Card[]>([])
 const prices = ref<MarketDay[]>([])
 
 async function fetchCollectibles() {
-  let response = await ((await client.getAllCollectibles()).json()) as Card[]
-  response = response.sort((a,b) => b.rarity_id - a.rarity_id)
+  let response = (await (await client.getAllCollectibles()).json()) as Card[]
+  response = response.sort((a, b) => b.rarity_id - a.rarity_id)
   collectibles.value = response
 }
 
 async function fetchMarketPrices() {
-  const response = await ((await client.getMarketPrices()).json()) as MarketDay[]
+  const response = (await (
+    await client.getMarketPrices()
+  ).json()) as MarketDay[]
   prices.value = response
 }
 
 function getPriceForCollectible(collectibleId: number): MarketDay {
-  return prices.value.find((price: MarketDay) => price.collectibleId === collectibleId) as MarketDay
+  return prices.value.find(
+    (price: MarketDay) => price.collectibleId === collectibleId
+  ) as MarketDay
 }
 
 onMounted(() => {

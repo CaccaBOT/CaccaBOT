@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { ref, watch, onBeforeMount, onMounted } from "vue"
-import ApexCharts from "vue3-apexcharts"
-import { PoopsPerDay } from "../../types/PoopsPerDay"
-import { color } from "../../main"
+import { ref, watch, onBeforeMount, onMounted } from 'vue'
+import ApexCharts from 'vue3-apexcharts'
+import { PoopsPerDay } from '../../types/PoopsPerDay'
+import { color } from '../../main'
 
 // Define the props with TypeScript
 const props = defineProps<{
@@ -19,32 +19,32 @@ const data = ref(Object.values(props.poopsPerDay ?? {})) // The poop counts
 const options = ref({
   series: [
     {
-      name: "Poops",
-      data: data.value,
-    },
+      name: 'Poops',
+      data: data.value
+    }
   ],
   chart: {
-    type: "line", // Using a line chart to show trends over time
-    background: "transparent",
+    type: 'line', // Using a line chart to show trends over time
+    background: 'transparent'
   },
   dataLabels: {
-    enabled: false,
+    enabled: false
   },
   stroke: {
-    curve: "smooth",
+    curve: 'smooth'
   },
   xaxis: {
-    type: "datetime",
-    categories: categories.value,
+    type: 'datetime',
+    categories: categories.value
   },
   tooltip: {
     x: {
-      format: "dd/MM/yyyy", // Format the tooltip date display
-    },
+      format: 'dd/MM/yyyy' // Format the tooltip date display
+    }
   },
   theme: {
-    mode: color,
-  },
+    mode: color
+  }
 })
 
 watch(
@@ -56,7 +56,7 @@ watch(
     options.value.xaxis.categories = categories.value
     updater.value++
   },
-  { immediate: true },
+  { immediate: true }
 )
 </script>
 

@@ -3,9 +3,13 @@ import { watch } from 'vue'
 import { useSettingsStore } from '../stores/settings'
 const settingsStore = useSettingsStore()
 
-watch(settingsStore.$state, () => {
-  settingsStore.save()
-}, { deep: true })
+watch(
+  settingsStore.$state,
+  () => {
+    settingsStore.save()
+  },
+  { deep: true }
+)
 </script>
 
 <template>

@@ -1,15 +1,15 @@
 <script setup lang="ts">
-import Asset from "../types/Asset"
-import { onMounted, ref } from "vue"
-import { useGlobalStore } from "../stores/global"
-import { useSessionStore } from "../stores/session"
-import { useAPIStore } from "../stores/api"
+import Asset from '../types/Asset'
+import { onMounted, ref } from 'vue'
+import { useGlobalStore } from '../stores/global'
+import { useSessionStore } from '../stores/session'
+import { useAPIStore } from '../stores/api'
 import TablerArrowsDiff from '~icons/tabler/arrows-diff'
 import IcBaselineDiscord from '~icons/ic/baseline-discord'
 import HeroiconsCheck20Solid from '~icons/heroicons/check-20-solid'
 import HeroiconsOutlineRefresh from '~icons/heroicons-outline/refresh'
-import router from "../router/router"
-import { useToast } from "vue-toastification"
+import router from '../router/router'
+import { useToast } from 'vue-toastification'
 
 const globalStore = useGlobalStore()
 const sessionStore = useSessionStore()
@@ -23,57 +23,54 @@ const discordUser = ref(null)
 const loading = ref(false)
 
 function link() {
-    window.location.href = redirectUrl
+  window.location.href = redirectUrl
 }
 
 function retry() {
-    code.value = null
-    router.push('/auth/discord')
+  code.value = null
+  router.push('/auth/discord')
 }
 
 onMounted(async () => {
-    const urlParams = new URLSearchParams(window.location.search)
-    code.value = urlParams.get('code')
+  const urlParams = new URLSearchParams(window.location.search)
+  code.value = urlParams.get('code')
 
-    if (!code.value) {
-        return
+  if (!code.value) {
+    return
+  }
+
+  loading.value = true
+  let response
+
+  if (sessionStore.session.id) {
+    response = await client.linkDiscord(code.value)
+  } else {
+    response = await client.discordLogin(code.value)
+  }
+
+  loading.value = false
+
+  if (response.ok) {
+    if (!sessionStore.session.id) {
+      sessionStore.session = await response.json()
+      toast.success(`Logged in as ${sessionStore.session.username}`)
+      sessionStore.save()
+      router.push('/')
+      return
     }
 
-    loading.value = true
-    let response
-
-    if (sessionStore.session.id) {
-        response = await client.linkDiscord(code.value)
-    } else {
-        response = await client.discordLogin(code.value)
+    discordUser.value = await response.json()
+    sessionStore.session.discordId = discordUser.value.id
+  } else {
+    if (!sessionStore.session.id) {
+      toast.error('Failed to login')
+      router.push('/')
+      return
     }
 
-    loading.value = false
-
-    if (response.ok) {
-
-        if (!sessionStore.session.id) {
-            sessionStore.session = await response.json()
-            toast.success(`Logged in as ${sessionStore.session.username}`)
-            sessionStore.save()
-            router.push('/')
-            return
-        }
-
-        discordUser.value = await response.json()
-        sessionStore.session.discordId = discordUser.value.id
-    } else {
-
-        if (!sessionStore.session.id) {
-            toast.error("Failed to login")
-            router.push('/')
-            return
-        }
-
-        toast.error("Failed to link Discord account")
-    }
+    toast.error('Failed to link Discord account')
+  }
 })
-
 </script>
 
 <template>

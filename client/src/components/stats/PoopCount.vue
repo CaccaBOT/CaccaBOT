@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Frequency } from "../../types/Frequency"
+import { Frequency } from '../../types/Frequency'
 
 const props = defineProps<{
   frequency: Frequency
@@ -8,10 +8,10 @@ const props = defineProps<{
 }>()
 
 function getWord(frequency: Frequency) {
-  if (frequency == "weekly" || frequency == "monthly") {
+  if (frequency == 'weekly' || frequency == 'monthly') {
     return `last ${frequency.substring(0, frequency.length - 2)}`
   } else {
-    return "yesterday"
+    return 'yesterday'
   }
 }
 

@@ -1,17 +1,17 @@
 <script setup lang="ts">
-import { onMounted, ref } from "vue"
-import { useGlobalStore } from "../stores/global"
-import { useAPIStore } from "../stores/api"
-import CirculatingMerdollars from "../components/stats/CirculatingMerdollars.vue"
-import MonthResetCountdown from "../components/stats/MonthResetCountdown.vue"
-import PoopCount from "../components/stats/PoopCount.vue"
-import TopPooper from "../components/stats/TopPooper.vue"
-import { User } from "../types/User"
-import UserCount from "../components/stats/UserCount.vue"
-import MonthlyPoopTreemapChart from "../components/stats/MonthlyPoopTreemapChart.vue"
-import PoopLineChart from "../components/stats/PoopLineChart.vue"
-import LongestStreak from "../components/stats/LongestStreak.vue"
-import { useToast } from "vue-toastification"
+import { onMounted, ref } from 'vue'
+import { useGlobalStore } from '../stores/global'
+import { useAPIStore } from '../stores/api'
+import CirculatingMerdollars from '../components/stats/CirculatingMerdollars.vue'
+import MonthResetCountdown from '../components/stats/MonthResetCountdown.vue'
+import PoopCount from '../components/stats/PoopCount.vue'
+import TopPooper from '../components/stats/TopPooper.vue'
+import { User } from '../types/User'
+import UserCount from '../components/stats/UserCount.vue'
+import MonthlyPoopTreemapChart from '../components/stats/MonthlyPoopTreemapChart.vue'
+import PoopLineChart from '../components/stats/PoopLineChart.vue'
+import LongestStreak from '../components/stats/LongestStreak.vue'
+import { useToast } from 'vue-toastification'
 const toast = useToast()
 const globalStore = useGlobalStore()
 const { client } = useAPIStore()
@@ -25,12 +25,12 @@ onMounted(async () => {
       stats.value = await response.json()
     }
   } catch (e) {
-    toast.error("Failed to retrieve stats")
+    toast.error('Failed to retrieve stats')
   }
 })
 
 const mockUser = {
-  username: "iBalls",
+  username: 'iBalls'
 } as User
 </script>
 

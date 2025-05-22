@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { useGlobalStore } from "../../stores/global"
-import { UserStats } from "../../types/UserStats"
-import HeroiconsTrophy from "~icons/heroicons/trophy"
-import HeroiconsFire from "~icons/heroicons/fire"
-import HeroiconsChartBar from "~icons/heroicons/chart-bar"
-import MaterialSymbolsExposurePlus1Rounded from "~icons/material-symbols/exposure-plus-1-rounded"
+import { useGlobalStore } from '../../stores/global'
+import { UserStats } from '../../types/UserStats'
+import HeroiconsTrophy from '~icons/heroicons/trophy'
+import HeroiconsFire from '~icons/heroicons/fire'
+import HeroiconsChartBar from '~icons/heroicons/chart-bar'
+import MaterialSymbolsExposurePlus1Rounded from '~icons/material-symbols/exposure-plus-1-rounded'
 
 const props = defineProps<{
   stats: UserStats

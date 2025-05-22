@@ -1,4 +1,4 @@
-import { CollectibleRarity } from "../enums/CollectibleRarity"
+import { CollectibleRarity } from '../enums/CollectibleRarity'
 
 export type Card = {
   id: number

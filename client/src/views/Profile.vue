@@ -1,20 +1,20 @@
 <script setup lang="ts">
-import { onMounted, ref, watch } from "vue"
-import router from "../router/router"
-import { useGlobalStore } from "../stores/global"
-import { useAPIStore } from "../stores/api"
-import { UserStats } from "../types/UserStats"
-import Asset from "../types/Asset.ts"
-import HeroiconsPencil from "~icons/heroicons/pencil"
-import { Poop } from "../types/Profile.ts"
-import { useSessionStore } from "../stores/session.ts"
-import Achievements from "../components/profile/Achievements.vue"
-import UserStatsBadge from "../components/UserStatsBadge.vue"
-import Inventory from "../components/profile/Inventory.vue"
-import ProfilePoopChart from "../components/profile/ProfilePoopChart.vue"
-import PoopUserStats from "../components/profile/PoopUserStats.vue"
-import { useModalStore } from "../stores/modal.ts"
-import { ModalEnum } from "../types/ModalEnum.ts"
+import { onMounted, ref, watch } from 'vue'
+import router from '../router/router'
+import { useGlobalStore } from '../stores/global'
+import { useAPIStore } from '../stores/api'
+import { UserStats } from '../types/UserStats'
+import Asset from '../types/Asset.ts'
+import HeroiconsPencil from '~icons/heroicons/pencil'
+import { Poop } from '../types/Profile.ts'
+import { useSessionStore } from '../stores/session.ts'
+import Achievements from '../components/profile/Achievements.vue'
+import UserStatsBadge from '../components/UserStatsBadge.vue'
+import Inventory from '../components/profile/Inventory.vue'
+import ProfilePoopChart from '../components/profile/ProfilePoopChart.vue'
+import PoopUserStats from '../components/profile/PoopUserStats.vue'
+import { useModalStore } from '../stores/modal.ts'
+import { ModalEnum } from '../types/ModalEnum.ts'
 
 const modalStore = useModalStore()
 const globalStore = useGlobalStore()
@@ -27,11 +27,11 @@ const userAchievements = ref([])
 const monthlyUserPoops = ref([] as Poop[])
 
 function isAdmin() {
-    if (isOwnProfile()) {
-        return sessionStore.session.admin
-    } else {
-        return globalStore.profile.admin
-    }
+  if (isOwnProfile()) {
+    return sessionStore.session.admin
+  } else {
+    return globalStore.profile.admin
+  }
 }
 
 function editBio() {
@@ -40,7 +40,7 @@ function editBio() {
 }
 
 function isOwnProfile() {
-  return router.currentRoute.value.path.includes("/own")
+  return router.currentRoute.value.path.includes('/own')
 }
 
 async function fetchUserCollectibles(id: string) {
@@ -52,7 +52,7 @@ async function fetchUserAchievements(id: string) {
 }
 
 async function fetchProfileStats(id) {
-  if (router.currentRoute.value.name == "monthlyProfile" || isOwnProfile()) {
+  if (router.currentRoute.value.name == 'monthlyProfile' || isOwnProfile()) {
     const year = globalStore.selectedDate.getFullYear()
     const month = globalStore.selectedDate.getMonth() + 1
     userStats.value = await (
