@@ -16,6 +16,16 @@ import {
 } from 'fastify'
 import achievementChecker from '../../achievements/check'
 import { config } from '../../config/loader'
+import { client } from '../../discord/client'
+import log from 'loglevel'
+import { EmbedBuilder, TextChannel } from 'discord.js'
+
+const rarityColors: Record<string, number> = {
+  4: 0xffd600,
+  3: 0x9500ff,
+  2: 0x0068ff,
+  1: 0x808080
+}
 
 const openPackEndpoint = async function (
   server: FastifyInstance,
@@ -46,6 +56,40 @@ const openPackEndpoint = async function (
       })
     }
     achievementChecker.checkCollectibleBased(user, collectible)
+
+    if (config.discordModuleEnabled) {
+      const channels = client.guilds.cache.get(config.guildId)?.channels.cache
+      const collectiblesChannel = channels?.find(c => c.name === 'collectibles')
+
+      if (!collectiblesChannel) {
+        log.warn("Collectibles channel not found, pack opening won't be broadcasted!")
+      } else {
+        const channel = await client.channels.fetch(collectiblesChannel.id)
+
+        if (channel instanceof TextChannel) {
+          const embed = new EmbedBuilder()
+            .setTitle('🎉 Pack Opened!')
+            .setColor(rarityColors[rarities[collectible.rarity_id - 1].id])
+            .setThumbnail(collectible.asset_url)
+            .addFields(
+              { name: 'User', value: `<@${user.discordId}>`, inline: true },
+              { name: 'Collectible', value: `**${collectible.name}**`, inline: true },
+              {
+                name: 'Rarity',
+                value: rarities[collectible.rarity_id - 1]?.name || 'Unknown',
+                inline: true
+              }
+            )
+            .setTimestamp()
+            .setFooter({ text: 'Card Collectors • Pack Opening' });
+
+          await channel.send({ embeds: [embed] });
+        } else {
+          log.warn('Fetched collectibles channel is not a text channel!')
+        }
+      }
+    }
+
     res.code(200).send(collectible)
   })
 }
