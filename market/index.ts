@@ -97,19 +97,12 @@ const MarketLogic = {
   },
 
   saveMarketHistory(collectibleId: number) {
-    log.trace('Saving market history')
     const day = moment().tz(config.timezone).startOf('day').utc().toDate()
-    log.trace('Day is set to ' + day.toISOString())
     const actualDay = new Date(day)
     actualDay.setHours(actualDay.getHours() + 2)
-    log.trace('actualDay is set to ' + actualDay.toISOString())
     const orders = getOrdersExecutedInDay(collectibleId, day)
-    log.trace(
-      'Orders found for collectible ' + collectibleId + ': ' + orders.length
-    )
 
     if (!orders || orders.length == 0) {
-      log.trace('No orders found for collectible ' + collectibleId)
       const yesterday = moment()
         .subtract(1, 'day')
         .tz(config.timezone)
@@ -121,15 +114,8 @@ const MarketLogic = {
         collectibleId,
         yesterday
       )
-      log.trace(previousMarketHistory)
 
       if (!previousMarketHistory) {
-        log.trace(
-          'No previous market history found for collectible ' + collectibleId
-        )
-        log.trace(
-          'Adding empty market history for collectible ' + collectibleId
-        )
         addMarketPriceHistory(collectibleId, day, {
           openPrice: null,
           closePrice: null,
@@ -137,9 +123,6 @@ const MarketLogic = {
           lowPrice: null
         })
       } else {
-        log.trace(
-          'found previous market history for collectible ' + collectibleId
-        )
         addMarketPriceHistory(collectibleId, day, {
           openPrice: previousMarketHistory.open_price,
           closePrice: previousMarketHistory.close_price,

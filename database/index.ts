@@ -578,6 +578,24 @@ export async function updatePassword(userId: string, password: string) {
   generateToken(userId)
 }
 
+export function createUserFromDiscord(
+  discordId: string,
+  username: string,
+) {
+  const id = hashId(discordId)
+
+  while (
+    !UsernameValidator.validate(username) ||
+    !isUsernameAvailable(username)
+  ) {
+    username = usernameGenerator.generateUsername(8, false)
+  }
+
+  db.prepare(
+    `INSERT INTO user (id, username, discordId) VALUES (?, ?, ?)`
+  ).run(id, username, discordId)
+}
+
 export function createUser(
   rawPhone: string,
   username: string,
