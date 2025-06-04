@@ -20,6 +20,10 @@ import {
 import { OrderSide, OrderType } from '../../../types/OrderEnums'
 import MarketLogic from '../../../market'
 import { server as serverInstance } from '../../../index'
+import { config } from '../../../config/loader'
+import { client } from '../../../discord/client'
+import log from 'loglevel'
+import { EmbedBuilder, TextChannel } from 'discord.js'
 
 interface Params {
   collectibleId: string
@@ -157,6 +161,56 @@ const insertOrderEndpoint = async function (
       serverInstance.io.emit('market', {
         collectibleId
       })
+
+      if (config.discordModuleEnabled) {
+        let channels = client.guilds.cache.get(config.guildId)?.channels.cache
+        let marketChannel = channels?.find((c) => c.name === 'market')
+
+        if (!marketChannel) {
+          log.warn("Market channel not found, orders won't be broadcasted!")
+          return
+        }
+
+        let channel = await client.channels.fetch(marketChannel.id)
+
+        if (channel instanceof TextChannel) {
+          const collectible = getAllCollectibles().find(
+            (c) => c.id === collectibleId
+          )
+
+          const embed = new EmbedBuilder()
+            .setTitle(`🧾 New ${side === 'BUY' ? 'Buy' : 'Sell'} Order`)
+            .setColor(side === 'BUY' ? 0x00b0f4 : 0xff5050)
+            .setThumbnail(collectible?.asset_url || '')
+            .addFields(
+              { name: 'User', value: `<@${user.discordId}>`, inline: true },
+              {
+                name: 'Collectible',
+                value: collectible?.name ?? `#${collectibleId}`,
+                inline: true
+              },
+              { name: 'Side', value: side, inline: true },
+              { name: 'Type', value: type, inline: true },
+              { name: 'Quantity', value: quantity.toString(), inline: true },
+              ...(type === 'LIMIT'
+                ? [
+                    { name: 'Price per Unit', value: `${price}`, inline: true },
+                    {
+                      name: 'Total Price',
+                      value: `${price * quantity}`,
+                      inline: true
+                    }
+                  ]
+                : [])
+            )
+            .setTimestamp()
+            .setFooter({ text: 'Market Order System' })
+
+          await channel.send({ embeds: [embed] })
+        } else {
+          log.warn('Fetched market channel is not a text channel!')
+        }
+      }
     }
   )
 }
