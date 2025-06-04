@@ -1,11 +1,20 @@
 <script setup lang="ts">
+import { onMounted, ref } from 'vue'
 import AchievementBadge from '../../components/AchievementBadge.vue'
 import { useAchievementStore } from '../../stores/achievement'
 
 const achievementStore = useAchievementStore()
-const sortedAchievements = achievementStore.achievements.sort(
-  (a, b) => b.difficulty_id - a.difficulty_id
-)
+const sortedAchievements = ref([])
+
+onMounted(async () => {
+  if (achievementStore.achievements.length === 0) {
+    await achievementStore.loadAchievements()
+  }
+
+  sortedAchievements.value = achievementStore.achievements.sort(
+    (a, b) => b.difficulty_id - a.difficulty_id
+  )
+})
 </script>
 
 <template>
