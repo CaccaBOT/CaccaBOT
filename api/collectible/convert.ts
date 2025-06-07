@@ -18,6 +18,9 @@ import achievementChecker from '../../achievements/check'
 import { config } from '../../config/loader'
 import { MessageMedia } from 'whatsapp-web.js'
 import { whatsappClient } from '../../whatsapp'
+import { events } from '../../middleware/events'
+import { EventTypeEnum } from '../../types/events/EventType'
+import { CollectibleActionEnum } from '../../types/events/CollectibleActionEnum'
 
 interface ConvertBody {
   collectibles: number[]
@@ -112,7 +115,15 @@ const convertEndpoint = async function (
       }
 
       achievementChecker.checkCollectibleBased(user, collectible)
-      addCollectibleToUser(user.id, collectible.id)
+      const newOwnership = addCollectibleToUser(user.id, collectible.id)
+
+      // emit the conversion event
+      events.emit(EventTypeEnum.COLLECTIBLE, {
+        action: CollectibleActionEnum.CONVERT,
+        user,
+        collectibles: [newOwnership]
+      })
+
       res.code(200).send(collectible)
     }
   )

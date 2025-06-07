@@ -18,3 +18,10 @@ export function compareDays(
   if (d1.isAfter(d2)) return 1
   return 0
 }
+
+export const rarityColors: Record<string, number> = {
+  4: 0xffd600,
+  3: 0x9500ff,
+  2: 0x0068ff,
+  1: 0x808080
+}

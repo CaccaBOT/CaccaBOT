@@ -16,6 +16,8 @@ import { Order } from '../types/Order'
 import { OrderType, OrderSide } from '../types/OrderEnums'
 import log from 'loglevel'
 import { MarketPriceHistory } from '../types/MarketPriceHistory'
+import { CollectibleOwnership } from '../types/CollectibleOwnership'
+import { Rarity } from '../types/Rarity'
 
 const timezone = config.timezone || 'UTC'
 
@@ -649,10 +651,10 @@ export function setMoney(userId: string, amount: number) {
   db.prepare(`UPDATE user SET money = ? WHERE id = ?`).run(amount, userId)
 }
 
-export function addCollectibleToUser(userId: string, collectibleId: number) {
-  db.prepare(
-    `INSERT INTO user_collectible(user_id, collectible_id) VALUES(?, ?)`
-  ).run(userId, collectibleId)
+export function addCollectibleToUser(userId: string, collectibleId: number): CollectibleOwnership {
+  return db.prepare(
+    `INSERT INTO user_collectible(user_id, collectible_id) VALUES(?, ?) RETURNING *`
+  ).get(userId, collectibleId)
 }
 
 export function addOpenedPack(userId: string) {
@@ -661,7 +663,7 @@ export function addOpenedPack(userId: string) {
   ).run(userId, userId)
 }
 
-export function getRarities() {
+export function getRarities(): Rarity[] {
   return db.prepare(`SELECT * FROM rarity`).all()
 }
 

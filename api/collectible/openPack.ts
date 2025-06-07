@@ -19,13 +19,7 @@ import { config } from '../../config/loader'
 import { client } from '../../discord/client'
 import log from 'loglevel'
 import { EmbedBuilder, TextChannel } from 'discord.js'
-
-const rarityColors: Record<string, number> = {
-  4: 0xffd600,
-  3: 0x9500ff,
-  2: 0x0068ff,
-  1: 0x808080
-}
+import { rarityColors } from '../../utilities'
 
 const openPackEndpoint = async function (
   server: FastifyInstance,

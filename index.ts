@@ -203,6 +203,22 @@ async function initJobs() {
   }
 }
 
+function initListeners() {
+  const listenersDir = fs
+    .readdirSync(`${path.resolve('./middleware/listeners')}`)
+    .filter((file) => file.endsWith('.ts') || file.endsWith('.js'))
+
+  for (const listenerFile of listenersDir) {
+    import(`${path.resolve('./middleware/listeners')}/${listenerFile}`)
+      .then(() => {
+        log.info(`[LISTENER] ${listenerFile} loaded`)
+      })
+      .catch((err) => {
+        log.error(`[LISTENER] Failed to load ${listenerFile}:`, err)
+      })
+  }
+}
+
 server.listen(
   { host: '0.0.0.0', port: process.env.SERVER_PORT ?? 3000 },
   async (err: any, address: string) => {
@@ -213,6 +229,7 @@ server.listen(
 
     initDatabase()
     await initJobs()
+    initListeners()
 
     if (config.discordModuleEnabled) {
       await client.login(process.env.DISCORD_BOT_TOKEN)
