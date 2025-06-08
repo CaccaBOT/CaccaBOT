@@ -16,8 +16,6 @@ import {
 import { authenticate } from '../../middleware/auth'
 import achievementChecker from '../../achievements/check'
 import { config } from '../../config/loader'
-import { MessageMedia } from 'whatsapp-web.js'
-import { whatsappClient } from '../../whatsapp'
 import { events } from '../../middleware/events'
 import { EventTypeEnum } from '../../types/events/EventType'
 import { CollectibleActionEnum } from '../../types/events/CollectibleActionEnum'
@@ -105,16 +103,6 @@ const convertEndpoint = async function (
           Math.floor(Math.random() * collectiblesOfRarity.length)
         ]
 
-      // broadcast the new collectible to the group chat
-      if (config.whatsappModuleEnabled) {
-        const rarities = getRarities()
-        const media = await MessageMedia.fromUrl(collectible.asset_url)
-        whatsappClient.sendMessage(config.groupId, media, {
-          caption: `*[CONVERT] ${user.username}* found *${collectible.name}* (${rarities[collectible.rarity_id - 1].name})`
-        })
-      }
-
-      achievementChecker.checkCollectibleBased(user, collectible)
       const newOwnership = addCollectibleToUser(user.id, collectible.id)
 
       // emit the conversion event

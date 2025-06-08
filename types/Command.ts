@@ -1,5 +1,3 @@
-import { Message } from 'whatsapp-web.js'
-
 export type Command = {
   name: string
   description: string

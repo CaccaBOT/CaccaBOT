@@ -13,7 +13,6 @@ import {
   getAllOrderSides,
   getAllOrderTypes,
   getOrdersOfUserCreatedAtDay,
-  getActiveOrdersByCollectible,
   getBuyActiveOrdersByCollectible,
   getSellActiveOrdersByCollectible
 } from '../../../database/index'
@@ -24,6 +23,10 @@ import { config } from '../../../config/loader'
 import { client } from '../../../discord/client'
 import log from 'loglevel'
 import { EmbedBuilder, TextChannel } from 'discord.js'
+import { events } from '../../../middleware/events'
+import { EventTypeEnum } from '../../../types/events/EventType'
+import { MarketActionEnum } from '../../../types/events/MarketActionEnum'
+import { Order } from '../../../types/Order'
 
 interface Params {
   collectibleId: string
@@ -108,6 +111,8 @@ const insertOrderEndpoint = async function (
         return
       }
 
+      let orders: Order[] = []
+
       switch (side) {
         case 'SELL':
           {
@@ -134,7 +139,16 @@ const insertOrderEndpoint = async function (
               return
             }
 
-            createOrder(user.id, collectibleId, type, side, price, quantity)
+            orders.push(
+              ...createOrder(
+                user.id,
+                collectibleId,
+                type,
+                side,
+                price,
+                quantity
+              )
+            )
           }
           break
 
@@ -151,7 +165,16 @@ const insertOrderEndpoint = async function (
               return
             }
 
-            createOrder(user.id, collectibleId, type, side, price, quantity)
+            orders.push(
+              ...createOrder(
+                user.id,
+                collectibleId,
+                type,
+                side,
+                price,
+                quantity
+              )
+            )
           }
           break
       }
@@ -160,6 +183,12 @@ const insertOrderEndpoint = async function (
 
       serverInstance.io.emit('market', {
         collectibleId
+      })
+
+      events.emit(EventTypeEnum.MARKET, {
+        action: MarketActionEnum.NEW_ORDER,
+        user,
+        orders
       })
 
       if (config.discordModuleEnabled) {

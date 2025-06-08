@@ -6,8 +6,6 @@ import { config } from '../config/loader'
 import poopValidator from '../validators/poop'
 import {
   addPoop,
-  getUserProfileByPhone,
-  createUser,
   getLastPoop,
   poopStatsFromUserWithFilter,
   getUserByDiscordId,
@@ -83,60 +81,52 @@ client.on(Events.InteractionCreate, async (interaction) => {
 })
 
 client.on(Events.MessageCreate, async (message) => {
+  if (message.author.bot) {
+    return
+  }
 
-    if (message.author.bot) {
-      return
+  if (poopValidator.validate(message.content)) {
+    try {
+      let userId = message.author.id
+      let foundUser = getUserByDiscordId(userId)
+
+      if (!foundUser.id) {
+        createUserFromDiscord(userId, message.author.username)
+        foundUser = getUserByDiscordId(userId)
+      }
+
+      addPoop(foundUser.id)
+
+      const stats = poopStatsFromUserWithFilter(
+        foundUser.id,
+        moment().year(),
+        moment().month() + 1
+      )
+
+      const poop = getLastPoop()
+
+      await message.reply(
+        '✅ Saved' +
+          '\nID: ' +
+          poop.id +
+          '\nTimestamp: ' +
+          poop.timestamp +
+          '\nRank: ' +
+          stats.monthlyLeaderboardPosition +
+          '°' +
+          '\nStreak: ' +
+          stats.streak +
+          '\nDaily AVG: ' +
+          stats.poopAverage +
+          '\nMonthly: ' +
+          stats.monthlyPoops +
+          '\nCertificate: ' +
+          `${config.serverUrl}/poop/${poop.id}`
+      )
+
+      achievementChecker.checkPoopBased(foundUser, poop)
+    } catch (error) {
+      log.error('[DISCORD] Error processing poop message:', error)
     }
-
-    if (poopValidator.validate(message.content)) {
-        try {
-            let userId = message.author.id;
-            let foundUser = getUserByDiscordId(userId);
-
-            if (!foundUser.id) {
-
-                createUserFromDiscord(
-                    userId,
-                    message.author.username,
-                );
-                foundUser = getUserByDiscordId(userId);
-            }
-
-            addPoop(foundUser.id);
-
-            const stats = poopStatsFromUserWithFilter(
-                foundUser.id,
-                moment().year(),
-                moment().month() + 1
-            );
-
-            const poop = getLastPoop();
-
-            const reply = await message.reply(
-                '✅ Saved' +
-                '\nID: ' +
-                poop.id +
-                '\nTimestamp: ' +
-                poop.timestamp +
-                '\nRank: ' +
-                stats.monthlyLeaderboardPosition +
-                '°' +
-                '\nStreak: ' +
-                stats.streak +
-                '\nDaily AVG: ' +
-                stats.poopAverage +
-                '\nMonthly: ' +
-                stats.monthlyPoops +
-                '\nCertificate: ' +
-                `${config.serverUrl}/poop/${poop.id}`
-            );
-
-            achievementChecker.checkPoopBased(foundUser, poop, {
-              //@ts-expect-error
-                reply: (content) => reply.reply(content)
-            });
-        } catch (error) {
-            log.error('[DISCORD] Error processing poop message:', error);
-        }
-    }
-});
+  }
+})

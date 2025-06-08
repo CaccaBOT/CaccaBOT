@@ -1,5 +1,3 @@
-import { Message } from 'whatsapp-web.js'
-import { Achievement } from '../../types/Achievement'
 import { Poop } from '../../types/Poop'
 import { RawUser } from '../../types/User'
 import {
@@ -7,17 +5,21 @@ import {
   addAchievementToUser,
   getAchievement
 } from '../../database'
+import { events } from '../../middleware/events'
+import { EventTypeEnum } from '../../types/events/EventType'
+import { AchievementCheckerFunction } from '../../types/AchievementCheckerFunction'
 
-const pentakill: Achievement = {
+const pentakill: AchievementCheckerFunction = {
   id: 'PENTAKILL',
-  check: function (poop: Poop, user: RawUser, message: Message) {
+  check: function (poop: Poop, user: RawUser) {
     const stats = poopStatsFromUser(user.id)
     if (stats.today >= 5) {
       addAchievementToUser(user.id, this.id)
       const achievement = getAchievement(this.id)
-      message.reply(
-        `*[ACHIEVEMENT] ${user.username}* unlocked *${achievement.name}*`
-      )
+      events.emit(EventTypeEnum.ACHIEVEMENT, {
+        user,
+        achievement
+      })
     }
   }
 }

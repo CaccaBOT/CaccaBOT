@@ -3,7 +3,6 @@ export const server = require('fastify')({
   http2: process.env.ENVIRONMENT == 'production'
 })
 import { FastifyRequest, FastifyReply } from 'fastify'
-import { whatsappClient } from './whatsapp/index'
 import { initDatabase } from './database/index'
 import fs from 'fs'
 import path from 'path'
@@ -173,21 +172,6 @@ server.decorate('NotFound', (req: FastifyRequest, res: FastifyReply) => {
 
 server.setNotFoundHandler(server.NotFound)
 
-if (config.whatsappModuleEnabled) {
-  const sessionLockFile = path.join(
-    '/app',
-    '.wwebjs_auth',
-    'session',
-    'SingletonLock'
-  )
-
-  try {
-    fs.unlinkSync(sessionLockFile)
-  } catch (_) {}
-
-  whatsappClient.initialize()
-}
-
 async function initJobs() {
   const jobsDir = fs
     .readdirSync(`${path.resolve('./jobs')}`)
@@ -196,7 +180,7 @@ async function initJobs() {
   for (const jobFile of jobsDir) {
     const job = await import(`${path.resolve('./jobs')}/${jobFile}`)
     schedule.scheduleJob(
-      { rule: job.default.interval, tz: config.timezone || 'UTC' },
+      { rule: job.default.interval, tz: config.timezone },
       job.default.execute
     )
     log.info(`[JOB] ${job.default.interval} => ${job.default.name}`)
@@ -235,12 +219,6 @@ server.listen(
       await client.login(process.env.DISCORD_BOT_TOKEN)
     }
 
-    if (config.monthlyPurge) {
-      log.warn(
-        '[WARNING] Monthly Purge is enabled, users who have been ' +
-          'inactive for more than a month will be deleted at month reset!'
-      )
-    }
     log.info('[WEBSERVER] Ready on ' + address)
   }
 )

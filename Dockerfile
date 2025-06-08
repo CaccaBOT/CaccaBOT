@@ -17,8 +17,6 @@ FROM node:20-alpine
 
 RUN apk add --no-cache bash chromium
 
-ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium
-
 WORKDIR /app
 
 COPY --from=builder /app/build ./

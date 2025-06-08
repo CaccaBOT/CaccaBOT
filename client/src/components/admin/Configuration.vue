@@ -4,11 +4,8 @@ import { ref } from 'vue'
 //@ts-ignore
 const timezones = Intl.supportedValuesOf('timeZone')
 const config = ref({
-  prefix: null,
   serverUrl: null,
   groupId: null,
-  whatsappModuleEnabled: false,
-  monthlyPurge: false,
   timezone: null
 })
 
@@ -29,10 +26,6 @@ function save() {
       <div class="not-prose p-6">
         <form class="form-control" @submit.prevent="() => { }">
           <fieldset class="fieldset">
-            <label class="label" for="prefix">Prefix</label>
-            <input id="prefix" v-model="config.prefix" type="text" placeholder="cacca" class="input" required />
-          </fieldset>
-          <fieldset class="fieldset">
             <label class="label" for="serverUrl">Server URL</label>
             <input id="serverUrl" v-model="config.serverUrl" type="text" placeholder="https://yourinstance.dev"
               class="input" required />
@@ -50,16 +43,6 @@ function save() {
             </select>
           </fieldset>
           <div class="divider"></div>
-          <div class="flex flex-col">
-            <label class="label cursor-pointer">
-              <span class="label-text text-lg">Whatsapp Module</span>
-              <input v-model="config.whatsappModuleEnabled" type="checkbox" class="toggle toggle-success" />
-            </label>
-            <label class="label cursor-pointer">
-              <span class="label-text text-lg">Monthly Purge</span>
-              <input v-model="config.monthlyPurge" type="checkbox" class="toggle toggle-success" />
-            </label>
-          </div>
           <div class="join mt-8 w-96">
             <button @click="autoDetect()" class="btn join-item btn-primary">Auto-Detect</button>
             <button @click="save()" class="btn join-item btn-success">Save</button>

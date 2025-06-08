@@ -1,4 +1,3 @@
-import { Message } from 'whatsapp-web.js'
 import { checkAchievementForUser } from '../database'
 import { Poop } from '../types/Poop'
 import { RawUser } from '../types/User'
@@ -18,13 +17,13 @@ const AchievementChecker = {
     })
   },
 
-  checkPoopBased(user: RawUser, poop: Poop, message: Message) {
+  checkPoopBased(user: RawUser, poop: Poop) {
     const achievementsDir = path.resolve(`${__dirname}/poop`)
     fs.readdirSync(achievementsDir).forEach(async (file) => {
       const achievementModule = await import(`${achievementsDir}/${file}`)
       const achievement = achievementModule.default
       if (!checkAchievementForUser(user.id, achievement.id)) {
-        achievement.check(poop, user, message)
+        achievement.check(poop, user)
       }
     })
   },

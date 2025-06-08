@@ -1,5 +1,5 @@
 export type Rarity = {
-    id: number
-    name: string
-    chance: number
+  id: number
+  name: string
+  chance: number
 }

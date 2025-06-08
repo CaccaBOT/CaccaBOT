@@ -2,13 +2,15 @@ import { EventEmitter } from 'events'
 import { MarketEvent } from '../types/events/MarketEvent'
 import { CollectibleEvent } from '../types/events/CollectibleEvent'
 import { EventTypeEnum } from '../types/events/EventType'
+import { AchievementEvent } from '../types/events/AchievementEvent'
 
 const emitter = new EventEmitter()
 
 type EventMap = {
   [EventTypeEnum.MARKET]: MarketEvent
   [EventTypeEnum.COLLECTIBLE]: CollectibleEvent
-};
+  [EventTypeEnum.ACHIEVEMENT]: AchievementEvent
+}
 
 type Listener<K extends keyof EventMap> = (value: EventMap[K]) => void
 
@@ -27,7 +29,7 @@ const events = {
 
   emit: <K extends keyof EventMap>(event: K, value: EventMap[K]): void => {
     emitter.emit(event, value)
-  },
+  }
 }
 
 export { events }

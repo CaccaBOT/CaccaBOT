@@ -22,7 +22,7 @@ import {
 } from '../../database/index'
 import moment from 'moment-timezone'
 import { config } from '../../config/loader'
-const timezone = config.timezone || 'UTC'
+const timezone = config.timezone
 
 const statsAllEndpoint = async function (
   server: FastifyInstance,

@@ -10,14 +10,11 @@ export let isLoaded = false
 export let config: Config = {
   name: '',
   description: '',
-  prefix: '',
   serverUrl: '',
   groupId: '',
   guildId: '',
-  whatsappModuleEnabled: false,
   discordModuleEnabled: false,
-  monthlyPurge: false,
-  timezone: '',
+  timezone: 'UTC',
   loglevel: '',
   logMessages: false
 }

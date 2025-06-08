@@ -19,7 +19,7 @@ import { MarketPriceHistory } from '../types/MarketPriceHistory'
 import { CollectibleOwnership } from '../types/CollectibleOwnership'
 import { Rarity } from '../types/Rarity'
 
-const timezone = config.timezone || 'UTC'
+const timezone = config.timezone
 
 export function initDatabase() {
   const migrationFiles = fs
@@ -580,10 +580,7 @@ export async function updatePassword(userId: string, password: string) {
   generateToken(userId)
 }
 
-export function createUserFromDiscord(
-  discordId: string,
-  username: string,
-) {
+export function createUserFromDiscord(discordId: string, username: string) {
   const id = hashId(discordId)
 
   while (
@@ -593,9 +590,11 @@ export function createUserFromDiscord(
     username = usernameGenerator.generateUsername(8, false)
   }
 
-  db.prepare(
-    `INSERT INTO user (id, username, discordId) VALUES (?, ?, ?)`
-  ).run(id, username, discordId)
+  db.prepare(`INSERT INTO user (id, username, discordId) VALUES (?, ?, ?)`).run(
+    id,
+    username,
+    discordId
+  )
 }
 
 export function createUser(
@@ -651,10 +650,15 @@ export function setMoney(userId: string, amount: number) {
   db.prepare(`UPDATE user SET money = ? WHERE id = ?`).run(amount, userId)
 }
 
-export function addCollectibleToUser(userId: string, collectibleId: number): CollectibleOwnership {
-  return db.prepare(
-    `INSERT INTO user_collectible(user_id, collectible_id) VALUES(?, ?) RETURNING *`
-  ).get(userId, collectibleId)
+export function addCollectibleToUser(
+  userId: string,
+  collectibleId: number
+): CollectibleOwnership {
+  return db
+    .prepare(
+      `INSERT INTO user_collectible(user_id, collectible_id) VALUES(?, ?) RETURNING *`
+    )
+    .get(userId, collectibleId)
 }
 
 export function addOpenedPack(userId: string) {
@@ -1233,31 +1237,41 @@ export function createOrder(
   side: OrderSide,
   price: number,
   quantity: number
-) {
-  db.transaction(() => {
+): Order[] {
+  let orders: Order[] = []
+  return db.transaction(() => {
     switch (type) {
       case 'MARKET':
         {
-          for (let i = 0; i < quantity; i++)
-            db.prepare(
-              'INSERT INTO `order` (user_id, collectible_id, `type`, side, creation_timestamp) VALUES (?, ?, ?, ?, ?)'
-            ).run(userId, collectibleId, type, side, new Date().toISOString())
+          for (let i = 0; i < quantity; i++) {
+            let order = db
+              .prepare(
+                'INSERT INTO `order` (user_id, collectible_id, `type`, side, creation_timestamp) VALUES (?, ?, ?, ?, ?) RETURNING *'
+              )
+              .get(userId, collectibleId, type, side, new Date().toISOString())
+            orders.push(order)
+          }
         }
         break
 
       default:
         {
-          for (let i = 0; i < quantity; i++)
-            db.prepare(
-              'INSERT INTO `order` (user_id, collectible_id, `type`, side, price, creation_timestamp) VALUES (?, ?, ?, ?, ?, ?)'
-            ).run(
-              userId,
-              collectibleId,
-              type,
-              side,
-              price,
-              new Date().toISOString()
-            )
+          for (let i = 0; i < quantity; i++) {
+            let order = db
+              .prepare(
+                'INSERT INTO `order` (user_id, collectible_id, `type`, side, price, creation_timestamp) VALUES (?, ?, ?, ?, ?, ?) RETURNING *'
+              )
+              .get(
+                userId,
+                collectibleId,
+                type,
+                side,
+                price,
+                new Date().toISOString()
+              )
+
+            orders.push(order)
+          }
         }
         break
     }
@@ -1271,6 +1285,8 @@ export function createOrder(
       for (let i = 0; i < quantity; i++)
         updateCollectibleOwnershipToSelling(userCollectible[i].id)
     }
+
+    return orders
   })()
 }
 

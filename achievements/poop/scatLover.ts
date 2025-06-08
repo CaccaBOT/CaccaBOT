@@ -1,4 +1,3 @@
-import { Message } from 'whatsapp-web.js'
 import { Poop } from '../../types/Poop'
 import { RawUser } from '../../types/User'
 import {
@@ -6,18 +5,21 @@ import {
   addAchievementToUser,
   getAchievement
 } from '../../database'
-import { Achievement } from '../../types/Achievement'
+import { events } from '../../middleware/events'
+import { EventTypeEnum } from '../../types/events/EventType'
+import { AchievementCheckerFunction } from '../../types/AchievementCheckerFunction'
 
-const scatLover: Achievement = {
+const scatLover: AchievementCheckerFunction = {
   id: 'SCAT_LOVER',
-  check: function (poop: Poop, user: RawUser, message: Message) {
+  check: function (poop: Poop, user: RawUser) {
     const streak = poopStreak(user.id)
     if (streak >= 69) {
       addAchievementToUser(user.id, this.id)
       const achievement = getAchievement(this.id)
-      message.reply(
-        `*[ACHIEVEMENT] ${user.username}* unlocked *${achievement.name}*`
-      )
+      events.emit(EventTypeEnum.ACHIEVEMENT, {
+        user,
+        achievement
+      })
     }
   }
 }

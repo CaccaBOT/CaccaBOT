@@ -1,17 +1,19 @@
-import { Achievement } from '../../types/Achievement'
 import { addAchievementToUser, getAchievement } from '../../database'
 import { Poop } from '../../types/Poop'
 import { RawUser } from '../../types/User'
-import { Message } from 'whatsapp-web.js'
+import { events } from '../../middleware/events'
+import { EventTypeEnum } from '../../types/events/EventType'
+import { AchievementCheckerFunction } from '../../types/AchievementCheckerFunction'
 
-const iBecameRich: Achievement = {
+const iBecameRich: AchievementCheckerFunction = {
   id: 'I_BECAME_RICH',
-  check: function (poop: Poop, user: RawUser, message: Message) {
+  check: function (poop: Poop, user: RawUser) {
     addAchievementToUser(user.id, this.id)
     const achievement = getAchievement(this.id)
-    message.reply(
-      `*[ACHIEVEMENT] ${user.username}* unlocked *${achievement.name}*`
-    )
+    events.emit(EventTypeEnum.ACHIEVEMENT, {
+      user,
+      achievement
+    })
   }
 }
 

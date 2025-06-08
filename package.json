@@ -1,6 +1,6 @@
 {
   "name": "caccabot",
-  "version": "8.2.2",
+  "version": "9.0.0",
   "description": "The official CaccaBOT project",
   "main": "index.ts",
   "scripts": {
@@ -31,10 +31,8 @@
     "node-schedule": "^2.1.1",
     "npm": "^8.19.4",
     "puppeteer": "^13.7.0",
-    "qrcode-terminal": "^0.12.0",
     "socket.io": "^4.8.1",
-    "username-gen": "^1.0.1",
-    "whatsapp-web.js": "1.26.1-alpha.3"
+    "username-gen": "^1.0.1"
   },
   "devDependencies": {
     "@biomejs/biome": "1.9.4",

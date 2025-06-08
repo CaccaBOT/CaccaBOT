@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useAchievementStore } from '../../stores/achievement'
-import { Achievement } from '../../types/Achievement'
+
 import { UserAchievement } from '../../types/UserAchievement'
 import HeroiconsTrophy from '~icons/heroicons/trophy'
 import { computed } from 'vue'

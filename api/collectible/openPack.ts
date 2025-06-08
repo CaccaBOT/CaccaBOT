@@ -6,20 +6,15 @@ import {
   addOpenedPack
 } from '../../database'
 import { authenticate } from '../../middleware/auth'
-import { whatsappClient } from '../../whatsapp/index'
-import { MessageMedia } from 'whatsapp-web.js'
 import {
   FastifyInstance,
   FastifyReply,
   FastifyRequest,
   RouteOptions
 } from 'fastify'
-import achievementChecker from '../../achievements/check'
-import { config } from '../../config/loader'
-import { client } from '../../discord/client'
-import log from 'loglevel'
-import { EmbedBuilder, TextChannel } from 'discord.js'
-import { rarityColors } from '../../utilities'
+import { events } from '../../middleware/events'
+import { EventTypeEnum } from '../../types/events/EventType'
+import { CollectibleActionEnum } from '../../types/events/CollectibleActionEnum'
 
 const openPackEndpoint = async function (
   server: FastifyInstance,
@@ -41,48 +36,15 @@ const openPackEndpoint = async function (
       collectiblesOfRarity[
         Math.floor(Math.random() * collectiblesOfRarity.length)
       ]
-    addCollectibleToUser(user.id, collectible.id)
+    const newOwnership = addCollectibleToUser(user.id, collectible.id)
     addOpenedPack(user.id)
-    if (config.whatsappModuleEnabled) {
-      const media = await MessageMedia.fromUrl(collectible.asset_url)
-      whatsappClient.sendMessage(config.groupId, media, {
-        caption: `*[PACK] ${user.username}* found *${collectible.name}* (${rarities[collectible.rarity_id - 1].name})`
-      })
-    }
-    achievementChecker.checkCollectibleBased(user, collectible)
 
-    if (config.discordModuleEnabled) {
-      const channels = client.guilds.cache.get(config.guildId)?.channels.cache
-      const collectiblesChannel = channels?.find(c => c.name === 'collectibles')
-
-      if (!collectiblesChannel) {
-        log.warn("Collectibles channel not found, pack opening won't be broadcasted!")
-      } else {
-        const channel = await client.channels.fetch(collectiblesChannel.id)
-
-        if (channel instanceof TextChannel) {
-          const embed = new EmbedBuilder()
-            .setTitle('🎉 Pack Opened!')
-            .setColor(rarityColors[rarities[collectible.rarity_id - 1].id])
-            .setThumbnail(collectible.asset_url)
-            .addFields(
-              { name: 'User', value: `<@${user.discordId}>`, inline: true },
-              { name: 'Collectible', value: `**${collectible.name}**`, inline: true },
-              {
-                name: 'Rarity',
-                value: rarities[collectible.rarity_id - 1]?.name || 'Unknown',
-                inline: true
-              }
-            )
-            .setTimestamp()
-            .setFooter({ text: 'Card Collectors • Pack Opening' });
-
-          await channel.send({ embeds: [embed] });
-        } else {
-          log.warn('Fetched collectibles channel is not a text channel!')
-        }
-      }
-    }
+    // emit the pack opening event
+    events.emit(EventTypeEnum.COLLECTIBLE, {
+      action: CollectibleActionEnum.OPEN_PACK,
+      user,
+      collectibles: [newOwnership]
+    })
 
     res.code(200).send(collectible)
   })

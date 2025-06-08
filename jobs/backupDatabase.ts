@@ -8,7 +8,7 @@ import { config } from '../config/loader'
 
 const BACKUP_CHAT_ID = '1363547820493242428'
 
-const monthlyPurge: Job = {
+const backupDatabase: Job = {
   name: 'Backup Database',
   interval: '0 */2 * * *',
   execute: async () => {
@@ -42,4 +42,4 @@ const monthlyPurge: Job = {
   }
 }
 
-export default monthlyPurge
+export default backupDatabase
