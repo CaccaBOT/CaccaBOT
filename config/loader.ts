@@ -15,8 +15,7 @@ export let config: Config = {
   guildId: '',
   discordModuleEnabled: false,
   timezone: 'UTC',
-  loglevel: '',
-  logMessages: false
+  loglevel: ''
 }
 
 export function loadConfig() {

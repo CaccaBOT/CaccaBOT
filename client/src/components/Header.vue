@@ -23,6 +23,7 @@ import { useModalStore } from '../stores/modal'
 import { ModalEnum } from '../types/ModalEnum'
 import { formatMoney } from '../utils/formatter'
 import { MenuItem } from '../types/MenuItem'
+import HeroiconsTableCells from '~icons/heroicons/table-cells'
 
 const sessionStore = useSessionStore()
 const modalStore = useModalStore()
@@ -162,6 +163,13 @@ const menuItems = ref<MenuItem[]>([
         label: 'Poop Table',
         icon: FluentAppsList24Regular,
         route: '/admin/poop-table',
+        requiresAdmin: true,
+        requiresAuth: true
+      },
+      {
+        label: 'Logs',
+        icon: HeroiconsTableCells,
+        route: '/admin/logs',
         requiresAdmin: true,
         requiresAuth: true
       }

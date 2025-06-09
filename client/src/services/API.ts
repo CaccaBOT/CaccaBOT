@@ -7,6 +7,14 @@ export const baseAPIURL = `${baseURL}/api`
 export default class API {
   sessionStore = useSessionStore()
 
+  async getLogs() {
+    return await fetch(`${baseAPIURL}/admin/logs`, {
+      headers: {
+        'X-Auth-Token': this.sessionStore.session.token
+      }
+    })
+  }
+
   async getUserCollectiblesNotSelling() {
     return await fetch(`${baseAPIURL}/collectible/inventory?selling=false`, {
       headers: {

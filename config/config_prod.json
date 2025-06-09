@@ -6,6 +6,5 @@
   "guildId": "1229739123770785792",
   "discordModuleEnabled": true,
   "timezone": "Europe/Rome",
-  "loglevel": "info",
-  "logMessages": true
+  "loglevel": "info"
 }

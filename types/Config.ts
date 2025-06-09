@@ -7,5 +7,4 @@ export type Config = {
   discordModuleEnabled: boolean
   timezone: string
   loglevel: string
-  logMessages: any
 }

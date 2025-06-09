@@ -94,6 +94,11 @@ const routes = [
     name: 'poopTable'
   },
   {
+    path: '/admin/logs',
+    component: () => import('../views/admin/Logs.vue'),
+    name: 'logs'
+  },
+  {
     path: '/settings',
     component: () => import('../views/Settings.vue'),
     name: 'userSettings'
