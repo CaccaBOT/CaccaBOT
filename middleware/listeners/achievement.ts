@@ -29,12 +29,11 @@ events.on(EventTypeEnum.ACHIEVEMENT, async (data: AchievementEvent) => {
 
     if (channel instanceof TextChannel) {
       const achievement = data.achievement
-      console.log(achievement)
       const embed = new EmbedBuilder()
         .setTitle('🏆 Achievement Unlocked!')
         .setColor(rarityColors[achievement.difficulty_id])
         .addFields(
-          { name: 'User', value: `<@${data.user.discordId}>`, inline: true },
+          { name: 'User', value: `<@${data.user.id}>`, inline: true },
           {
             name: 'Achievement',
             value: `**${achievement.name}**`,

@@ -1,15 +1,11 @@
 // TODO: update logic of market/index.ts/executeTransaction to not need the export
 export const db = require('better-sqlite3')('./storage/db.sqlite3')
 import crypto from 'crypto'
-import argon2 from 'argon2'
 import moment from 'moment-timezone'
 import fs from 'fs'
 import path from 'path'
 import { Migration } from '../types/Migration'
 import { config } from '../config/loader'
-import UsernameValidator from '../validators/username'
-//@ts-ignore
-import usernameGenerator from 'username-gen'
 import { UserCollectible } from '../types/UserCollectible'
 import { Collectible } from '../types/Collectible'
 import { Order } from '../types/Order'
@@ -18,6 +14,7 @@ import log from 'loglevel'
 import { MarketPriceHistory } from '../types/MarketPriceHistory'
 import { CollectibleOwnership } from '../types/CollectibleOwnership'
 import { Rarity } from '../types/Rarity'
+import { RawUser } from '../types/User'
 
 const timezone = config.timezone
 
@@ -57,17 +54,6 @@ export function getHistoricalMarketDays(collectibleId: number) {
   return db
     .prepare(`SELECT * FROM market_price_history WHERE collectible_id = ?`)
     .all(collectibleId)
-}
-
-export function getUserByDiscordId(discordId: string) {
-  return db.prepare(`SELECT * FROM user WHERE discordId = ?`).get(discordId)
-}
-
-export function setDiscordId(userId: string, discordId: string) {
-  db.prepare(`UPDATE user SET discordId = ? WHERE id = ?`).run(
-    discordId,
-    userId
-  )
 }
 
 export function getPoop(poopId: number) {
@@ -544,20 +530,6 @@ export function logout(token: string) {
   generateToken(user.id)
 }
 
-export async function login(username: string, password: string) {
-  const user = db.prepare(`SELECT * FROM user WHERE username = ?`).get(username)
-
-  if (!user) {
-    return null
-  }
-
-  if (!(await argon2.verify(user.password, password))) {
-    return null
-  }
-
-  return user
-}
-
 export function getUserByToken(token: string) {
   const user = db.prepare(`SELECT * FROM user WHERE token = ?`).get(token)
   if (user) {
@@ -568,57 +540,16 @@ export function getUserByToken(token: string) {
   return user
 }
 
-export function generateToken(userId: string) {
+export function generateToken(userId: string): RawUser {
   const token = crypto.randomBytes(64).toString('hex')
-  db.prepare(`UPDATE user SET token = ? WHERE id = ?`).run(token, userId)
-  return token
+  return db.prepare(`UPDATE user SET token = ? WHERE id = ? RETURNING *`).get(token, userId)
 }
 
-export async function updatePassword(userId: string, password: string) {
-  const hash = await argon2.hash(password)
-  db.prepare(`UPDATE user SET password = ? WHERE id = ?`).run(hash, userId)
-  generateToken(userId)
-}
-
-export function createUserFromDiscord(discordId: string, username: string) {
-  const id = hashId(discordId)
-
-  while (
-    !UsernameValidator.validate(username) ||
-    !isUsernameAvailable(username)
-  ) {
-    username = usernameGenerator.generateUsername(8, false)
-  }
-
-  db.prepare(`INSERT INTO user (id, username, discordId) VALUES (?, ?, ?)`).run(
-    id,
-    username,
-    discordId
+export function createUser(discordId: string, username: string): RawUser {
+  return db.prepare(`INSERT INTO user (id, username) VALUES (?, ?) RETURNING *`).get(
+    discordId,
+    username
   )
-}
-
-export function createUser(
-  rawPhone: string,
-  username: string,
-  bio: string | null
-) {
-  const phone = sanitizePhone(rawPhone)
-  const id = hashId(phone)
-
-  while (
-    !UsernameValidator.validate(username) ||
-    !isUsernameAvailable(username)
-  ) {
-    username = usernameGenerator.generateUsername(8, false)
-  }
-
-  db.prepare(
-    `INSERT INTO user (id, phone, username, bio) VALUES (?, ?, ?, ?)`
-  ).run(id, phone, username, bio)
-}
-
-export function isUsernameAvailable(username: string): boolean {
-  return getUserProfileByUsername(username).id == null
 }
 
 export function getUserCollectibles(userId: string) {
@@ -697,15 +628,6 @@ export function getUserProfileByUsername(username: string) {
     .get(username)
 }
 
-export function getUserProfileByPhone(phone: string) {
-  phone = sanitizePhone(phone)
-  return db
-    .prepare(
-      'SELECT u.*, COUNT(p.id) as poops FROM user u LEFT JOIN poop p ON u.id = p.user_id WHERE u.phone = ?'
-    )
-    .get(phone)
-}
-
 export function getLastPoop() {
   return db.prepare(`SELECT * FROM poop ORDER BY id DESC LIMIT 1`).get()
 }
@@ -737,7 +659,7 @@ export function poopLeaderboard() {
   const result = db
     .prepare(
       `
-            SELECT u.id, u.phone, u.username, u.pfp, u.bio, u.frozen, u.money, u.admin,
+            SELECT u.id, u.username, u.pfp, u.bio, u.frozen, u.money, u.admin,
                    poops,
                    ROW_NUMBER() OVER (ORDER BY poops DESC) AS rank
             FROM (
@@ -773,7 +695,7 @@ export function poopLeaderboardWithFilter(year: number, month: number) {
   const result = db
     .prepare(
       `
-        SELECT u.id, u.phone, u.username, u.pfp, u.bio, u.frozen, u.money, u.discordId,
+        SELECT u.id, u.username, u.pfp, u.bio, u.frozen, u.money,
                poops,
                ROW_NUMBER() OVER (ORDER BY poops DESC) AS rank
         FROM (
@@ -1153,14 +1075,6 @@ export function updateBio(userId: string, bio: string) {
 		WHERE id = ?
 	`
   ).run(bio, userId)
-}
-
-export function sanitizePhone(phone: string) {
-  return phone.match(/^\d+/)![0]
-}
-
-export function hashId(id: string) {
-  return crypto.createHash('md5').update(id.match(/^\d+/)![0]).digest('hex')
 }
 
 export function rawQuery(query: string) {
@@ -1816,4 +1730,27 @@ export function addMarketPriceHistory(
       day.toISOString()
     )
   }
+}
+
+export function getUserById(userId: string): RawUser {
+  const user = db.prepare(`SELECT * FROM user WHERE id = ?`).get(userId)
+
+  if (user) {
+    user.frozen = Boolean(user.frozen)
+    user.admin = Boolean(user.admin)
+  }
+
+  return user
+}
+
+export function setUserId(userId: string, newUserId: string) {
+  db.prepare(`UPDATE user SET id = ? WHERE id = ?`).run(newUserId, userId)
+}
+
+export function isUsernameAvailable(username: string): boolean {
+  const user = db
+    .prepare(`SELECT * FROM user WHERE username = ?`)
+    .get(username)
+
+  return !user
 }

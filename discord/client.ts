@@ -8,8 +8,8 @@ import {
   addPoop,
   getLastPoop,
   poopStatsFromUserWithFilter,
-  getUserByDiscordId,
-  createUserFromDiscord
+  createUser,
+  getUserById
 } from '../database'
 import achievementChecker from '../achievements/check'
 import moment from 'moment-timezone'
@@ -26,13 +26,13 @@ export const client = new Client({
 export let commands = new Map()
 
 const commandFiles = fs
-  .readdirSync(path.join(__dirname, 'commands'))
+  .readdirSync(path.join(__dirname, '../commands'))
   .filter((file) => file.endsWith('.js') || file.endsWith('.ts'))
 
 client.once(Events.ClientReady, async (readyClient) => {
   for (const file of commandFiles) {
     try {
-      const imported = await import(`./commands/${file}`)
+      const imported = await import(`../commands/${file}`)
       const command = imported.default
 
       if (command && command.data && command.execute) {
@@ -88,11 +88,11 @@ client.on(Events.MessageCreate, async (message) => {
   if (poopValidator.validate(message.content)) {
     try {
       let userId = message.author.id
-      let foundUser = getUserByDiscordId(userId)
+      let foundUser = getUserById(userId)
 
       if (!foundUser.id) {
-        createUserFromDiscord(userId, message.author.username)
-        foundUser = getUserByDiscordId(userId)
+        createUser(userId, message.author.username)
+        foundUser = getUserById(userId)
       }
 
       addPoop(foundUser.id)

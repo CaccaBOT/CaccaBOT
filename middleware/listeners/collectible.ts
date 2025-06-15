@@ -43,7 +43,7 @@ async function handleOpenPack(data: CollectibleEvent) {
           .setColor(rarityColors[rarities[collectible.rarity_id - 1].id])
           .setThumbnail(collectible.asset_url!)
           .addFields(
-            { name: 'User', value: `<@${data.user.discordId}>`, inline: true },
+            { name: 'User', value: `<@${data.user.id}>`, inline: true },
             {
               name: 'Collectible',
               value: `**${collectible.name}**`,
@@ -84,8 +84,8 @@ async function handleConvert(data: CollectibleEvent) {
     return
   }
 
-  const userMention = data.user.discordId
-    ? `<@${data.user.discordId}>`
+  const userMention = data.user.id
+    ? `<@${data.user.id}>`
     : data.user.username
   const embeds: EmbedBuilder[] = []
 

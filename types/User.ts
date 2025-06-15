@@ -1,8 +1,6 @@
 export type RawUser = {
   id: string
-  phone?: string
   username: string
-  password?: string
   frozen: boolean
   token?: string | null
   pfp: string | null
@@ -10,7 +8,6 @@ export type RawUser = {
   money: number
   openedPacks: number
   admin: boolean
-  discordId: string | null
 }
 
 export type User = {
@@ -22,5 +19,4 @@ export type User = {
   money: number
   openedPacks: number
   admin: boolean
-  discordId: string | null
 }

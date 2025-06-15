@@ -2,7 +2,6 @@
   "name": "CaccaBOT Legacy",
   "description": "The first CaccaBOT instance on earth!",
   "serverUrl": "https://caccabot.duckdns.org",
-  "groupId": "120363283575526755@g.us",
   "guildId": "1229739123770785792",
   "discordModuleEnabled": true,
   "timezone": "Europe/Rome",

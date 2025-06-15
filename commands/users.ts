@@ -8,7 +8,7 @@ import {
   EmbedBuilder,
   SlashCommandBuilder
 } from 'discord.js'
-import { getAllUsers } from '../../database'
+import { getAllUsers } from '../database'
 
 const USERS_PER_PAGE = 25
 

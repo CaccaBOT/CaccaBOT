@@ -5,7 +5,6 @@ import ChangeUsernameModal from '../components/modals/ChangeUsernameModal.vue'
 import ChangePfpModal from '../components/modals/ChangePfpModal.vue'
 import ChangeThemeModal from '../components/modals/ChangeThemeModal.vue'
 import { ModalEnum } from '../types/ModalEnum'
-import MigrationNoticeModal from '../components/modals/MigrationNoticeModal.vue'
 
 export const useModalStore = defineStore('modal', {
   state: () => ({
@@ -29,8 +28,7 @@ export const useModalStore = defineStore('modal', {
         [ModalEnum.ChangePassword]: ChangePasswordModal,
         [ModalEnum.ChangeUsername]: ChangeUsernameModal,
         [ModalEnum.ChangePfp]: ChangePfpModal,
-        [ModalEnum.ChangeTheme]: ChangeThemeModal,
-        [ModalEnum.MigrationNotice]: MigrationNoticeModal
+        [ModalEnum.ChangeTheme]: ChangeThemeModal
       }
       return state.activeModal ? modalMapping[state.activeModal] : null
     }

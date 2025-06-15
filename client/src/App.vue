@@ -14,6 +14,7 @@ import { useModalStore } from './stores/modal.ts'
 import { useSettingsStore } from './stores/settings.ts'
 import { ModalEnum } from './types/ModalEnum.ts'
 import router from './router/router.ts'
+import { isSnowflake } from './utils/snowflake.ts'
 
 const toast = useToast()
 const globalStore = useGlobalStore()
@@ -65,16 +66,6 @@ onMounted(async () => {
       autoRaf: true
     })
   }
-
-  setTimeout(() => {
-    if (
-      sessionStore.session.id &&
-      !sessionStore.session.discordId &&
-      router.currentRoute.value.path === '/'
-    ) {
-      modalStore.open(ModalEnum.MigrationNotice)
-    }
-  }, 1000)
 })
 </script>
 

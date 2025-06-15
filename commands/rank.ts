@@ -3,7 +3,7 @@ import {
   SlashCommandBuilder,
   EmbedBuilder
 } from 'discord.js'
-import { poopLeaderboardWithFilter } from '../../database'
+import { poopLeaderboardWithFilter } from '../database'
 
 export default {
   data: new SlashCommandBuilder()

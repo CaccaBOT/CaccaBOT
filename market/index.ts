@@ -20,7 +20,6 @@ import { compareDays } from '../utilities'
 import { server } from '../index'
 import moment from 'moment'
 import { config } from '../config/loader'
-import log from 'loglevel'
 import { OrderType } from '../types/OrderEnums'
 
 const taxationAmount = 0.1

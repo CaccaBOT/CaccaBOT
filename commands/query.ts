@@ -5,10 +5,8 @@ import {
 } from 'discord.js'
 import {
   rawQuery,
-  getUserProfileById,
-  isUserAdmin,
-  getUserByDiscordId
-} from '../../database'
+  isUserAdmin
+} from '../database'
 
 export default {
   data: new SlashCommandBuilder()
@@ -23,7 +21,7 @@ export default {
 
   async execute(interaction: CommandInteraction) {
     // Check if user is admin
-    const isAdmin = isUserAdmin(getUserByDiscordId(interaction.user.id).id)
+    const isAdmin = isUserAdmin(interaction.user.id)
 
     if (!isAdmin) {
       await interaction.reply({

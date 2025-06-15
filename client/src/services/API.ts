@@ -31,8 +31,6 @@ export default class API {
     })
   }
 
-  async getMarketFeed() {}
-
   async deleteOrder(orderId: number) {
     return await fetch(`${baseAPIURL}/market/order/${orderId}`, {
       method: 'DELETE',
@@ -151,17 +149,6 @@ export default class API {
     return await fetch(`${baseAPIURL}/instance/info`)
   }
 
-  async login(username: string, password: string) {
-    return await fetch(`${baseAPIURL}/auth/login`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        username,
-        password
-      })
-    })
-  }
-
   async logout(token: string) {
     return await fetch(`${baseAPIURL}/auth/logout`, {
       method: 'POST',
@@ -181,19 +168,6 @@ export default class API {
       },
       body: JSON.stringify({
         username
-      })
-    })
-  }
-
-  async changePassword(password: string) {
-    return await fetch(`${baseAPIURL}/auth/password`, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Auth-Token': this.sessionStore.session.token
-      },
-      body: JSON.stringify({
-        password
       })
     })
   }

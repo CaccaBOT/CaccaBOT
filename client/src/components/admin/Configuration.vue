@@ -5,7 +5,6 @@ import { ref } from 'vue'
 const timezones = Intl.supportedValuesOf('timeZone')
 const config = ref({
   serverUrl: null,
-  groupId: null,
   timezone: null
 })
 
@@ -29,11 +28,6 @@ function save() {
             <label class="label" for="serverUrl">Server URL</label>
             <input id="serverUrl" v-model="config.serverUrl" type="text" placeholder="https://yourinstance.dev"
               class="input" required />
-          </fieldset>
-          <fieldset class="fieldset">
-            <label class="label" for="groupId">Group ID</label>
-            <input id="groupId" v-model="config.groupId" type="text" placeholder="123456789012345678@g.us" class="input"
-              required />
           </fieldset>
           <fieldset class="fieldset">
             <label class="label" for="timezone">Server Timezone</label>

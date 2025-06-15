@@ -212,7 +212,7 @@ const insertOrderEndpoint = async function (
             .setColor(side === 'BUY' ? 0x00b0f4 : 0xff5050)
             .setThumbnail(collectible?.asset_url || '')
             .addFields(
-              { name: 'User', value: `<@${user.discordId}>`, inline: true },
+              { name: 'User', value: `<@${user.id}>`, inline: true },
               {
                 name: 'Collectible',
                 value: collectible?.name ?? `#${collectibleId}`,

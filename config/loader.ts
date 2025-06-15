@@ -11,7 +11,6 @@ export let config: Config = {
   name: '',
   description: '',
   serverUrl: '',
-  groupId: '',
   guildId: '',
   discordModuleEnabled: false,
   timezone: 'UTC',

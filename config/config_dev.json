@@ -2,7 +2,6 @@
   "name": "CaccaBOT Testing",
   "description": "The official CaccaBOT Testing environment",
   "serverUrl": "http://localhost:3000",
-  "groupId": "120363272256807045@g.us",
   "guildId": "1229739123770785792",
   "discordModuleEnabled": true,
   "timezone": "Europe/Rome",

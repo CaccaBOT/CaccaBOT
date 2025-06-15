@@ -3,7 +3,7 @@ import {
   SlashCommandBuilder,
   EmbedBuilder
 } from 'discord.js'
-import { config } from '../../config/loader'
+import { config } from '../config/loader'
 
 export default {
   data: new SlashCommandBuilder()

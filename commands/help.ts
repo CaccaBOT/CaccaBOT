@@ -3,9 +3,9 @@ import {
   SlashCommandBuilder,
   EmbedBuilder
 } from 'discord.js'
-import { commands } from '../client'
-import { version } from '../../package.json'
-import { config } from '../../config/loader'
+import { commands } from '../discord/client'
+import { version } from '../package.json'
+import { config } from '../config/loader'
 
 export default {
   data: new SlashCommandBuilder()

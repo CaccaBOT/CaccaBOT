@@ -3,8 +3,8 @@ import {
   SlashCommandBuilder,
   EmbedBuilder
 } from 'discord.js'
-import { getUserProfileByUsername, poopStatsFromUser } from '../../database'
-import { config } from '../../config/loader'
+import { getUserProfileByUsername, poopStatsFromUser } from '../database'
+import { config } from '../config/loader'
 
 export default {
   data: new SlashCommandBuilder()

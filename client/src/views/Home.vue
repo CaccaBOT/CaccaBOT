@@ -6,24 +6,11 @@ import MdiGithub from '~icons/mdi/github'
 import AntDesignTikTokOutlined from '~icons/ant-design/tik-tok-outlined'
 import SimpleIconsInstagram from '~icons/simple-icons/instagram'
 import { useGlobalStore } from '../stores/global'
-import HeroiconsUserGroup from '~icons/heroicons/user-group'
-import { useSessionStore } from '../stores/session'
-import IcBaselineDiscord from '~icons/ic/baseline-discord'
-import router from '../router/router'
-import { useModalStore } from '../stores/modal'
-import { ModalEnum } from '../types/ModalEnum'
 const globalStore = useGlobalStore()
-const sessionStore = useSessionStore()
-const modalStore = useModalStore()
-
 let installPrompt = ref(null)
 
 async function install() {
   await installPrompt.value.prompt()
-}
-
-function discordLogin() {
-  router.push('/auth/discord')
 }
 
 onMounted(async () => {
@@ -47,10 +34,6 @@ onMounted(async () => {
         <p class="m-0 mb-4 p-2 text-xl">{{ globalStore.instance.description }}</p>
         <p class="m-0 text-2xl">{{ globalStore.instance.version }}</p>
       </div>
-      <button v-if="sessionStore.session.id && !sessionStore.session.discordId" @click="discordLogin" class="btn btn-primary mt-6 w-80">
-        <IcBaselineDiscord class="text-xl" />
-        Link to Discord
-      </button>
       <button v-show="installPrompt != null" @click="install" class="btn btn-success mt-6 w-80">
         <HeroiconsDownload class="text-xl" />
         Install

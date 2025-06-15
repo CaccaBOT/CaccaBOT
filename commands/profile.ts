@@ -4,10 +4,10 @@ import {
   updateProfilePicture,
   updateBio,
   isUsernameAvailable,
-  getUserByDiscordId
-} from '../../database'
-import UsernameValidator from '../../validators/username'
-import achievementChecker from '../../achievements/check'
+  getUserById
+} from '../database'
+import UsernameValidator from '../validators/username'
+import achievementChecker from '../achievements/check'
 
 export default {
   data: new SlashCommandBuilder()
@@ -51,7 +51,7 @@ export default {
     const subcommand = interaction.options.get('subcommand')?.value as string
 
     const discordId = interaction.user.id
-    const user = await getUserByDiscordId(discordId)
+    const user = getUserById(discordId)
 
     if (!user) {
       await interaction.reply({

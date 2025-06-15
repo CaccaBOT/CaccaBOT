@@ -3,7 +3,7 @@ import {
   SlashCommandBuilder,
   EmbedBuilder
 } from 'discord.js'
-import { poopStats } from '../../database'
+import { poopStats } from '../database'
 
 export default {
   data: new SlashCommandBuilder()
