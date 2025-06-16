@@ -15,6 +15,9 @@ import { MarketPriceHistory } from '../types/MarketPriceHistory'
 import { CollectibleOwnership } from '../types/CollectibleOwnership'
 import { Rarity } from '../types/Rarity'
 import { RawUser } from '../types/User'
+import { Riddle } from '../types/Riddle'
+import { RiddlePart } from '../types/RiddlePart'
+import { Hint } from '../types/Hint'
 
 const timezone = config.timezone
 
@@ -1753,4 +1756,77 @@ export function isUsernameAvailable(username: string): boolean {
     .get(username)
 
   return !user
+}
+
+export function getRiddle(id: number): Riddle {
+  const riddle = db.prepare(`SELECT * FROM riddle WHERE id = ?`).get(id)
+
+  return riddle
+}
+
+export function getRiddles(): Riddle[] {
+  const riddle = db.prepare(`SELECT * FROM riddle`).all()
+
+  return riddle
+}
+
+export function getRiddlePart(id: string): RiddlePart {
+  const riddlePart = db
+    .prepare(`SELECT * FROM riddle_part WHERE id = ?`)
+    .get(id)
+
+  return riddlePart
+}
+
+export function getPartsOfRiddle(riddleId: number): RiddlePart[] {
+  const riddleParts = db
+    .prepare(`SELECT * FROM riddle_part WHERE riddle_id = ?`)
+    .all(riddleId)
+  
+  return riddleParts
+}
+
+export function getPartOfRiddle(riddleId: number, position: number): RiddlePart {
+  const riddlePart = db
+    .prepare(`SELECT * FROM riddle_part WHERE riddle_id = ? AND position = ?`)
+    .get(riddleId, position)
+  
+  return riddlePart
+}
+
+export function getHintsOfUser(userId: string): Hint[] {
+  const hints = db
+    .prepare(`SELECT * FROM hint WHERE user_id = ?`)
+    .all(userId)
+
+  return hints
+}
+
+export function getHintsOfUserOfRiddle(userId: string, riddleId: number): Hint[] {
+  return db.prepare(`
+    SELECT hint.*
+    FROM hint
+    JOIN riddle_part ON hint.riddle_part_id = riddle_part.id
+    WHERE hint.user_id = ? AND riddle_part.riddle_id = ?
+  `).all(userId, riddleId);
+}
+
+export function addHint(userId: string, riddlePartId: string) {
+  const exists = !!db
+    .prepare(
+      `SELECT 1 FROM hint WHERE user_id = ? AND riddle_part_id = ? LIMIT 1`
+    )
+    .get(userId, riddlePartId)
+
+  if (exists) {
+    return false
+  }
+
+  db.prepare(
+      `INSERT INTO hint (user_id, riddle_part_id, timestamp) VALUES (?, ?, ?)`
+    ).run(
+      userId,
+      riddlePartId,
+      new Date().toISOString()
+    )
 }

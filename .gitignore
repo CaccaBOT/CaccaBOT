@@ -1,6 +1,4 @@
 node_modules/*
-.wwebjs_auth
-.wwebjs_cache
 # ignore intellij config
 .idea
 public/*
